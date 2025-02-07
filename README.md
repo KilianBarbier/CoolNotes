@@ -33,6 +33,6 @@ This project is a minimalist and modern text editor designed to make sharing you
 ---
 
 ## License
-This project is licensed under the [Unlicense](https://unlicense.org/).
+This project is licensed under [The Unlicense License](https://unlicense.org/).
 
 ---
