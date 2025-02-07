@@ -1,127 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Responsive User Panel</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #121212;
+        color: #ffffff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+      }
 
+      .container {
+        position: relative;
+        width: 90%;
+        max-width: 1200px;
+        height: 80vh;
+        display: flex;
+        background: linear-gradient(135deg, #3b3b3b, #1f1f1f);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("https://via.placeholder.com/800x800") no-repeat center;
+        background-size: cover;
+      }
+
+      .center-div {
+        width: 60%;
+        max-width: 400px;
+        height: 60%;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .user-panel {
+        width: 300px;
+        background-color: #1e1e2f;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-left: 2px solid #3f3f4f;
+      }
+
+      .user-panel h2 {
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+        color: #ffffff;
+        text-align: center;
+      }
+
+      .user-panel ul {
+        list-style: none;
+      }
+
+      .user-panel ul li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background: #2a2a3b;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .user-panel ul li:hover {
+        background: #41415a;
+      }
+
+      @media (max-width: 768px) {
         .container {
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            height: 80vh;
-            display: flex;
-            background: linear-gradient(135deg, #3b3b3b, #1f1f1f);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: url('https://via.placeholder.com/800x800') no-repeat center;
-            background-size: cover;
-        }
-
-        .center-div {
-            width: 60%;
-            max-width: 400px;
-            height: 60%;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          flex-direction: column;
+          height: 90vh;
         }
 
         .user-panel {
-            width: 300px;
-            background-color: #1e1e2f;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            border-left: 2px solid #3f3f4f;
+          width: 100%;
+          border-left: none;
+          border-top: 2px solid #3f3f4f;
         }
 
-        .user-panel h2 {
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            color: #ffffff;
-            text-align: center;
+        .center-div {
+          width: 80%;
         }
-
-        .user-panel ul {
-            list-style: none;
-        }
-
-        .user-panel ul li {
-            margin-bottom: 10px;
-            padding: 10px;
-            background: #2a2a3b;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .user-panel ul li:hover {
-            background: #41415a;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                height: 90vh;
-            }
-
-            .user-panel {
-                width: 100%;
-                border-left: none;
-                border-top: 2px solid #3f3f4f;
-            }
-
-            .center-div {
-                width: 80%;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="content">
-            <div class="center-div">
-                <p>Centered Content</p>
-            </div>
+      <div class="content">
+        <div class="center-div">
+          <p>Centered Content</p>
         </div>
-        <div class="user-panel">
-            <h2>User Panel</h2>
-            <ul>
-                <li>Option 1</li>
-                <li>Option 2</li>
-                <li>Option 3</li>
-                <li>Option 4</li>
-            </ul>
-        </div>
+      </div>
+      <div class="user-panel">
+        <h2>User Panel</h2>
+        <ul>
+          <li>Option 1</li>
+          <li>Option 2</li>
+          <li>Option 3</li>
+          <li>Option 4</li>
+        </ul>
+      </div>
     </div>
-</body>
+  </body>
 </html>
