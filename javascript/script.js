@@ -29,7 +29,7 @@ function togglePanel() {
 function applyBackground(id) {
   const container = document.querySelector('.container');
   const img = document.getElementById(id);
-  const background = `url(${img.src}) no-repeat center / cover`;
+  const background = `url(${img.src.replace('.jpg', '.webp')}) no-repeat center / cover`;
   container.style.background = background;
 }
 

@@ -19,7 +19,7 @@ body {
   aspect-ratio: var(--aspect-ratio, 3 / 2);
   display: flex;
   margin: auto;
-  background: url("/media/img/bg/li-zhang-wtDy3HaivJI-unsplash.jpg") no-repeat center;
+  background: url("/media/img/bg/webp/big/li-zhang-wtDy3HaivJI-unsplash.webp") no-repeat center;
   background-size: cover;
   border-radius: 20px;
   overflow: hidden;
@@ -245,7 +245,7 @@ body.light-theme {
 }
 
 body.light-theme .container {
-  background: url("/media/img/bg/li-zhang-wtDy3HaivJI-unsplash.jpg") no-repeat center;
+  background: url("/media/img/bg/webp/big/li-zhang-wtDy3HaivJI-unsplash.webp") no-repeat center;
   background-size: cover;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
