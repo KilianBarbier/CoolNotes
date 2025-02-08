@@ -1,127 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive User Panel</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive User Panel</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/javascript/script.js" defer></script>
+  <!-- Preload the background image -->
+  <link rel="preload" href="/media/img/bg/milad-fakurian-seA-FPPXL-M-unsplash.jpg" as="image" />
+  <style>
+    /* Loading screen styles */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #121212;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      font-family: Arial, sans-serif;
+      color: #ffffff;
+    }
 
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #121212;
-        color: #ffffff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        overflow: hidden;
-      }
+    #loading-screen .spinner {
+      border: 8px solid rgba(255, 255, 255, 0.3);
+      border-top: 8px solid #ffffff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
 
-      .container {
-        position: relative;
-        width: 90%;
-        max-width: 1200px;
-        height: 80vh;
-        display: flex;
-        background: linear-gradient(135deg, #3b3b3b, #1f1f1f);
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
       }
+    }
+  </style>
 
-      .content {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: url("https://via.placeholder.com/800x800") no-repeat center;
-        background-size: cover;
-      }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const downloadBtn = document.getElementById('downloadBtn');
+    const container = document.querySelector('.container');
+    const textarea = document.querySelector('.textarea');
 
-      .center-div {
-        width: 60%;
-        max-width: 400px;
-        height: 60%;
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      }
-
-      .user-panel {
-        width: 300px;
-        background-color: #1e1e2f;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        border-left: 2px solid #3f3f4f;
-      }
-
-      .user-panel h2 {
-        margin-bottom: 20px;
-        font-size: 1.5rem;
+    // Télécharger le contenu du container en tant qu'image
+    downloadBtn.addEventListener('click', function () {
+      // Remplace temporairement la textarea par un div pour la capture
+      const tempDiv = document.createElement('div');
+      const preElement = document.createElement('pre');
+      preElement.textContent = textarea.value; // Utilise textContent pour conserver les sauts de ligne
+      preElement.setAttribute('style', `
+        width: 100%;
+        height: 100%;
         color: #ffffff;
         text-align: center;
-      }
-
-      .user-panel ul {
-        list-style: none;
-      }
-
-      .user-panel ul li {
-        margin-bottom: 10px;
         padding: 10px;
-        background: #2a2a3b;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.3s;
-      }
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      `);
 
-      .user-panel ul li:hover {
-        background: #41415a;
-      }
+      tempDiv.appendChild(preElement);
 
-      @media (max-width: 768px) {
-        .container {
-          flex-direction: column;
-          height: 90vh;
-        }
+      // Remplace la textarea par le div temporaire
+      textarea.style.display = 'none';
+      container.querySelector('.center-div').appendChild(tempDiv);
 
-        .user-panel {
-          width: 100%;
-          border-left: none;
-          border-top: 2px solid #3f3f4f;
-        }
+      // Capture l'ensemble du conteneur
+      html2canvas(container, {
+        backgroundColor: null, // Assure la transparence du fond
+        scale: 2, // Augmente la résolution pour une meilleure qualité
+        useCORS: true, // Utilise CORS pour les images externes
+        logging: true, // Active les logs pour le débogage
+        windowWidth: document.documentElement.clientWidth, // Assure que la largeur de la fenêtre est prise en compte
+        windowHeight: document.documentElement.clientHeight // Assure que la hauteur de la fenêtre est prise en compte
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL("image/png"); // Assure que l'image est en PNG
+        link.download = 'container.png';
+        link.click();
 
-        .center-div {
-          width: 80%;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="content">
-        <div class="center-div">
-          <p>Centered Content</p>
-        </div>
-      </div>
-      <div class="user-panel">
-        <h2>User Panel</h2>
-        <ul>
-          <li>Option 1</li>
-          <li>Option 2</li>
-          <li>Option 3</li>
-          <li>Option 4</li>
-        </ul>
+        // Rétablit la textarea
+        tempDiv.remove();
+        textarea.style.display = 'block';
+      }).catch(error => {
+        console.error("Erreur lors de la capture de l'image :", error);
+
+        // Rétablit la textarea en cas d'erreur
+        tempDiv.remove();
+        textarea.style.display = 'block';
+      });
+    });
+  });
+</script>
+
+
+
+</head>
+<body>
+
+    <button id="downloadBtn" class="download-btn">Télécharger</button>
+    <button id="themeToggleBtn" class="theme-toggle-btn">Basculer le thème</button>
+    
+  <div class="container" style="position: relative">
+    <div class="content">
+      <div class="center-div">
+        <textarea class="textarea"></textarea>
       </div>
     </div>
-  </body>
+  </div>
+
+  <div class="side-panel" id="sidePanel">
+    <button class="shrink-btn" onclick="togglePanel()">
+      <img
+        id="toggleIcon"
+        style="filter: invert(1); transform: scale(0.3) rotate(0deg); object-fit: fill;"
+        src="https://img.icons8.com/ios/50/000000/expand-arrow.png"
+      />
+    </button>
+    <div class="user-panel">
+      <h2>Aspect ratio</h2>
+      <ul>
+        <li id="btn-postinsta" onclick="applyAspectRatio(1080, 1080)">Instagram Post (1080x1080)</li>
+        <li id="btn-storyinsta" onclick="applyAspectRatio(1080, 1920)">Instagram Story (1080x1920)</li>
+        <li id="btn-postfb" onclick="applyAspectRatio(1200, 630)">Facebook Post (1200x630)</li>
+        <li id="btn-coverfb" onclick="applyAspectRatio(820, 312)">Facebook Cover (820x312)</li>
+        <li id="btn-posttwitter" onclick="applyAspectRatio(1200, 675)">Twitter Post (1200x675)</li>
+        <li id="btn-headertwitter" onclick="applyAspectRatio(1500, 500)">Twitter Header (1500x500)</li>
+        <li id="btn-postlinkedin" onclick="applyAspectRatio(1200, 627)">LinkedIn Post (1200x627)</li>
+        <li id="btn-coverlinkedin" onclick="applyAspectRatio(1584, 396)">LinkedIn Cover (1584x396)</li>
+        <li id="btn-thumbnailyt" onclick="applyAspectRatio(1280, 720)">YouTube Thumbnail (1280x720)</li>
+        <li id="btn-channelyt" onclick="applyAspectRatio(2560, 1440)">YouTube Channel (2560x1440)</li>
+      </ul>
+      <hr style="border: 1px solid #3f3f4f; margin: 10px" />
+      <h2>Backgrounds</h2>
+      <div class="wrapper">
+        <div class="thumbnail-container">
+          <img
+            id="bg2"
+            class="bg-thumbnail"
+            src="/media/img/bg/milad-fakurian-c_O4jomEvLU-unsplash.jpg"
+            onclick="applyBackground('bg2')"
+          />
+        </div>
+        <div class="thumbnail-container">
+          <img
+            id="bg3"
+            class="bg-thumbnail"
+            src="/media/img/bg/milad-fakurian-DKxRA-4dY9M-unsplash.jpg"
+            onclick="applyBackground('bg3')"
+          />
+        </div>
+        <div class="thumbnail-container">
+          <img
+            id="bg4"
+            class="bg-thumbnail"
+            src="/media/img/bg/milad-fakurian-DX7pT_guAyE-unsplash.jpg"
+            onclick="applyBackground('bg4')"
+          />
+        </div>
+        <div class="thumbnail-container">
+          <img
+            id="bg5"
+            class="bg-thumbnail"
+            src="/media/img/bg/milad-fakurian-F0LtAt5JTmE-unsplash.jpg"
+            onclick="applyBackground('bg5')"
+          />
+        </div>
+        <div class="thumbnail-container">
+          <img
+            id="bg6"
+            class="bg-thumbnail"
+            src="/media/img/bg/milad-fakurian-PGdW_bHDbpI-unsplash.jpg"
+            onclick="applyBackground('bg6')"
+          />
+        </div>
+        <div class="thumbnail-container">
+          <img
+            id="bg7"
+            class="bg-thumbnail"
+            src="/media/img/bg/milad-fakurian-PSPVCSnFT8k-unsplash.jpg"
+            onclick="applyBackground('bg7')"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Hide the loading screen once the content is loaded
+      document.getElementById("loading-screen").style.display = "none";
+    });
+  </script>  
+</body>
 </html>
