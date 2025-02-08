@@ -9,7 +9,7 @@ body {
   overflow: hidden;
   position: relative;
   margin: 0;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 .container {
@@ -105,12 +105,11 @@ body {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  border-left: 2px solid #3f3f4f;
+  border-left: 2px solid #444444;
   transform: translateX(0);
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-radius: 10px 0px 0px 10px;
   height: 100%;
 }
 
@@ -257,6 +256,6 @@ body.light-theme .center-div {
 }
 
 body.light-theme .textarea {
-  color: #000000;
+  color: white;
   transition: all 0.3s ease;
 }
