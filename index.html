@@ -1,315 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Responsive User Panel</title>
-  <link rel="stylesheet" href="/css/style.css" />
-  <script src="/javascript/script.js" defer></script>
-  <!-- Preload the background image -->
-  <link rel="preload" href="/media/img/bg/milad-fakurian-seA-FPPXL-M-unsplash.jpg" as="image" />
-  <!-- Preconnect and load Inter font -->
-  <link rel="preconnect" href="https://rsms.me/">
-  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-  <style>
-    :root {
-      font-family: 'Inter', sans-serif;
-      font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
-    }
-    @supports (font-variation-settings: normal) {
-      :root { font-family: 'InterVariable', sans-serif; }
-    }
-  </style>
-  <style>
-    /* Loading screen styles */
-    #loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #121212;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      font-family: 'Inter', sans-serif;
-      color: #ffffff;
-    }
-
-    #loading-screen .spinner {
-      border: 8px solid rgba(255, 255, 255, 0.3);
-      border-top: 8px solid #ffffff;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Light theme styles */
-    body.light-theme {
-      background-color: #fff;
-      color: #000000;
-    }
-
-    .light-theme .user-panel {
-      background-color: #fff;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CoolNotes - Create beautiful notes effortlessly</title>
     
-    .light-theme .user-panel h2 {
-      color: black;
-    }
+    <!-- Meta tags SEO -->
+    <meta name="description" content="CoolNotes is a minimalist and modern text editor designed to help you create beautiful notes effortlessly. Clean and intuitive interface for note-taking and collaborative work." />
+    <meta name="keywords" content="text editor, beautiful notes, note sharing, collaboration, online writing, clean interface" />
+    <meta name="author" content="CoolNotes" />
+    <meta name="robots" content="index, follow" />
 
-    .light-theme .shrink-btn {
-      background-color: #fff;
-      border: 2px solid #3f3f4f;
-    }
+    <!-- Open Graph -->
+    <meta property="og:title" content="CoolNotes - Create beautiful notes effortlessly" />
+    <meta property="og:description" content="Easily create and share beautiful notes with our intuitive and modern text editor." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/media/img/coolnotes-preview.jpg" />
+    <meta property="og:url" content="https://dev.kilianbarbier.fr" />
 
-    .light-theme .shrink-btn img {
-      filter: invert(0) !important;
-    }
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CoolNotes - Create beautiful notes effortlessly" />
+    <meta name="twitter:description" content="Create and share beautiful notes easily." />
+    <meta name="twitter:image" content="/media/img/coolnotes-preview.jpg" />
 
-    /* Dark theme styles */
-    body.dark-theme {
-      background-color: #1a1a1a;
-      color: #ffffff;
-    }
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.kilianbarbier.fr" />
 
-    .dark-theme .container {
-      background-color: #1e1e1e;
-    }
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/javascript/script.js" defer></script>
+    <!-- Preload the background image -->
+    <link rel="preload" href="/media/img/bg/li-zhang-wtDy3HaivJI-unsplash.jpg" as="image" />
+    <!-- Preconnect and load Inter font -->
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+        :root {
+            font-family: 'Inter', sans-serif;
+            font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+        }
+        @supports (font-variation-settings: normal) {
+            :root { font-family: 'InterVariable', sans-serif; }
+        }
+    </style>
+    <style>
+        /* Loading screen styles */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+        }
 
-    .dark-theme .side-panel {
-      background-color: #2e2e2e;
-    }
+        #loading-screen .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #ffffff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
 
-    #fontWeightSlider, #fontSizeSlider, #paddingSlider {
-      width: 100%;
-      margin: 10px 0;
-    }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-    .side-panel {
-      border-radius: 10px;
-      max-height: 100vh; /* Limite la hauteur maximale à la hauteur de la fenêtre */
-      overflow-y: auto; /* Active le défilement vertical */
-    }
+        /* Light theme styles */
+        body.light-theme {
+            background-color: #fff;
+            color: #000000;
+        }
 
-    .user-panel {
-      max-height: calc(100vh - 20px); /* Ajuste la hauteur maximale du user-panel */
-      overflow-y: auto; /* Active le défilement vertical */
-      padding: 10px; /* Ajoute un peu de padding pour l'esthétique */
-    }
-  </style>
+        .light-theme .user-panel {
+            background-color: #fff;
+        }
+        
+        .light-theme .user-panel h2 {
+            color: black;
+        }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const downloadBtn = document.getElementById('downloadBtn');
-    const container = document.querySelector('.container');
-    const textarea = document.querySelector('.textarea');
-    const themeToggleBtn = document.getElementById('themeToggleBtn');
+        .light-theme .shrink-btn {
+            background-color: #fff;
+            border: 2px solid #3f3f4f;
+        }
 
-    const fontWeightSlider = document.getElementById('fontWeightSlider');
-    const fontSizeSlider = document.getElementById('fontSizeSlider');
+        .light-theme .shrink-btn img {
+            filter: invert(0) !important;
+        }
 
-    fontWeightSlider.addEventListener('input', function () {
-      textarea.style.fontWeight = fontWeightSlider.value;
-    });
+        /* Dark theme styles */
+        body.dark-theme {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
 
-    fontSizeSlider.addEventListener('input', function () {
-      textarea.style.fontSize = fontSizeSlider.value + 'px';
-    });
+        .dark-theme .container {
+            background-color: #1a1a1a;
+        }
 
-    // Télécharger le contenu du container en tant qu'image
-    downloadBtn.addEventListener('click', function () {
-      // Remplace temporairement la textarea par un div pour la capture
-      const tempDiv = document.createElement('div');
-      const preElement = document.createElement('pre');
-      preElement.textContent = textarea.value; // Utilise textContent pour conserver les sauts de ligne
-      preElement.setAttribute('style', `
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        padding: 10px;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        backdrop-filter: blur(10px);
-        font-weight: ${textarea.style.fontWeight};
-        font-size: ${textarea.style.fontSize};
-      `);
+        .dark-theme .side-panel {
+            background-color: #1a1a1a;
+        }
 
-      tempDiv.appendChild(preElement);
+        #fontWeightSlider, #fontSizeSlider, #paddingSlider {
+            width: 100%;
+            margin: 10px 0;
+        }
 
-      // Remplace la textarea par le div temporaire
-      textarea.style.display = 'none';
-      container.querySelector('.center-div').appendChild(tempDiv);
+        .side-panel {
+            border-radius: 10px;
+            max-height: 100vh; /* Limite la hauteur maximale à la hauteur de la fenêtre */
+            overflow-y: auto; /* Active le défilement vertical */
+        }
 
-      // Ajoute le backdrop-filter à .center-div
-      const centerDiv = container.querySelector('.center-div');
-      centerDiv.style.backdropFilter = 'blur(10px)';
+        .user-panel {
+            max-height: calc(100vh - 20px); /* Ajuste la hauteur maximale du user-panel */
+            overflow-y: auto; /* Active le défilement vertical */
+            padding: 10px; /* Ajoute un peu de padding pour l'esthétique */
+        }
+    </style>
 
-      // Capture l'ensemble du conteneur
-      html2canvas(container, {
-        backgroundColor: null, // Assure la transparence du fond
-        scale: 2, // Augmente la résolution pour une meilleure qualité
-        useCORS: true, // Utilise CORS pour les images externes
-        logging: true, // Active les logs pour le débogage
-        windowWidth: document.documentElement.clientWidth, // Assure que la largeur de la fenêtre est prise en compte
-        windowHeight: document.documentElement.clientHeight // Assure que la hauteur de la fenêtre est prise en compte
-      }).then(canvas => {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL("image/png"); // Assure que l'image est en PNG
-        link.download = 'container.png';
-        link.click();
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const downloadBtn = document.getElementById('downloadBtn');
+            const container = document.querySelector('.container');
+            const textarea = document.querySelector('.textarea');
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
 
-        // Rétablit la textarea
-        tempDiv.remove();
-        textarea.style.display = 'block';
+            const fontWeightSlider = document.getElementById('fontWeightSlider');
+            const fontSizeSlider = document.getElementById('fontSizeSlider');
 
-        // Supprime le backdrop-filter de .center-div
-        centerDiv.style.backdropFilter = 'blur(10px)';
-      }).catch(error => {
-        console.error("Erreur lors de la capture de l'image :", error);
+            fontWeightSlider.addEventListener('input', function () {
+                textarea.style.fontWeight = fontWeightSlider.value;
+            });
 
-        // Rétablit la textarea en cas d'erreur
-        tempDiv.remove();
-        textarea.style.display = 'block';
-      });
-    });
+            fontSizeSlider.addEventListener('input', function () {
+                textarea.style.fontSize = fontSizeSlider.value + 'px';
+            });
 
-    // Toggle theme
-    themeToggleBtn.addEventListener('click', function () {
-      document.body.classList.toggle('dark-theme');
-      document.body.classList.toggle('light-theme');
-    });
+            // Télécharger le contenu du container en tant qu'image
+            downloadBtn.addEventListener('click', function () {
+                // Remplace temporairement la textarea par un div pour la capture
+                const tempDiv = document.createElement('div');
+                const preElement = document.createElement('pre');
+                preElement.textContent = textarea.value; // Utilise textContent pour conserver les sauts de ligne
+                preElement.setAttribute('style', `
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
+                    padding: 10px;
+                    box-sizing: border-box;
+                    font-family: 'Inter', sans-serif;
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                    backdrop-filter: blur(10px);
+                    font-weight: ${textarea.style.fontWeight};
+                    font-size: ${textarea.style.fontSize};
+                `);
 
-    // Force dark theme by default
-    document.body.classList.add('dark-theme');
-  });
-</script>
+                tempDiv.appendChild(preElement);
 
+                // Remplace la textarea par le div temporaire
+                textarea.style.display = 'none';
+                container.querySelector('.center-div').appendChild(tempDiv);
 
+                // Ajoute le backdrop-filter à .center-div
+                const centerDiv = container.querySelector('.center-div');
+                centerDiv.style.backdropFilter = 'blur(10px)';
 
+                // Capture l'ensemble du conteneur
+                html2canvas(container, {
+                    backgroundColor: null, // Assure la transparence du fond
+                    scale: 2, // Augmente la résolution pour une meilleure qualité
+                    useCORS: true, // Utilise CORS pour les images externes
+                    logging: true, // Active les logs pour le débogage
+                    windowWidth: document.documentElement.clientWidth, // Assure que la largeur de la fenêtre est prise en compte
+                    windowHeight: document.documentElement.clientHeight // Assure que la hauteur de la fenêtre est prise en compte
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL("image/png"); // Assure que l'image est en PNG
+                    link.download = 'container.png';
+                    link.click();
+
+                    // Rétablit la textarea
+                    tempDiv.remove();
+                    textarea.style.display = 'block';
+
+                    // Supprime le backdrop-filter de .center-div
+                    centerDiv.style.backdropFilter = 'blur(10px)';
+                }).catch(error => {
+                    console.error("Erreur lors de la capture de l'image :", error);
+
+                    // Rétablit la textarea en cas d'erreur
+                    tempDiv.remove();
+                    textarea.style.display = 'block';
+                });
+            });
+
+            // Toggle theme
+            themeToggleBtn.addEventListener('click', function () {
+                document.body.classList.toggle('dark-theme');
+                document.body.classList.toggle('light-theme');
+            });
+
+            // Force dark theme by default
+            document.body.classList.add('dark-theme');
+        });
+    </script>
 </head>
 <body>
+    <header role="banner">
+        <nav role="navigation" aria-label="Main menu">
+            <button id="downloadBtn" class="download-btn" aria-label="Download text">Download</button>
+            <button id="themeToggleBtn" class="theme-toggle-btn" aria-label="Switch theme">Switch theme</button>
+        </nav>
+    </header>
 
-    <button id="downloadBtn" class="download-btn">Download</button>
-    <button id="themeToggleBtn" class="theme-toggle-btn">Switch theme</button>
-    
-  <div class="container" style="position: relative">
-    <div class="content">
-      <div class="center-div">
-        <textarea class="textarea"></textarea>
-      </div>
-    </div>
-  </div>
-  <button class="shrink-btn" onclick="togglePanel()" style="position: fixed; top: 50%; transform: translateY(-50%) rotate(-90deg); right: 251px;">
-    <img
-      id="toggleIcon"
-      style="filter: invert(1); transform: scale(0.3) rotate(0deg); object-fit: fill;"
-      src="https://img.icons8.com/ios/50/000000/expand-arrow.png"
-    />
-  </button>
-  <div class="side-panel" id="sidePanel">
-    <div class="user-panel">
-      <h2>Aspect ratio</h2>
-      <ul>
-        <li id="btn-postinsta" onclick="applyAspectRatio(1080, 1080)">Instagram Post (1080x1080)</li>
-        <li id="btn-storyinsta" onclick="applyAspectRatio(1080, 1920)">Instagram Story (1080x1920)</li>
-        <li id="btn-postfb" onclick="applyAspectRatio(1200, 630)">Facebook Post (1200x630)</li>
-        <li id="btn-coverfb" onclick="applyAspectRatio(820, 312)">Facebook Cover (820x312)</li>
-        <li id="btn-posttwitter" onclick="applyAspectRatio(1200, 675)">Twitter Post (1200x675)</li>
-        <li id="btn-headertwitter" onclick="applyAspectRatio(1500, 500)">Twitter Header (1500x500)</li>
-        <li id="btn-postlinkedin" onclick="applyAspectRatio(1200, 627)">LinkedIn Post (1200x627)</li>
-        <li id="btn-coverlinkedin" onclick="applyAspectRatio(1584, 396)">LinkedIn Cover (1584x396)</li>
-        <li id="btn-thumbnailyt" onclick="applyAspectRatio(1280, 720)">YouTube Thumbnail (1280x720)</li>
-        <li id="btn-channelyt" onclick="applyAspectRatio(2560, 1440)">YouTube Channel (2560x1440)</li>
-      </ul>
-      <hr style="border: 1px solid #3f3f4f; margin: 10px" />
+    <main role="main">
+        <div class="container" style="position: relative">
+            <div class="content">
+                <div class="center-div">
+                    <textarea class="textarea"></textarea>
+                </div>
+            </div>
+        </div>
+    </main>
 
-      <!-- Slider for content padding -->
-      <div>
-        <label for="paddingSlider">Padding:</label>
-        <input
-          type="range"
-          id="paddingSlider"
-          min="0"
-          max="200"
-          value="60"
-          step="1"
+    <aside class="side-panel" id="sidePanel" role="complementary" aria-label="Editing options">
+        <div class="user-panel">
+            <h2>Aspect ratio</h2>
+            <ul>
+                <li id="btn-postinsta" onclick="applyAspectRatio(1080, 1080)">Instagram Post (1080x1080)</li>
+                <li id="btn-storyinsta" onclick="applyAspectRatio(1080, 1920)">Instagram Story (1080x1920)</li>
+                <li id="btn-postfb" onclick="applyAspectRatio(1200, 630)">Facebook Post (1200x630)</li>
+                <li id="btn-coverfb" onclick="applyAspectRatio(820, 312)">Facebook Cover (820x312)</li>
+                <li id="btn-posttwitter" onclick="applyAspectRatio(1200, 675)">Twitter Post (1200x675)</li>
+                <li id="btn-headertwitter" onclick="applyAspectRatio(1500, 500)">Twitter Header (1500x500)</li>
+                <li id="btn-postlinkedin" onclick="applyAspectRatio(1200, 627)">LinkedIn Post (1200x627)</li>
+                <li id="btn-coverlinkedin" onclick="applyAspectRatio(1584, 396)">LinkedIn Cover (1584x396)</li>
+                <li id="btn-thumbnailyt" onclick="applyAspectRatio(1280, 720)">YouTube Thumbnail (1280x720)</li>
+                <li id="btn-channelyt" onclick="applyAspectRatio(2560, 1440)">YouTube Channel (2560x1440)</li>
+            </ul>
+            <hr style="border: 1px solid #3f3f4f; margin: 10px" />
+
+            <!-- Slider for content padding -->
+            <div>
+                <label for="paddingSlider">Padding:</label>
+                <input
+                    type="range"
+                    id="paddingSlider"
+                    min="0"
+                    max="200"
+                    value="60"
+                    step="1"
+                />
+            </div>
+
+            <div>
+                <label for="fontWeightSlider">Font Weight:</label>
+                <input type="range" id="fontWeightSlider" min="100" max="900" value="400" step="100" />
+            </div>
+            <div>
+                <label for="fontSizeSlider">Font Size:</label>
+                <input type="range" id="fontSizeSlider" min="10" max="72" value="16" step="1" />
+            </div>
+
+            <hr style="border: 1px solid #3f3f4f; margin: 10px" />
+            <h2>Backgrounds</h2>
+            <div class="wrapper">
+                <div class="thumbnail-container">
+                    <img
+                        id="bg2"
+                        class="bg-thumbnail"
+                        src="/media/img/bg/milad-fakurian-c_O4jomEvLU-unsplash.jpg"
+                        onclick="applyBackground('bg2')"
+                    />
+                </div>
+                <div class="thumbnail-container">
+                    <img
+                        id="bg3"
+                        class="bg-thumbnail"
+                        src="/media/img/bg/milad-fakurian-DKxRA-4dY9M-unsplash.jpg"
+                        onclick="applyBackground('bg3')"
+                    />
+                </div>
+                <div class="thumbnail-container">
+                    <img
+                        id="bg4"
+                        class="bg-thumbnail"
+                        src="/media/img/bg/milad-fakurian-DX7pT_guAyE-unsplash.jpg"
+                        onclick="applyBackground('bg4')"
+                    />
+                </div>
+                <div class="thumbnail-container">
+                    <img
+                        id="bg5"
+                        class="bg-thumbnail"
+                        src="/media/img/bg/milad-fakurian-F0LtAt5JTmE-unsplash.jpg"
+                        onclick="applyBackground('bg5')"
+                    />
+                </div>
+                <div class="thumbnail-container">
+                    <img
+                        id="bg6"
+                        class="bg-thumbnail"
+                        src="/media/img/bg/milad-fakurian-PGdW_bHDbpI-unsplash.jpg"
+                        onclick="applyBackground('bg6')"
+                    />
+                </div>
+                <div class="thumbnail-container">
+                    <img
+                        id="bg7"
+                        class="bg-thumbnail"
+                        src="/media/img/bg/milad-fakurian-PSPVCSnFT8k-unsplash.jpg"
+                        onclick="applyBackground('bg7')"
+                    />
+                </div>
+            </div>
+        </div>
+    </aside>
+    <button class="shrink-btn" onclick="togglePanel()" style="position: fixed; top: 50%; transform: translateY(-50%) rotate(-90deg); right: 251px;">
+        <img
+            id="toggleIcon"
+            style="filter: invert(1); transform: scale(0.3) rotate(0deg); object-fit: fill;"
+            src="https://img.icons8.com/ios/50/000000/expand-arrow.png"
         />
-      </div>
-
-      <div>
-        <label for="fontWeightSlider">Font Weight:</label>
-        <input type="range" id="fontWeightSlider" min="100" max="900" value="400" step="100" />
-      </div>
-      <div>
-        <label for="fontSizeSlider">Font Size:</label>
-        <input type="range" id="fontSizeSlider" min="10" max="72" value="16" step="1" />
-      </div>
-
-      <hr style="border: 1px solid #3f3f4f; margin: 10px" />
-      <h2>Backgrounds</h2>
-      <div class="wrapper">
-        <div class="thumbnail-container">
-          <img
-            id="bg2"
-            class="bg-thumbnail"
-            src="/media/img/bg/milad-fakurian-c_O4jomEvLU-unsplash.jpg"
-            onclick="applyBackground('bg2')"
-          />
-        </div>
-        <div class="thumbnail-container">
-          <img
-            id="bg3"
-            class="bg-thumbnail"
-            src="/media/img/bg/milad-fakurian-DKxRA-4dY9M-unsplash.jpg"
-            onclick="applyBackground('bg3')"
-          />
-        </div>
-        <div class="thumbnail-container">
-          <img
-            id="bg4"
-            class="bg-thumbnail"
-            src="/media/img/bg/milad-fakurian-DX7pT_guAyE-unsplash.jpg"
-            onclick="applyBackground('bg4')"
-          />
-        </div>
-        <div class="thumbnail-container">
-          <img
-            id="bg5"
-            class="bg-thumbnail"
-            src="/media/img/bg/milad-fakurian-F0LtAt5JTmE-unsplash.jpg"
-            onclick="applyBackground('bg5')"
-          />
-        </div>
-        <div class="thumbnail-container">
-          <img
-            id="bg6"
-            class="bg-thumbnail"
-            src="/media/img/bg/milad-fakurian-PGdW_bHDbpI-unsplash.jpg"
-            onclick="applyBackground('bg6')"
-          />
-        </div>
-        <div class="thumbnail-container">
-          <img
-            id="bg7"
-            class="bg-thumbnail"
-            src="/media/img/bg/milad-fakurian-PSPVCSnFT8k-unsplash.jpg"
-            onclick="applyBackground('bg7')"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+    </button>
 </body>
 </html>

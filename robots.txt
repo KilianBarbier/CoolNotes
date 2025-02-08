@@ -1,0 +1,24 @@
+# Règles générales
+User-agent: *
+Allow: /
+Disallow: /private/    # Contenu sensible
+Disallow: /temp/       # Fichiers temporaires
+
+# Contrôle du taux de crawl
+Crawl-delay: 0
+
+# Localisation du sitemap
+Sitemap: https://dev.kilianbarbier.fr/sitemap.xml
+
+# Blocage des outils SEO
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+Disallow: /
+
+# Blocage des outils d'automatisation
+User-agent: Dotbot
+User-agent: Wget
+User-agent: curl
+User-agent: php
+Disallow: /
