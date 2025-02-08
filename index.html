@@ -58,9 +58,6 @@
       color: #000000;
     }
 
-    .light-theme .container {
-    }
-
     .light-theme .user-panel {
       background-color: #fff;
     }
@@ -95,6 +92,18 @@
     #fontWeightSlider, #fontSizeSlider, #paddingSlider {
       width: 100%;
       margin: 10px 0;
+    }
+
+    .side-panel {
+      border-radius: 10px;
+      max-height: 100vh; /* Limite la hauteur maximale à la hauteur de la fenêtre */
+      overflow-y: auto; /* Active le défilement vertical */
+    }
+
+    .user-panel {
+      max-height: calc(100vh - 20px); /* Ajuste la hauteur maximale du user-panel */
+      overflow-y: auto; /* Active le défilement vertical */
+      padding: 10px; /* Ajoute un peu de padding pour l'esthétique */
     }
   </style>
 
@@ -182,12 +191,8 @@
       document.body.classList.toggle('light-theme');
     });
 
-    // Set initial theme
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.body.classList.add('dark-theme');
-    } else {
-      document.body.classList.add('light-theme');
-    }
+    // Force dark theme by default
+    document.body.classList.add('dark-theme');
   });
 </script>
 
@@ -206,7 +211,13 @@
       </div>
     </div>
   </div>
-
+  <button class="shrink-btn" onclick="togglePanel()" style="position: fixed; top: 50%; transform: translateY(-50%) rotate(-90deg); right: 251px;">
+    <img
+      id="toggleIcon"
+      style="filter: invert(1); transform: scale(0.3) rotate(0deg); object-fit: fill;"
+      src="https://img.icons8.com/ios/50/000000/expand-arrow.png"
+    />
+  </button>
   <div class="side-panel" id="sidePanel">
     <div class="user-panel">
       <h2>Aspect ratio</h2>
@@ -299,13 +310,6 @@
         </div>
       </div>
     </div>
-    <button class="shrink-btn" onclick="togglePanel()">
-      <img
-        id="toggleIcon"
-        style="filter: invert(1); transform: scale(0.3) rotate(0deg); object-fit: fill;"
-        src="https://img.icons8.com/ios/50/000000/expand-arrow.png"
-      />
-    </button>
   </div>
 </body>
 </html>

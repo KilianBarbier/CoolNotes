@@ -1,3 +1,8 @@
+// Add this function at the top of your script file
+function isBrowser(browser) {
+  return navigator.userAgent.toLowerCase().indexOf(browser) > -1;
+}
+
 function updatePadding(container, val, width, height) {
   // Nouvelle logique: on considère le padBlock comme la valeur du slider
   // et le padInline = padBlock * (width/height)
@@ -8,13 +13,21 @@ function updatePadding(container, val, width, height) {
 }
 
 function togglePanel() {
-  const panel = document.getElementById("sidePanel");
-  const icon = document.getElementById("toggleIcon");
-  panel.classList.toggle("hidden-panel");
-  if (panel.classList.contains("hidden-panel")) {
-    icon.style.transform = "scale(0.3) rotate(-180deg)";
+  const sidePanel = document.getElementById('sidePanel');
+  const shrinkBtn = document.querySelector('.shrink-btn');
+  const shrinkBtnImg = document.querySelector('.shrink-btn img');
+  const rightPosition = isBrowser('firefox') ? '249px' : '251px';
+
+  if (sidePanel.style.transform === 'translateX(100%)') {
+    // Panel opening
+    sidePanel.style.transform = 'translateX(0)';
+    shrinkBtn.style.right = rightPosition;
+    shrinkBtnImg.style.transform = 'rotate(0deg) scale(0.3)';
   } else {
-    icon.style.transform = "scale(0.3) rotate(0deg)";
+    // Panel closing
+    sidePanel.style.transform = 'translateX(100%)';
+    shrinkBtn.style.right = '-50px';
+    shrinkBtnImg.style.transform = 'rotate(-180deg) scale(0.3)';
   }
 }
 
@@ -80,5 +93,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       updatePadding(container, val, width, height);
     });
+  }
+
+  // Add this code where you initialize your page
+  const shrinkBtn = document.querySelector('.shrink-btn');
+  if (isBrowser('firefox')) {
+    shrinkBtn.style.right = '249px';
+  } else {
+    shrinkBtn.style.right = '251px';
   }
 });
