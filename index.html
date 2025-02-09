@@ -226,7 +226,7 @@
           preElement.textContent = textarea.value;
           const currentFontSize = parseInt(textarea.style.fontSize);
           const downloadFontSize = window.innerWidth <= 480 ? 
-            Math.max(currentFontSize - 2, 1) : // Réduction de 2pt avec minimum 1pt
+            Math.max(currentFontSize - 2.5, 1) : // Réduction de 2pt avec minimum 1pt
             currentFontSize;
 
           preElement.setAttribute(
