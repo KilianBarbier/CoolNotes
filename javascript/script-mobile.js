@@ -123,10 +123,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   autoResize(textarea);
 
-  textarea.focus();
+  if (window.innerWidth > 480) {
+    textarea.focus();
+  }
 
   document.addEventListener('click', function (event) {
-    if (event.target !== textarea) {
+    if (event.target !== textarea && window.innerWidth > 480) {
       textarea.focus();
     }
   });
