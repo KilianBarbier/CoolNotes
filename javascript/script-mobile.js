@@ -163,3 +163,190 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 window.addEventListener('resize', initializeMobileLayout);
+
+function showOverlay() {
+  const overlay = document.getElementById('overlay');
+  const backdrop = document.querySelector('.overlay-backdrop');
+  overlay.style.display = 'block';
+  backdrop.style.display = 'block';
+}
+
+function closeOverlay() {
+  const overlay = document.getElementById('overlay');
+  const backdrop = document.querySelector('.overlay-backdrop');
+  overlay.style.display = 'none';
+  backdrop.style.display = 'none';
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const downloadBtn = document.getElementById("downloadBtn");
+  const container = document.querySelector(".container");
+  const textarea = document.querySelector(".textarea");
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+  const fontWeightSlider = document.getElementById("fontWeightSlider");
+  const fontSizeSlider = document.getElementById("fontSizeSlider");
+
+  fontWeightSlider.addEventListener("input", function () {
+    textarea.style.fontWeight = fontWeightSlider.value;
+  });
+
+  fontSizeSlider.addEventListener("input", function () {
+    textarea.style.fontSize = fontSizeSlider.value + "px";
+  });
+
+  downloadBtn.addEventListener("click", function () {
+    const tempDiv = document.createElement("div");
+    const innerDiv = document.createElement("div");
+    const preElement = document.createElement("pre");
+    preElement.textContent = textarea.value;
+    const currentFontSize = parseInt(textarea.style.fontSize);
+    const downloadFontSize = window.innerWidth <= 480 ? 
+      Math.max(currentFontSize - 4, 1) : // Réduction de 2pt avec minimum 1pt
+      currentFontSize;
+
+    preElement.setAttribute(
+      "style",
+      `
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+        white-space: pre-wrap;
+        line-height: normal !important;
+        word-wrap: break-word;
+        background-color: ${container.style.backgroundColor};
+        font-weight: ${textarea.style.fontWeight};
+        font-size: ${downloadFontSize}px;
+        color: ${textarea.style.color};
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin-top: -18px;
+      `
+    );
+
+    innerDiv.setAttribute(
+      "style",
+      `
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+      `
+    );
+
+    tempDiv.setAttribute(
+      "style",
+      `
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      `
+    );
+
+    innerDiv.appendChild(preElement);
+    tempDiv.appendChild(innerDiv);
+
+    textarea.style.display = "none";
+    container.querySelector(".center-div").appendChild(tempDiv);
+
+    const centerDiv = container.querySelector(".center-div");
+    centerDiv.style.backdropFilter = "blur(10px)";
+
+    html2canvas(container, {
+      backgroundColor: null,
+      scale: 2,
+      useCORS: true,
+      logging: true,
+      windowWidth: document.documentElement.clientWidth,
+      windowHeight: document.documentElement.clientHeight,
+    })
+      .then((canvas) => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "container.png";
+        link.click();
+
+        tempDiv.remove();
+        textarea.style.display = "block";
+        centerDiv.style.backdropFilter = "blur(10px)";
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la capture de l'image :", error);
+
+        tempDiv.remove();
+        textarea.style.display = "block";
+      });
+  });
+
+  themeToggleBtn.addEventListener("click", function () {
+    document.body.classList.toggle("dark-theme");
+    document.body.classList.toggle("light-theme");
+  });
+
+  document.body.classList.add("dark-theme");
+
+  // Add wiggle functionality
+  document.addEventListener('click', function(event) {
+    const overlay = document.getElementById('overlay');
+    const backdrop = document.querySelector('.overlay-backdrop');
+    const closeBtn = document.querySelector('.close-btn');
+    
+    if (backdrop && closeBtn && overlay && 
+        overlay.style.display === 'block' && 
+        event.target === backdrop) {
+        
+        closeBtn.classList.remove('wiggle');
+        void closeBtn.offsetWidth; // Force reflow
+        closeBtn.classList.add('wiggle');
+    }
+  });
+
+  // Single click event listener for wiggle
+  document.addEventListener('click', function(event) {
+    const overlay = document.getElementById('overlay');
+    const backdrop = document.querySelector('.overlay-backdrop');
+    const closeBtn = document.querySelector('.close-btn');
+    
+    if (backdrop && 
+        closeBtn && 
+        overlay && 
+        overlay.style.display !== 'none' && 
+        event.target === backdrop) {
+        
+        console.log('Wiggle animation triggered');
+        closeBtn.classList.remove('wiggle');
+        void closeBtn.offsetWidth;
+        closeBtn.classList.add('wiggle');
+    }
+  });
+});
+
+document.addEventListener('click', function(event) {
+  const overlay = document.getElementById('overlay');
+  const backdrop = document.querySelector('.overlay-backdrop');
+  const closeBtn = document.querySelector('.close-btn');
+  
+  console.log('Click detected');
+  console.log('Overlay display:', overlay?.style.display);
+  console.log('Clicked element:', event.target);
+  console.log('Is backdrop?:', event.target === backdrop);
+  
+  if (backdrop && closeBtn && overlay && 
+      overlay.style.display === 'block' && 
+      event.target === backdrop) {
+      
+      console.log('Wiggle animation triggered');
+      closeBtn.classList.remove('wiggle');
+      void closeBtn.offsetWidth;
+      closeBtn.classList.add('wiggle');
+  }
+});
