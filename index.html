@@ -224,6 +224,11 @@
           const innerDiv = document.createElement("div");
           const preElement = document.createElement("pre");
           preElement.textContent = textarea.value;
+          const currentFontSize = parseInt(textarea.style.fontSize);
+          const downloadFontSize = window.innerWidth <= 480 ? 
+            Math.max(currentFontSize - 2, 1) : // Réduction de 2pt avec minimum 1pt
+            currentFontSize;
+
           preElement.setAttribute(
             "style",
             `
@@ -238,7 +243,7 @@
               word-wrap: break-word;
               background-color: ${container.style.backgroundColor};
               font-weight: ${textarea.style.fontWeight};
-              font-size: ${textarea.style.fontSize};
+              font-size: ${downloadFontSize}px;
               color: ${textarea.style.color};
               margin: 0;
               display: flex;
