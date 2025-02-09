@@ -221,27 +221,62 @@
 
         downloadBtn.addEventListener("click", function () {
           const tempDiv = document.createElement("div");
+          const innerDiv = document.createElement("div");
           const preElement = document.createElement("pre");
           preElement.textContent = textarea.value;
           preElement.setAttribute(
             "style",
             `
-                    width: 100%;
-                    height: 100%;
-                    text-align: center;
-                    padding: 10px;
-                    box-sizing: border-box;
-                    font-family: 'Inter', sans-serif;
-                    white-space: pre-wrap;
-                    word-wrap: break-word;
-                    background-color: ${container.style.backgroundColor};
-                    font-weight: ${textarea.style.fontWeight};
-                    font-size: ${textarea.style.fontSize};
-                    color: ${textarea.style.color};
-                `
+              width: 100%;
+              height: 100%;
+              text-align: center;
+              padding: 10px;
+              padding-top: 0px;
+              box-sizing: border-box;
+              font-family: 'Inter', sans-serif;
+              white-space: pre-wrap;
+              word-wrap: break-word;
+              background-color: ${container.style.backgroundColor};
+              font-weight: ${textarea.style.fontWeight};
+              font-size: ${textarea.style.fontSize};
+              color: ${textarea.style.color};
+              margin: 0;
+              line-height: 1.5;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              margin-top: -18px;
+            `
           );
 
-          tempDiv.appendChild(preElement);
+          innerDiv.setAttribute(
+            "style",
+            `
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+              height: 100%;
+              padding-top: 0px;
+            `
+          );
+
+          tempDiv.setAttribute(
+            "style",
+            `
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+              height: 100%;
+              overflow: hidden;
+              padding-top: 0px;
+            `
+          );
+
+          innerDiv.appendChild(preElement);
+          tempDiv.appendChild(innerDiv);
 
           textarea.style.display = "none";
           container.querySelector(".center-div").appendChild(tempDiv);
@@ -265,7 +300,6 @@
 
               tempDiv.remove();
               textarea.style.display = "block";
-
               centerDiv.style.backdropFilter = "blur(10px)";
             })
             .catch((error) => {
