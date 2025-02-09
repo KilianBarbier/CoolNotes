@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>CoolNotes - Create beautiful notes effortlessly</title>
 
     <meta
@@ -42,7 +42,7 @@
     <link rel="canonical" href="https://dev.kilianbarbier.fr" />
 
     <link rel="stylesheet" href="/css/style.css" />
-    <script src="/javascript/script.js" defer></script>
+    <script src="/javascript/script-mobile.js" defer></script>
 
     <link
       rel="preload"
@@ -182,7 +182,7 @@
       #fontWeightSlider,
       #fontSizeSlider,
       #paddingSlider {
-        width: 100%;
+        width: 95%;
         margin: 10px 0;
       }
 
@@ -196,6 +196,7 @@
         max-height: calc(100vh - 20px);
         overflow-y: auto;
         padding: 10px;
+        width: 95%;
       }
     </style>
 
@@ -351,8 +352,8 @@
     </main>
 
     <aside
-      class="side-panel"
       id="sidePanel"
+      class="sp-styling"
       role="complementary"
       aria-label="Editing options"
     >
@@ -581,13 +582,13 @@
       </div>
     </aside>
     <button
-      class="shrink-btn"
+      class="shrink-btn normal-shrink-btn"
       onclick="togglePanel()"
       style="
         position: fixed;
         top: 50%;
         transform: translateY(-50%) rotate(-90deg);
-        right: 251px;
+        right: 253px;
       "
     >
       <img
