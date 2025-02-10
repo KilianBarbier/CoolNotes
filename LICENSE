@@ -1,24 +1,61 @@
-This is free and unencumbered software released into the public domain.
+Contrat de Licence Propriétaire
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
+1. Objet de la Licence
 
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
+Le présent contrat de licence régit l'utilisation du site web CoolNotes (ci-après dénommé "le Site"), accessible à l'adresse https://dev.kilianbarbier.fr, incluant son code source, sa conception, ses fonctionnalités et tout contenu associé. Le Site est protégé par le droit d'auteur conformément aux dispositions des articles L111-1 et suivants du Code de la Propriété Intellectuelle.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+2. Droits Exclusifs
 
-For more information, please refer to <https://unlicense.org>
+Le titulaire des droits, Kilian BARBIER (ci-après "le Propriétaire"), conserve l'intégralité des droits patrimoniaux et moraux sur le Site. Aucune partie du Site ne peut être utilisée, copiée, modifiée, reproduite, distribuée ou exploitée à des fins commerciales ou non commerciales sans l'autorisation écrite préalable du Propriétaire.
+
+3. Restrictions
+
+L'utilisateur s'engage à respecter les restrictions suivantes :
+
+Interdiction de reproduction : Toute reproduction partielle ou totale du code source, des interfaces graphiques ou des contenus est strictement interdite.
+
+Interdiction de modification : Il est interdit de modifier, adapter ou créer des œuvres dérivées à partir du Site.
+
+Interdiction de distribution : Le Site ne peut être partagé, publié ou distribué sous quelque forme que ce soit.
+
+Interdiction d'usage commercial : Toute utilisation commerciale du Site ou de ses composants est expressément interdite sans accord écrit.
+
+Interdiction de rétro-ingénierie : L'utilisateur n'est pas autorisé à tenter d'accéder au code source par décompilation ou autres moyens techniques.
+
+Toute exception à ces restrictions doit faire l'objet d'une autorisation écrite et préalable du Propriétaire.
+
+4. Propriété Intellectuelle
+
+Le Site, y compris son code source, ses designs et ses contenus, constitue une œuvre originale protégée par le droit d'auteur. Toute violation des droits de propriété intellectuelle exposera l'utilisateur à des poursuites civiles et pénales.
+
+En cas de violation, le Propriétaire pourra engager des actions en justice, notamment pour obtenir réparation du préjudice subi.
+
+5. Durée et Résiliation
+
+Cette licence est accordée pour une durée indéterminée jusqu'à résiliation par le Propriétaire.
+
+Le Propriétaire se réserve le droit de résilier la licence à tout moment en cas de violation des termes. La résiliation entraînera l'obligation pour l'utilisateur de cesser immédiatement toute utilisation du Site et de détruire toute copie ou donnée issue du Site en sa possession.
+
+6. Sanctions en cas de violation
+
+En cas de non-respect des présentes dispositions, le Propriétaire pourra :
+
+Mettre en demeure l'utilisateur de cesser l'infraction sous peine de poursuites judiciaires.
+
+Exiger une indemnisation pour tout préjudice subi.
+
+Engager des actions civiles et/ou pénales conformément à la législation en vigueur.
+
+7. Limitation de Responsabilité
+
+Le Propriétaire décline toute responsabilité en cas de dommages directs ou indirects résultant de l'utilisation non autorisée du Site. L'utilisateur assume l'entière responsabilité de toute conséquence découlant d'une utilisation du Site en violation de la présente licence.
+
+8. Loi Applicable et Juridiction Compétente
+
+Le présent contrat est régi par la loi française.
+
+Tout litige relatif à ce contrat sera soumis aux tribunaux compétents du ressort du siège social du Propriétaire.
+
+9. Acceptation
+
+En accédant au Site, l'utilisateur reconnaît avoir pris connaissance des termes de cette licence et les accepter sans réserve.

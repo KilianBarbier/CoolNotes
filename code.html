@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>CoolNotes - Créez de magnifiques notes sans effort</title>
+
+    <meta
+      name="description"
+      content="CoolNotes est un éditeur de texte minimaliste et moderne conçu pour vous aider à créer de magnifiques notes sans effort. Interface propre et intuitive pour la prise de notes et le travail collaboratif."
+    />
+    <meta
+      name="keywords"
+      content="éditeur de texte, belles notes, partage de notes, collaboration, écriture en ligne, interface propre"
+    />
+    <meta name="author" content="Kilian BARBIER" />
+    <meta name="robots" content="index, follow" />
+
+    <meta
+      property="og:title"
+      content="CoolNotes - Créez de magnifiques notes sans effort"
+    />
+    <meta
+      property="og:description"
+      content="Créez et partagez facilement de magnifiques notes grâce à notre éditeur de texte intuitif et moderne."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/media/img/coolnotes_128.png" />
+    <meta property="og:url" content="https://dev.kilianbarbier.fr" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="CoolNotes - Créez de magnifiques notes sans effort"
+    />
+    <meta
+      name="twitter:description"
+      content="Créez et partagez de belles notes facilement."
+    />
+    <meta name="twitter:image" content="media/img/coolnotes_128.png" />
+
+    <link rel="canonical" href="https://dev.kilianbarbier.fr" />
+    <link
+      rel="preload"
+      href="/media/img/AdobeStock_1235151525-1.webp"
+      as="image"
+      fetchpriority="high"
+    />
+
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="/javascript/script-mobile.js" defer></script>
+
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/li-zhang-wtDy3HaivJI-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-c_O4jomEvLU-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-DKxRA-4dY9M-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-DX7pT_guAyE-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-F0LtAt5JTmE-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-PGdW_bHDbpI-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-PSPVCSnFT8k-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-S1t_emhtzI8-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-seA-FPPXL-M-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-SJZ_KGNs4sA-unsplash.webp"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="/media/img/bg/webp/big/milad-fakurian-xUtskxO_-CQ-unsplash.webp"
+      as="image"
+    />
+    <link rel="preconnect" href="https://rsms.me/" />
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <link rel="icon" href="/media/img/coolnotes_128.png" type="image/png" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <header role="banner">
+      <nav role="navigation" aria-label="Menu principal">
+        <button
+          id="downloadBtn"
+          class="download-btn"
+          aria-label="Télécharger le texte"
+        >
+          Télécharger
+        </button>
+        <button
+          id="themeToggleBtn"
+          class="theme-toggle-btn"
+          aria-label="Changer de thème"
+        >
+          Changer de thème
+        </button>
+      </nav>
+    </header>
+
+    <main role="main">
+      <div class="container" style="position: relative">
+        <div class="content">
+          <div class="center-div">
+            <textarea class="textarea"></textarea>
+          </div>
+        </div>
+      </div>
+      <span
+        style="
+          display: block;
+          text-align: center;
+          margin-top: 20px;
+          font-size: 12px;
+          color: #888;
+        "
+      >
+        Images d'arrière-plan par
+        <a
+          href="https://unsplash.com/@sunx"
+          style="
+            color: #888;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+          "
+          target="_blank"
+          rel="noopener"
+          >Li Zhang</a
+        >
+        &
+        <a
+          href="https://unsplash.com/@fakurian"
+          style="
+            color: #888;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+          "
+          target="_blank"
+          rel="noopener"
+          >Milad Fakurian</a
+        >
+        sur Unsplash
+      </span>
+    </main>
+
+    <aside
+      id="sidePanel"
+      class="sp-styling"
+      role="complementary"
+      aria-label="Options d'édition"
+    >
+      <div class="user-panel">
+        <h2>Ratio d'aspect</h2>
+        <ul>
+          <li id="btn-postinsta" onclick="applyAspectRatio(1080, 1080)">
+            Publication Instagram (1080x1080)
+          </li>
+          <li id="btn-storyinsta" onclick="applyAspectRatio(1080, 1920)">
+            Story Instagram (1080x1920)
+          </li>
+          <li id="btn-postfb" onclick="applyAspectRatio(1200, 630)">
+            Publication Facebook (1200x630)
+          </li>
+          <li id="btn-coverfb" onclick="applyAspectRatio(820, 312)">
+            Couverture Facebook (820x312)
+          </li>
+          <li id="btn-posttwitter" onclick="applyAspectRatio(1200, 675)">
+            Publication Twitter (1200x675)
+          </li>
+          <li id="btn-headertwitter" onclick="applyAspectRatio(1500, 500)">
+            En-tête Twitter (1500x500)
+          </li>
+          <li id="btn-postlinkedin" onclick="applyAspectRatio(1200, 627)">
+            Publication LinkedIn (1200x627)
+          </li>
+          <li id="btn-coverlinkedin" onclick="applyAspectRatio(1584, 396)">
+            Couverture LinkedIn (1584x396)
+          </li>
+          <li id="btn-thumbnailyt" onclick="applyAspectRatio(1280, 720)">
+            Miniature YouTube (1280x720)
+          </li>
+          <li id="btn-channelyt" onclick="applyAspectRatio(2560, 1440)">
+            Bannière chaîne YouTube (2560x1440)
+          </li>
+        </ul>
+        <hr style="border: 1px solid #3f3f4f; margin: 10px" />
+
+        <div>
+          <label for="paddingSlider">Marge intérieure (Padding) :</label>
+          <input
+            type="range"
+            id="paddingSlider"
+            min="0"
+            max="200"
+            value="60"
+            step="1"
+          />
+        </div>
+
+        <div>
+          <label for="fontWeightSlider">Épaisseur de la police :</label>
+          <input
+            type="range"
+            id="fontWeightSlider"
+            min="100"
+            max="900"
+            value="400"
+            step="100"
+          />
+        </div>
+        <div>
+          <label for="fontSizeSlider">Taille de la police :</label>
+          <input
+            type="range"
+            id="fontSizeSlider"
+            min="10"
+            max="72"
+            value="16"
+            step="1"
+          />
+        </div>
+
+        <hr style="border: 1px solid #3f3f4f; margin: 10px" />
+        <h2>Arrière-plans</h2>
+        <div class="wrapper">
+          <div class="thumbnail-container">
+            <label
+              for="bgUploadInput"
+              class="bg-thumbnail"
+              style="
+                background-color: #777777 !important;
+                border: 2px solid #fff;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                position: relative;
+              "
+            >
+              <img
+                src="https://img.icons8.com/fluency-systems-regular/50/upload--v1.png"
+                alt="Icône de téléchargement"
+                style="
+                  transform: scale(0.7);
+                  filter: invert(1);
+                  transition: opacity 0.3s;
+                "
+              />
+              <span
+                class="upload-text"
+                style="
+                  position: absolute;
+                  opacity: 0;
+                  transition: opacity 0.3s;
+                  color: white;
+                  font-family: 'Inter', sans-serif;
+                  font-weight: 900;
+                  font-weight: bold;
+                "
+                >Importe<br />le tien</span
+              >
+            </label>
+            <input
+              type="file"
+              id="bgUploadInput"
+              accept="image/*"
+              style="display: none"
+            />
+          </div>
+          <script>
+            document
+              .querySelector(".bg-thumbnail")
+              .addEventListener("mouseover", function () {
+                this.querySelector("img").style.opacity = "0";
+                this.querySelector(".upload-text").style.opacity = "1";
+              });
+            document
+              .querySelector(".bg-thumbnail")
+              .addEventListener("mouseout", function () {
+                this.querySelector("img").style.opacity = "1";
+                this.querySelector(".upload-text").style.opacity = "0";
+              });
+          </script>
+          <div class="thumbnail-container">
+            <img
+              id="bg1"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/li-zhang-wtDy3HaivJI-unsplash.webp"
+              onclick="applyBackground('bg1')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg2"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-c_O4jomEvLU-unsplash.webp"
+              onclick="applyBackground('bg2')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg3"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-DKxRA-4dY9M-unsplash.webp"
+              onclick="applyBackground('bg3')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg4"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-DX7pT_guAyE-unsplash.webp"
+              onclick="applyBackground('bg4')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg5"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-F0LtAt5JTmE-unsplash.webp"
+              onclick="applyBackground('bg5')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg6"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-PGdW_bHDbpI-unsplash.webp"
+              onclick="applyBackground('bg6')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg7"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-PSPVCSnFT8k-unsplash.webp"
+              onclick="applyBackground('bg7')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg8"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-S1t_emhtzI8-unsplash.webp"
+              onclick="applyBackground('bg8')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg9"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-seA-FPPXL-M-unsplash.webp"
+              onclick="applyBackground('bg9')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg10"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-SJZ_KGNs4sA-unsplash.webp"
+              onclick="applyBackground('bg10')"
+            />
+          </div>
+          <div class="thumbnail-container">
+            <img
+              id="bg11"
+              class="bg-thumbnail"
+              src="/media/img/bg/webp/big/milad-fakurian-xUtskxO_-CQ-unsplash.webp"
+              onclick="applyBackground('bg11')"
+            />
+          </div>
+        </div>
+      </div>
+    </aside>
+    <button
+      class="shrink-btn normal-shrink-btn"
+      onclick="togglePanel()"
+      style="
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%) rotate(-90deg);
+        right: 253px;
+      "
+    >
+      <img
+        id="toggleIcon"
+        style="
+          filter: invert(1);
+          transform: scale(0.3) rotate(0deg);
+          object-fit: fill;
+        "
+        src="https://img.icons8.com/ios/50/000000/expand-arrow.png"
+      />
+    </button>
+
+    <div class="overlay-backdrop"></div>
+    <div id="overlay">
+      <img
+        src="https://img.icons8.com/sf-regular/96/close-window.png"
+        class="close-btn"
+        onclick="closeOverlay()"
+        alt="close-window"
+      />
+      <div id="overlay-page1">
+        <h1 class="invert-text">
+          Bienvenue à bord,<br />merci d'avoir choisi CoolNotes !
+        </h1>
+        <div class="laius">
+          <p class="">
+            Vous pouvez maintenant créer de magnifiques notes et les télécharger<br>
+            en tant qu'images pour les partager sur vos réseaux !
+          </p>
+
+          <p class="">
+            Ceci est un projet personnel, il n'est donc peut-être pas parfait
+            car je travaille encore à l'améliorer.<br />Il est sous licence
+            <a
+              href="https://unlicense.org/#the-unlicense"
+              target="_blank"
+              class="no-color-link-in-laius"
+              rel="noopener"
+              >The Unlicense</a
+            >, alors n'hésitez pas à le forker sur
+            <a
+              href="github.com/kilianbarbier/coolnotes"
+              target="_blank"
+              class="no-color-link-in-laius"
+              rel="noopener"
+              >GitHub</a
+            >
+            si vous souhaitez contribuer. <br />Et bien sûr, si vous l'avez
+            aimé, vous lui attribuer une étoile, cela signifierait beaucoup pour
+            moi. <br /><br />Si vous avez des commentaires ou des suggestions,
+            n'hésitez pas à me contacter sur
+            <a
+              href="https://instagram.com/kilianb_pictures"
+              target="_blank"
+              class="no-color-link-in-laius"
+              rel="noopener"
+              >Instagram</a
+            >.
+          </p>
+          <p class="">
+            J'espère que vous apprécierez votre vol avec CoolNotes.<br />
+            — Kilian
+          </p>
+        </div>
+        <div class="overlay-footer">
+          <style>
+            .overlay-footer-content {
+              display: flex;
+              margin-top: 10px;
+              justify-content: center;
+              width: fit-content;
+              align-items: center;
+              gap: 10px;
+            }
+            .social-links img {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transition: filter 0.3s ease-in-out;
+              width: 30px;
+            }
+            .social-links:hover {
+              filter: invert(1);
+              transition: filter 0.3s ease-in-out;
+            }
+          </style>
+          <div class="overlay-footer-content">
+            <h3 class="invert-text">Retrouvez-moi sur :</h3>
+            <a
+              class="social-links"
+              href="https://instagram.com/kilianb_pictures"
+              target="_blank"
+              rel="noopener"
+            >
+              <img
+                src="https://img.icons8.com/material-outlined/96/instagram-new--v1.png"
+                alt="Instagram"
+              />
+            </a>
+            <a
+              class="social-links"
+              href="http://github.com/kilianbarbier"
+              target="_blank"
+              rel="noopener"
+            >
+              <img
+                src="https://img.icons8.com/material-outlined/96/github.png"
+                alt="GitHub"
+              />
+            </a>
+            <a
+              class="social-links"
+              href="https://linkedin.com/in/kibarbier"
+              target="_blank"
+              rel="noopener"
+            >
+              <img
+                src="https://img.icons8.com/material-outlined/96/linkedin.png"
+                alt="LinkedIn"
+              />
+            </a>
+          </div>
+          <label class="dont-show-again">
+            <span class="invert-text">Ne plus afficher ce message</span>
+            <input type="checkbox" onclick="dontShowAgain()" />
+          </label>
+        </div>
+      </div>
+      <div id="overlay-page2" style="display: none">
+        <h1 class="hep-hep-hep colored-blue">Hep hep hep !</h1>
+        <h3 class="colored-blue">
+          Tu veux bien lire ce que j'ai écris ?<br />
+          Ça m'a pris du temps à coder et j'y ait mis mon coeur <span>😢</span>
+        </h3>
+        <button class="go-back" onclick="showPageOne()">
+          D'accord... Je vais le lire ✨
+        </button>
+        <script>
+          function showPageOne() {
+            document.getElementById("overlay-page1").style.display = "block";
+            document.getElementById("overlay-page2").style.display = "none";
+          }
+        </script>
+      </div>
+    </div>
+  </body>
+</html>

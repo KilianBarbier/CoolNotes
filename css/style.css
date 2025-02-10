@@ -584,8 +584,13 @@ body.dark-theme {
     padding-inline: 10px;
   }
 
-  .social-links img {
-    width: 24px;
+  .social-links  {
+    transition: all 0.3s ease-in-out;
+    filter: none;
+  }
+  .social-links:hover {
+    filter: invert(1);
+    transition: all 0.3s ease-in-out;
   }
 
   [style*="background-color: rgba(255, 255, 255, 0.432)"] {
