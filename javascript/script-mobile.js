@@ -160,6 +160,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   handleResize();
   initializeMobileLayout();
+
+  // Single consolidated wiggle functionality
+  document.addEventListener('click', function(event) {
+    const overlay = document.getElementById('overlay');
+    const backdrop = document.querySelector('.overlay-backdrop');
+    const closeBtn = document.querySelector('.close-btn');
+    
+    if (backdrop && 
+        closeBtn && 
+        overlay && 
+        overlay.style.display === 'block' && 
+        event.target === backdrop) {
+        
+        closeBtn.classList.remove('wiggle');
+        void closeBtn.offsetWidth; // Force reflow
+        closeBtn.classList.add('wiggle');
+    }
+  });
+
+  document.body.classList.add("dark-theme");
 });
 
 window.addEventListener('resize', initializeMobileLayout);
@@ -350,60 +370,4 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.body.classList.add("dark-theme");
-
-  // Add wiggle functionality
-  document.addEventListener('click', function(event) {
-    const overlay = document.getElementById('overlay');
-    const backdrop = document.querySelector('.overlay-backdrop');
-    const closeBtn = document.querySelector('.close-btn');
-    
-    if (backdrop && closeBtn && overlay && 
-        overlay.style.display === 'block' && 
-        event.target === backdrop) {
-        
-        closeBtn.classList.remove('wiggle');
-        void closeBtn.offsetWidth; // Force reflow
-        closeBtn.classList.add('wiggle');
-    }
-  });
-
-  // Single click event listener for wiggle
-  document.addEventListener('click', function(event) {
-    const overlay = document.getElementById('overlay');
-    const backdrop = document.querySelector('.overlay-backdrop');
-    const closeBtn = document.querySelector('.close-btn');
-    
-    if (backdrop && 
-        closeBtn && 
-        overlay && 
-        overlay.style.display !== 'none' && 
-        event.target === backdrop) {
-        
-        console.log('Wiggle animation triggered');
-        closeBtn.classList.remove('wiggle');
-        void closeBtn.offsetWidth;
-        closeBtn.classList.add('wiggle');
-    }
-  });
-});
-
-document.addEventListener('click', function(event) {
-  const overlay = document.getElementById('overlay');
-  const backdrop = document.querySelector('.overlay-backdrop');
-  const closeBtn = document.querySelector('.close-btn');
-  
-  console.log('Click detected');
-  console.log('Overlay display:', overlay?.style.display);
-  console.log('Clicked element:', event.target);
-  console.log('Is backdrop?:', event.target === backdrop);
-  
-  if (backdrop && closeBtn && overlay && 
-      overlay.style.display === 'block' && 
-      event.target === backdrop) {
-      
-      console.log('Wiggle animation triggered');
-      closeBtn.classList.remove('wiggle');
-      void closeBtn.offsetWidth;
-      closeBtn.classList.add('wiggle');
-  }
 });
