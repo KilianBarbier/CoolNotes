@@ -193,14 +193,19 @@ window.addEventListener('load', function() {
   
   // Update checkbox to match stored state
   const checkbox = document.querySelector('.dont-show-again input[type="checkbox"]');
+  const overlay = document.getElementById('overlay');
+  const backdrop = document.querySelector('.overlay-backdrop');
+  
   if (checkbox) {
     checkbox.checked = dontShow;
   }
   
-  // If user previously chose not to show, don't show overlay
+  // If user previously chose not to show, hide overlay
   if (dontShow) {
     console.log('Overlay disabled by user preference');
     showOverlayEnabled = false;
+    overlay.style.display = 'none';
+    backdrop.style.display = 'none';
     return;
   }
   
