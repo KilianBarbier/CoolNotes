@@ -13,17 +13,8 @@
 ---
 
 ## About
-This project is a minimalist and modern text editor designed to make sharing your thoughts with friends seamless and enjoyable. The goal is to provide a clean, intuitive interface for writing and sharing text content, whether for quick notes, collaborative work, or casual conversation.
-
----
-
-## Planned_features
-- **Responsive Design:** Fully responsive interface for desktop and mobile. // 
-- **User Panel:** Easy-to-access user panel for account and sharing settings.
-- **Static Background:** A sleek, static background for aesthetic appeal.
-- **Text Editing Tools:** Basic formatting options like bold, italic, and underlined text.
-- **Sharing Options:** Share your text with friends via unique links or export features.
-- **Light/Dark Mode:** Toggle between light and dark themes.
+This project is a minimalist and modern text editor designed to make sharing your thoughts with friends seamless and enjoyable.
+The goal is to provide a clean, intuitive interface for writing and sharing text content, whether for quick notes, collaborative work, or casual conversation.
 
 ---
 
