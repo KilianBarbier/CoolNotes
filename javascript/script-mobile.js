@@ -179,28 +179,31 @@ let showTooFastMessage = true;  // Add this line - Variable for "too fast" messa
 // Update the dontShowAgain function
 function dontShowAgain() {
   const checkbox = document.querySelector('.dont-show-again input[type="checkbox"]');
-  if (checkbox && checkbox.checked) {
-    // Only save the preference for future visits
-    localStorage.setItem('showOverlay', 'false');
-    localStorage.setItem('showTooFastMessage', 'false');
-    // Don't change current session's variables
+  
+  // When checkbox is checked, we DONT want to show the overlay again
+  if (checkbox.checked) {
+    localStorage.setItem('showOverlay', 'false'); // Don't show again
+    console.log('Overlay disabled for future visits');
   } else {
-    localStorage.removeItem('showOverlay');
-    localStorage.removeItem('showTooFastMessage');
+    localStorage.setItem('showOverlay', 'true'); // Show next time
+    console.log('Overlay enabled for future visits');
   }
+  
+  console.log('Checkbox state:', checkbox.checked);
+  console.log('Stored value:', localStorage.getItem('showOverlay'));
 }
 
-// Remove preloadAndCacheOverlayBackground and loadOverlayBackground functions
-
-// Modify the load event listener
+// Update load event listener
 window.addEventListener('load', function() {
-  overlayOpenTime = Date.now();
-  showOverlayEnabled = localStorage.getItem('showOverlay') !== 'false';
-  showTooFastMessage = localStorage.getItem('showTooFastMessage') !== 'false';  // Add this line
+  // Get the stored preference - default to showing overlay if no preference
+  const shouldShowOverlay = localStorage.getItem('showOverlay') !== 'false';
+  console.log('Should show overlay:', shouldShowOverlay);
+  
+  showOverlayEnabled = shouldShowOverlay;
   
   if (showOverlayEnabled) {
     showOverlay();
-    overlayOpenTime = Date.now(); // Reset timer when overlay is actually shown
+    overlayOpenTime = Date.now();
   }
 });
 
@@ -227,39 +230,38 @@ function showOverlay() {
 }
 
 function closeOverlay() {
-  const timeSpent = Date.now() - overlayOpenTime;
+  const currentTime = Date.now();
+  const timeSpent = currentTime - overlayOpenTime;
+  
+  console.log('Close button clicked');
+  console.log('Current time:', currentTime);
+  console.log('Open time:', overlayOpenTime);
+  console.log('Time spent:', timeSpent);
+  
   const overlay = document.getElementById('overlay');
   const backdrop = document.querySelector('.overlay-backdrop');
   const page1 = document.getElementById('overlay-page1');
   const page2 = document.getElementById('overlay-page2');
   
-  console.log('=== Close Overlay Debug ===');
-  console.log('Time spent:', timeSpent);
-  console.log('MIN_READ_TIME:', MIN_READ_TIME);
-  console.log('showTooFastMessage:', showTooFastMessage);
-  console.log('Page 1 computed style:', window.getComputedStyle(page1).display);
-  console.log('Page 2 computed style:', window.getComputedStyle(page2).display);
+  // If already on page 2, just close
+  if (page2.style.display === 'block') {
+    overlay.style.display = 'none';
+    backdrop.style.display = 'none';
+    return;
+  }
   
-  // If trying to close too fast and on page 1
-  if (timeSpent < MIN_READ_TIME && 
-      window.getComputedStyle(page1).display !== 'none' && 
-      window.getComputedStyle(page2).display === 'none') {
-    console.log('Showing too fast message - switching to page 2');
+  // If trying to close too fast on page 1
+  if (timeSpent < MIN_READ_TIME) {
+    console.log('Showing too fast message');
     page1.style.display = 'none';
     page2.style.display = 'block';
     overlayOpenTime = Date.now(); // Reset timer for page 2
     return;
   }
   
-  // If on page 2 or enough time has passed
-  if (window.getComputedStyle(page2).display === 'block' || timeSpent >= MIN_READ_TIME) {
-    console.log('Closing overlay');
-    overlay.style.display = 'none';
-    backdrop.style.display = 'none';
-    return;
-  }
-  
-  console.log('Condition not met - keeping overlay open');
+  // Normal close
+  overlay.style.display = 'none';
+  backdrop.style.display = 'none';
 }
 
 function showPageOne() {
