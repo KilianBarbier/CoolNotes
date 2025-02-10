@@ -814,20 +814,16 @@ body.dark-theme {
   color: #013a8d !important;
 }
 .go-back{
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 8px;
   justify-content: center;
-  max-width: 88%;
-  width: max-content;
   background: #013a8d;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 20px;
   font-family: 'Inter', sans-serif;
   transition: all 0.3s ease;
   border: 2px solid #013a8d;
   color: #fdc677;
+  font-weight: 500;
+  font-size: unset;
 }

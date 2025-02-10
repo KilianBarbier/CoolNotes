@@ -74,11 +74,21 @@ function applyBackground(id) {
 function handleBackgroundUpload(event) {
   const container = document.querySelector('.container');
   const file = event.target.files[0];
+  
+  // Check if file is an image
   if (file) {
+    if (!file.type.match('image.*')) {
+      alert('Please upload an image file (jpg, png, etc.)');
+      return;
+    }
+    
     const reader = new FileReader();
     reader.onload = function(e) {
       const background = `url(${e.target.result}) no-repeat center / cover`;
       container.style.background = background;
+    };
+    reader.onerror = function() {
+      alert('Error reading file');
     };
     reader.readAsDataURL(file);
   }
@@ -110,76 +120,53 @@ window.addEventListener('resize', handleResize);
 
 applyAspectRatio(3, 2);
 
-document.addEventListener("DOMContentLoaded", function () {
+const DEFAULT_FONT_SIZE = '16';
+const DEFAULT_FONT_WEIGHT = '400';
+const DEFAULT_PADDING = '60';
+
+function initializeDefaults() {
   const textarea = document.querySelector('.textarea');
+  // Set initial font styles
+  textarea.style.fontSize = `${DEFAULT_FONT_SIZE}px`;
+  textarea.style.fontWeight = DEFAULT_FONT_WEIGHT;
+  
+  // Set initial slider values
+  document.getElementById('fontSizeSlider').value = DEFAULT_FONT_SIZE;
+  document.getElementById('fontWeightSlider').value = DEFAULT_FONT_WEIGHT;
+  document.getElementById('paddingSlider').value = DEFAULT_PADDING;
+}
 
-  function autoResize(textarea) {
-    textarea.style.height = '100%';
-  }
+function initializeTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'dark-theme';
+  document.body.classList.add(savedTheme);
+}
 
-  textarea.addEventListener('input', function () {
-    autoResize(textarea);
-  });
+function toggleTheme() {
+  document.body.classList.toggle('dark-theme');
+  document.body.classList.toggle('light-theme');
+  const currentTheme = document.body.classList.contains('dark-theme') ? 'dark-theme' : 'light-theme';
+  localStorage.setItem('theme', currentTheme);
+}
 
-  autoResize(textarea);
-
-  if (window.innerWidth > 480) {
-    textarea.focus();
-  }
-
-  document.addEventListener('click', function (event) {
-    if (event.target !== textarea && window.innerWidth > 480) {
-      textarea.focus();
-    }
-  });
-
-  const paddingSlider = document.getElementById("paddingSlider");
-  if (paddingSlider) {
-    paddingSlider.addEventListener("input", function () {
-      const container = document.querySelector(".container");
-      const aspectRatio = container.style.getPropertyValue('--aspect-ratio').split('/');
-      const width = parseFloat(aspectRatio[0]);
-      const height = parseFloat(aspectRatio[1]);
-      const val = parseInt(this.value);
-
-      updatePadding(container, val, width, height);
-    });
-  }
-
-  const shrinkBtn = document.querySelector('.shrink-btn');
-  if (isBrowser('firefox')) {
-    shrinkBtn.style.right = '249px';
-  } else {
-    shrinkBtn.style.right = '253px';
-  }
-
-  const bgUploadInput = document.getElementById("bgUploadInput");
-  if (bgUploadInput) {
-    bgUploadInput.addEventListener("change", handleBackgroundUpload);
-  }
-
+document.addEventListener("DOMContentLoaded", function () {
+  initializeDefaults();
+  initializeTheme();
+  // Text area handling
+  const textarea = document.querySelector('.textarea');
+  initializeTextArea(textarea);
+  
+  // Sliders initialization
+  initializeSliders();
+  
+  // Button handlers
+  initializeButtons();
+  
+  // Layout initialization
   handleResize();
   initializeMobileLayout();
-
-  // Single consolidated wiggle functionality
-  document.addEventListener('click', function(event) {
-    const overlay = document.getElementById('overlay');
-    const backdrop = document.querySelector('.overlay-backdrop');
-    const closeBtn = document.querySelector('.close-btn');
-    
-    if (backdrop && 
-        closeBtn && 
-        overlay && 
-        overlay.style.display === 'block' && 
-        event.target === backdrop) {
-        
-        closeBtn.classList.remove('wiggle');
-        void closeBtn.offsetWidth; // Force reflow
-        closeBtn.classList.add('wiggle');
-    }
-  });
-
-  document.body.classList.add("dark-theme");
+  
+  // Single wiggle handler
+  initializeWiggleHandler();
 });
 
 window.addEventListener('resize', initializeMobileLayout);
@@ -215,19 +202,32 @@ window.addEventListener('load', function() {
   
   if (showOverlayEnabled) {
     showOverlay();
+    overlayOpenTime = Date.now(); // Reset timer when overlay is actually shown
   }
 });
 
 function showOverlay() {
-  if (!showOverlayEnabled) return;  // Skip if disabled
+  if (!showOverlayEnabled) return;
+  
+  console.log('=== Show Overlay Debug ===');
+  console.log('showOverlayEnabled:', showOverlayEnabled);
+  console.log('showTooFastMessage:', showTooFastMessage);
   
   const overlay = document.getElementById('overlay');
   const backdrop = document.querySelector('.overlay-backdrop');
+  const page1 = document.getElementById('overlay-page1');
+  const page2 = document.getElementById('overlay-page2');
+  
   overlay.style.display = 'block';
   backdrop.style.display = 'block';
+  page1.style.display = 'block';
+  page2.style.display = 'none';
+  
+  overlayOpenTime = Date.now();
+  console.log('Set overlay open time:', overlayOpenTime);
+  console.log('========================');
 }
 
-// Modify the closeOverlay function
 function closeOverlay() {
   const timeSpent = Date.now() - overlayOpenTime;
   const overlay = document.getElementById('overlay');
@@ -235,139 +235,224 @@ function closeOverlay() {
   const page1 = document.getElementById('overlay-page1');
   const page2 = document.getElementById('overlay-page2');
   
-  // Check if we're on page 2
-  if (page2.style.display === 'block') {
-    // Close immediately if on page 2
+  console.log('=== Close Overlay Debug ===');
+  console.log('Time spent:', timeSpent);
+  console.log('MIN_READ_TIME:', MIN_READ_TIME);
+  console.log('showTooFastMessage:', showTooFastMessage);
+  console.log('Page 1 computed style:', window.getComputedStyle(page1).display);
+  console.log('Page 2 computed style:', window.getComputedStyle(page2).display);
+  
+  // If trying to close too fast and on page 1
+  if (timeSpent < MIN_READ_TIME && 
+      window.getComputedStyle(page1).display !== 'none' && 
+      window.getComputedStyle(page2).display === 'none') {
+    console.log('Showing too fast message - switching to page 2');
+    page1.style.display = 'none';
+    page2.style.display = 'block';
+    overlayOpenTime = Date.now(); // Reset timer for page 2
+    return;
+  }
+  
+  // If on page 2 or enough time has passed
+  if (window.getComputedStyle(page2).display === 'block' || timeSpent >= MIN_READ_TIME) {
+    console.log('Closing overlay');
     overlay.style.display = 'none';
     backdrop.style.display = 'none';
     return;
   }
   
-  if (timeSpent < MIN_READ_TIME && showTooFastMessage) {
-    // Show "too fast" message
-    page1.style.display = 'none';
-    page2.style.display = 'block';
-    return; // Prevent close
-  }
-  
-  // Normal close if enough time has passed
-  overlay.style.display = 'none';
-  backdrop.style.display = 'none';
+  console.log('Condition not met - keeping overlay open');
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const downloadBtn = document.getElementById("downloadBtn");
-  const container = document.querySelector(".container");
-  const textarea = document.querySelector(".textarea");
-  const themeToggleBtn = document.getElementById("themeToggleBtn");
+function showPageOne() {
+  const page1 = document.getElementById('overlay-page1');
+  const page2 = document.getElementById('overlay-page2');
+  page1.style.display = 'block';
+  page2.style.display = 'none';
+  overlayOpenTime = Date.now(); // Reset timer when returning to page 1
+}
 
+// Helper functions
+function initializeTextArea(textarea) {
+  function autoResize(textarea) {
+    textarea.style.height = '100%';
+  }
+  
+  textarea.addEventListener('input', () => autoResize(textarea));
+  autoResize(textarea);
+  
+  if (window.innerWidth > 480) {
+    textarea.focus();
+  }
+  
+  document.addEventListener('click', function (event) {
+    if (event.target !== textarea && window.innerWidth > 480) {
+      textarea.focus();
+    }
+  });
+}
+
+function initializeSliders() {
   const fontWeightSlider = document.getElementById("fontWeightSlider");
   const fontSizeSlider = document.getElementById("fontSizeSlider");
+  const paddingSlider = document.getElementById("paddingSlider");
+  const textarea = document.querySelector('.textarea');
+  
+  if (fontWeightSlider) {
+    fontWeightSlider.addEventListener("input", () => {
+      textarea.style.fontWeight = fontWeightSlider.value;
+    });
+  }
+  
+  if (fontSizeSlider) {
+    fontSizeSlider.addEventListener("input", () => {
+      textarea.style.fontSize = fontSizeSlider.value + "px";
+    });
+  }
+  
+  if (paddingSlider) {
+    paddingSlider.addEventListener("input", function () {
+      const container = document.querySelector(".container");
+      const aspectRatio = container.style.getPropertyValue('--aspect-ratio').split('/');
+      const width = parseFloat(aspectRatio[0]);
+      const height = parseFloat(aspectRatio[1]);
+      const val = parseInt(this.value);
+      
+      updatePadding(container, val, width, height);
+    });
+  }
+}
 
-  fontWeightSlider.addEventListener("input", function () {
-    textarea.style.fontWeight = fontWeightSlider.value;
+function initializeButtons() {
+  const downloadBtn = document.getElementById("downloadBtn");
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
+  const shrinkBtn = document.querySelector('.shrink-btn');
+  const bgUploadInput = document.getElementById("bgUploadInput");
+  
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", handleDownload);
+  }
+  
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", toggleTheme);
+  }
+  
+  if (shrinkBtn) {
+    shrinkBtn.style.right = isBrowser('firefox') ? '249px' : '253px';
+  }
+  
+  if (bgUploadInput) {
+    bgUploadInput.addEventListener("change", handleBackgroundUpload);
+  }
+}
+
+function initializeWiggleHandler() {
+  document.addEventListener('click', function(event) {
+    const overlay = document.getElementById('overlay');
+    const backdrop = document.querySelector('.overlay-backdrop');
+    const closeBtn = document.querySelector('.close-btn');
+    
+    if (backdrop && closeBtn && overlay && 
+        overlay.style.display === 'block' && 
+        event.target === backdrop) {
+        
+        closeBtn.classList.remove('wiggle');
+        void closeBtn.offsetWidth;
+        closeBtn.classList.add('wiggle');
+    }
   });
+}
 
-  fontSizeSlider.addEventListener("input", function () {
-    textarea.style.fontSize = fontSizeSlider.value + "px";
-  });
+function handleDownload() {
+  const container = document.querySelector(".container");
+  const textarea = document.querySelector(".textarea");
+  const tempDiv = document.createElement("div");
+  const innerDiv = document.createElement("div");
+  const preElement = document.createElement("pre");
+  preElement.textContent = textarea.value;
+  const currentFontSize = parseInt(textarea.style.fontSize);
+  const downloadFontSize = window.innerWidth <= 480 ? 
+    Math.max(currentFontSize - 4, 1) : // Réduction de 2pt avec minimum 1pt
+    currentFontSize;
 
-  downloadBtn.addEventListener("click", function () {
-    const tempDiv = document.createElement("div");
-    const innerDiv = document.createElement("div");
-    const preElement = document.createElement("pre");
-    preElement.textContent = textarea.value;
-    const currentFontSize = parseInt(textarea.style.fontSize);
-    const downloadFontSize = window.innerWidth <= 480 ? 
-      Math.max(currentFontSize - 4, 1) : // Réduction de 2pt avec minimum 1pt
-      currentFontSize;
+  preElement.setAttribute(
+    "style",
+    `
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      white-space: pre-wrap;
+      line-height: normal !important;
+      word-wrap: break-word;
+      background-color: ${container.style.backgroundColor};
+      font-weight: ${textarea.style.fontWeight};
+      font-size: ${downloadFontSize}px;
+      color: ${textarea.style.color};
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      margin-top: -18px;
+    `
+  );
 
-    preElement.setAttribute(
-      "style",
-      `
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-        white-space: pre-wrap;
-        line-height: normal !important;
-        word-wrap: break-word;
-        background-color: ${container.style.backgroundColor};
-        font-weight: ${textarea.style.fontWeight};
-        font-size: ${downloadFontSize}px;
-        color: ${textarea.style.color};
-        margin: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        margin-top: -18px;
-      `
-    );
+  innerDiv.setAttribute(
+    "style",
+    `
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    `
+  );
 
-    innerDiv.setAttribute(
-      "style",
-      `
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-      `
-    );
+  tempDiv.setAttribute(
+    "style",
+    `
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    `
+  );
 
-    tempDiv.setAttribute(
-      "style",
-      `
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      `
-    );
+  innerDiv.appendChild(preElement);
+  tempDiv.appendChild(innerDiv);
 
-    innerDiv.appendChild(preElement);
-    tempDiv.appendChild(innerDiv);
+  textarea.style.display = "none";
+  container.querySelector(".center-div").appendChild(tempDiv);
 
-    textarea.style.display = "none";
-    container.querySelector(".center-div").appendChild(tempDiv);
+  const centerDiv = container.querySelector(".center-div");
+  centerDiv.style.backdropFilter = "blur(10px)";
 
-    const centerDiv = container.querySelector(".center-div");
-    centerDiv.style.backdropFilter = "blur(10px)";
+  html2canvas(container, {
+    backgroundColor: null,
+    scale: 2,
+    useCORS: true,
+    logging: true,
+    windowWidth: document.documentElement.clientWidth,
+    windowHeight: document.documentElement.clientHeight,
+  })
+    .then((canvas) => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "container.png";
+      link.click();
 
-    html2canvas(container, {
-      backgroundColor: null,
-      scale: 2,
-      useCORS: true,
-      logging: true,
-      windowWidth: document.documentElement.clientWidth,
-      windowHeight: document.documentElement.clientHeight,
+      tempDiv.remove();
+      textarea.style.display = "block";
+      centerDiv.style.backdropFilter = "blur(10px)";
     })
-      .then((canvas) => {
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "container.png";
-        link.click();
+    .catch((error) => {
+      console.error("Erreur lors de la capture de l'image :", error);
 
-        tempDiv.remove();
-        textarea.style.display = "block";
-        centerDiv.style.backdropFilter = "blur(10px)";
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la capture de l'image :", error);
-
-        tempDiv.remove();
-        textarea.style.display = "block";
-      });
-  });
-
-  themeToggleBtn.addEventListener("click", function () {
-    document.body.classList.toggle("dark-theme");
-    document.body.classList.toggle("light-theme");
-  });
-
-  document.body.classList.add("dark-theme");
-});
+      tempDiv.remove();
+      textarea.style.display = "block";
+    });
+}
