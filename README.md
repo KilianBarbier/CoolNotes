@@ -1,4 +1,4 @@
-# Sleek Text Editor
+# CoolNotes
 
 **Short Description:** I'm trying to make a sleek text editor so you can share your thoughts with your friends.
 
