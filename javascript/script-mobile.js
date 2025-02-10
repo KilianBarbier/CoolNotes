@@ -179,16 +179,14 @@ let showTooFastMessage = true;  // Add this line - Variable for "too fast" messa
 // Update the dontShowAgain function
 function dontShowAgain() {
   const checkbox = document.querySelector('.dont-show-again input[type="checkbox"]');
-  if (checkbox.checked) {
-    showOverlayEnabled = false;
-    showTooFastMessage = false;  // Add this line
+  if (checkbox && checkbox.checked) {
+    // Only save the preference for future visits
     localStorage.setItem('showOverlay', 'false');
-    localStorage.setItem('showTooFastMessage', 'false');  // Add this line
+    localStorage.setItem('showTooFastMessage', 'false');
+    // Don't change current session's variables
   } else {
-    showOverlayEnabled = true;
-    showTooFastMessage = true;  // Add this line
     localStorage.removeItem('showOverlay');
-    localStorage.removeItem('showTooFastMessage');  // Add this line
+    localStorage.removeItem('showTooFastMessage');
   }
 }
 
