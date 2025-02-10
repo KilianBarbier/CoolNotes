@@ -278,7 +278,7 @@ body {
   border-radius: 5px;
   padding: 10px 20px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 998;
   transition: all 0.3s ease;
 }
 

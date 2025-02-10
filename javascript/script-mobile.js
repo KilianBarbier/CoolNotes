@@ -233,9 +233,8 @@ function closeOverlay() {
   const currentTime = Date.now();
   const timeSpent = currentTime - overlayOpenTime;
   
-  console.log('Close button clicked');
-  console.log('Current time:', currentTime);
-  console.log('Open time:', overlayOpenTime);
+  console.log('Close button clicked (Mobile Check)');
+  console.log('Is Mobile:', window.innerWidth <= 480);
   console.log('Time spent:', timeSpent);
   
   const overlay = document.getElementById('overlay');
@@ -243,8 +242,13 @@ function closeOverlay() {
   const page1 = document.getElementById('overlay-page1');
   const page2 = document.getElementById('overlay-page2');
   
+  // Force display check with getComputedStyle
+  const page2Visible = window.getComputedStyle(page2).display !== 'none';
+  console.log('Page 2 visible:', page2Visible);
+  
   // If already on page 2, just close
-  if (page2.style.display === 'block') {
+  if (page2Visible) {
+    console.log('Closing from page 2');
     overlay.style.display = 'none';
     backdrop.style.display = 'none';
     return;
@@ -252,14 +256,19 @@ function closeOverlay() {
   
   // If trying to close too fast on page 1
   if (timeSpent < MIN_READ_TIME) {
-    console.log('Showing too fast message');
+    console.log('Should show too fast message');
+    // Force display changes
     page1.style.display = 'none';
-    page2.style.display = 'block';
-    overlayOpenTime = Date.now(); // Reset timer for page 2
+    requestAnimationFrame(() => {
+      page2.style.display = 'block';
+      page2.style.opacity = '1';
+    });
+    overlayOpenTime = Date.now();
     return;
   }
   
   // Normal close
+  console.log('Normal close');
   overlay.style.display = 'none';
   backdrop.style.display = 'none';
 }
