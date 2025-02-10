@@ -180,26 +180,23 @@ let showTooFastMessage = true;  // Add this line - Variable for "too fast" messa
 function dontShowAgain() {
   const checkbox = document.querySelector('.dont-show-again input[type="checkbox"]');
   
-  // When checkbox is checked, we DONT want to show the overlay again
-  if (checkbox.checked) {
-    localStorage.setItem('showOverlay', 'false'); // Don't show again
-    console.log('Overlay disabled for future visits');
-  } else {
-    localStorage.setItem('showOverlay', 'true'); // Show next time
-    console.log('Overlay enabled for future visits');
-  }
-  
-  console.log('Checkbox state:', checkbox.checked);
-  console.log('Stored value:', localStorage.getItem('showOverlay'));
+  // Save to localStorage
+  localStorage.setItem('dontShowOverlay', checkbox.checked);
+  console.log('Saved checkbox state:', checkbox.checked);
 }
 
 // Update load event listener
 window.addEventListener('load', function() {
-  // Get the stored preference - default to showing overlay if no preference
-  const shouldShowOverlay = localStorage.getItem('showOverlay') !== 'false';
-  console.log('Should show overlay:', shouldShowOverlay);
+  // Get checkbox state from localStorage (converts to boolean)
+  const dontShow = localStorage.getItem('dontShowOverlay') === 'true';
+  console.log('Retrieved dontShow state:', dontShow);
   
-  showOverlayEnabled = shouldShowOverlay;
+  // Set checkbox state
+  const checkbox = document.querySelector('.dont-show-again input[type="checkbox"]');
+  checkbox.checked = dontShow;
+  
+  // Show overlay unless explicitly disabled
+  showOverlayEnabled = !dontShow;
   
   if (showOverlayEnabled) {
     showOverlay();
