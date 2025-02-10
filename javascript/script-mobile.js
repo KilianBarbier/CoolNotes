@@ -164,16 +164,73 @@ document.addEventListener("DOMContentLoaded", function () {
 
 window.addEventListener('resize', initializeMobileLayout);
 
+let overlayOpenTime;
+const MIN_READ_TIME = 6000; // 6 seconds minimum reading time
+let showOverlayEnabled = true;  // Variable for overlay visibility
+let showTooFastMessage = true;  // Add this line - Variable for "too fast" message
+
+// Update the dontShowAgain function
+function dontShowAgain() {
+  const checkbox = document.querySelector('.dont-show-again input[type="checkbox"]');
+  if (checkbox.checked) {
+    showOverlayEnabled = false;
+    showTooFastMessage = false;  // Add this line
+    localStorage.setItem('showOverlay', 'false');
+    localStorage.setItem('showTooFastMessage', 'false');  // Add this line
+  } else {
+    showOverlayEnabled = true;
+    showTooFastMessage = true;  // Add this line
+    localStorage.removeItem('showOverlay');
+    localStorage.removeItem('showTooFastMessage');  // Add this line
+  }
+}
+
+// Remove preloadAndCacheOverlayBackground and loadOverlayBackground functions
+
+// Modify the load event listener
+window.addEventListener('load', function() {
+  overlayOpenTime = Date.now();
+  showOverlayEnabled = localStorage.getItem('showOverlay') !== 'false';
+  showTooFastMessage = localStorage.getItem('showTooFastMessage') !== 'false';  // Add this line
+  
+  if (showOverlayEnabled) {
+    showOverlay();
+  }
+});
+
 function showOverlay() {
+  if (!showOverlayEnabled) return;  // Skip if disabled
+  
   const overlay = document.getElementById('overlay');
   const backdrop = document.querySelector('.overlay-backdrop');
   overlay.style.display = 'block';
   backdrop.style.display = 'block';
 }
 
+// Modify the closeOverlay function
 function closeOverlay() {
+  const timeSpent = Date.now() - overlayOpenTime;
   const overlay = document.getElementById('overlay');
   const backdrop = document.querySelector('.overlay-backdrop');
+  const page1 = document.getElementById('overlay-page1');
+  const page2 = document.getElementById('overlay-page2');
+  
+  // Check if we're on page 2
+  if (page2.style.display === 'block') {
+    // Close immediately if on page 2
+    overlay.style.display = 'none';
+    backdrop.style.display = 'none';
+    return;
+  }
+  
+  if (timeSpent < MIN_READ_TIME && showTooFastMessage) {
+    // Show "too fast" message
+    page1.style.display = 'none';
+    page2.style.display = 'block';
+    return; // Prevent close
+  }
+  
+  // Normal close if enough time has passed
   overlay.style.display = 'none';
   backdrop.style.display = 'none';
 }

@@ -120,3 +120,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
   handleResize();
 });
+
+let overlayOpenTime;
+const MIN_READ_TIME = 6000; // 6 seconds minimum reading time
+
+window.addEventListener('load', function() {
+  overlayOpenTime = Date.now();
+});
+
+function closeOverlay() {
+  const timeSpent = Date.now() - overlayOpenTime;
+  const overlay = document.getElementById('overlay');
+  const backdrop = document.querySelector('.overlay-backdrop');
+  const page1 = document.getElementById('overlay-page1');
+  const page2 = document.getElementById('overlay-page2');
+  
+  if (timeSpent < MIN_READ_TIME) {
+    // Show "too fast" message
+    page1.style.display = 'none';
+    page2.style.display = 'block';
+    
+    // Auto close after 3 seconds
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      backdrop.style.display = 'none';
+    }, 3000);
+  } else {
+    // Normal close
+    overlay.style.display = 'none';
+    backdrop.style.display = 'none';
+  }
+}
