@@ -187,21 +187,28 @@ function dontShowAgain() {
 
 // Update load event listener
 window.addEventListener('load', function() {
-  // Get checkbox state from localStorage (converts to boolean)
+  // First, check if user previously checked "don't show"
   const dontShow = localStorage.getItem('dontShowOverlay') === 'true';
-  console.log('Retrieved dontShow state:', dontShow);
+  console.log('Stored preference - dontShow:', dontShow);
   
-  // Set checkbox state
+  // Update checkbox to match stored state
   const checkbox = document.querySelector('.dont-show-again input[type="checkbox"]');
-  checkbox.checked = dontShow;
-  
-  // Show overlay unless explicitly disabled
-  showOverlayEnabled = !dontShow;
-  
-  if (showOverlayEnabled) {
-    showOverlay();
-    overlayOpenTime = Date.now();
+  if (checkbox) {
+    checkbox.checked = dontShow;
   }
+  
+  // If user previously chose not to show, don't show overlay
+  if (dontShow) {
+    console.log('Overlay disabled by user preference');
+    showOverlayEnabled = false;
+    return;
+  }
+  
+  // Otherwise, show overlay
+  console.log('Showing overlay');
+  showOverlayEnabled = true;
+  showOverlay();
+  overlayOpenTime = Date.now();
 });
 
 function showOverlay() {
