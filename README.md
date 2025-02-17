@@ -6,7 +6,6 @@
 
 ## Table of Contents
 - [About](#about)
-- [Features](#planned_features)
 - [Technologies](#technologies)
 - [License](#license)
 
