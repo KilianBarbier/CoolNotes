@@ -6,6 +6,20 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
+    <link rel="preconnect" href="https://dev.kilianbarbier.fr/">
+    <script>
+      const userLang = navigator.language.slice(0,2);
+      const urls = {
+        'fr': 'https://dev.kilianbarbier.fr/fr',
+        'en': 'https://dev.kilianbarbier.fr'
+      };
+      const defaultUrl = 'https://dev.kilianbarbier.fr';
+      const url = urls[userLang] ?? defaultUrl;
+      
+      if (window.location.href !== url) {
+        window.location.href = url;
+      }
+    </script>
     <title>CoolNotes - Créez de magnifiques notes sans effort</title>
 
     <meta
