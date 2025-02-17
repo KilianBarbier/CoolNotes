@@ -10,15 +10,17 @@
     <script>
       const userLang = navigator.language.slice(0,2);
       const urls = {
-        'fr': 'https://dev.kilianbarbier.fr/fr',
-        'en': 'https://dev.kilianbarbier.fr'
+        'fr': 'https://dev.kilianbarbier.fr/fr/',
+        'en': 'https://dev.kilianbarbier.fr/en/'
       };
-      const defaultUrl = 'https://dev.kilianbarbier.fr';
+      const defaultUrl = 'https://dev.kilianbarbier.fr/en/';
       const url = urls[userLang] ?? defaultUrl;
       
-      if (window.location.href !== url) {
-        window.location.href = url;
-      }
+      // No redirect, just add the link in the HTML
+      const newLink = document.createElement('a');
+      newLink.href = url;
+      newLink.textContent = "Go to " + userLang + " version";
+      document.body.prepend(newLink);
     </script>
     <title>CoolNotes - Créez de magnifiques notes sans effort</title>
 
