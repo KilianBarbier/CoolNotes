@@ -433,36 +433,40 @@
     <div class="overlay-backdrop"></div>
     <div id="overlay">
       <img
-          src="https://img.icons8.com/sf-regular/96/close-window.png"
-          class="close-btn"
-          onclick="closeOverlay()"
-          alt="close-window"
-        />
+        src="https://img.icons8.com/sf-regular/96/close-window.png"
+        class="close-btn"
+        onclick="closeOverlay()"
+        alt="close-window"
+      />
       <div id="overlay-page1">
-        
         <h1 class="invert-text">
           Welcome on board,<br />thanks for choosing CoolNotes !
         </h1>
         <div class="laius">
           <p class="">
             You can now create beautiful notes and download them as images.
-            <br />You can also switch between light and dark themes.
           </p>
 
           <p class="">
-            This is a personal project, so it may not be perfect as I'm still
-            working on improving it. <br />It's under The Unlicense, so feel
-            free to fork it on
+            This is a personal project, so it may not be perfect, if you see any
+            bug feel free to
+            <a href="https://github.com/KilianBarbier/CoolNotes/issues"
+              >open an issue.</a
+            >
+            <br />The project is under personalized license.<br /><a
+              href="https://github.com/KilianBarbier/CoolNotes?tab=License-1-ov-file"
+              class="no-color-link-in-laius"
+              >Consulter la licence →</a
+            ><br />
+            <br />If you like the project, you can give it a star on
             <a
-              href="github.com/kilianbarbier/coolnotes"
+              href="https://github.com/kilianbarbier/coolnotes"
               target="_blank"
               class="no-color-link-in-laius"
               rel="noopener"
               >GitHub</a
-            >
-            if you want to contribute. <br />And of course if you loved it, you
-            can star it, it would mean a lot to me. <br /><br />If you have any
-            feedback or suggestion, feel free to reach out to me on
+            >, it would mean a lot to me.<br /><br />If you have any feedback or
+            suggestion, feel free to reach out to me on
             <a
               href="https://instagram.com/kilianb_pictures"
               target="_blank"
@@ -546,24 +550,25 @@
           </div>
           <label class="dont-show-again">
             <span class="invert-text">Don't show this message again</span>
-            <input type="checkbox" onclick="dontShowAgain()">
+            <input type="checkbox" onclick="dontShowAgain()" />
           </label>
         </div>
       </div>
       <div id="overlay-page2" style="display: none">
         <h1 class="hep-hep-hep colored-blue">Hep hep hep!</h1>
         <h3 class="colored-blue">
-          You closed that overlay too fast, didn't you?<br>
+          You closed that overlay too fast, didn't you?<br />
           It took me time to write it, you know <span>😢</span>
         </h3>
-        <button class="go-back" onclick="showPageOne()">Okay... I'll read it ✨</button>
+        <button class="go-back" onclick="showPageOne()">
+          Okay... I'll read it ✨
+        </button>
         <script>
           function showPageOne() {
-            document.getElementById('overlay-page1').style.display = 'block';
-            document.getElementById('overlay-page2').style.display = 'none';
+            document.getElementById("overlay-page1").style.display = "block";
+            document.getElementById("overlay-page2").style.display = "none";
           }
         </script>
-
       </div>
     </div>
   </body>
