@@ -7,6 +7,9 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <link rel="preconnect" href="https://dev.kilianbarbier.fr/fr">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Cormorant+Garamond:wght@300..700&family=Dancing+Script:wght@400..700&family=Fira+Code:wght@300..700&family=JetBrains+Mono:wght@100..800&family=Montserrat:wght@100..900&family=Open+Sans:wght@300..800&family=Playfair+Display:wght@400..900&family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
     <script>
       const userLang = navigator.language.slice(0,2);
       const urls = {
@@ -129,6 +132,48 @@
     <link rel="icon" href="/media/img/coolnotes_128.png" type="image/png" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+      function handleTextareaFocus() {
+        const textarea = document.querySelector('.textarea');
+        const fontSelect = document.getElementById('fontFamilySelect');
+      
+        // Focus si on clique sur la textarea
+        document.addEventListener('click', function(event) {
+          if (event.target === textarea) {
+            textarea.focus();
+          }
+        });
+      
+        // Gestionnaire pour le changement de police avec application immédiate
+        fontSelect.addEventListener('change', function() {
+          const selectedFont = this.value;
+          textarea.style.cssText += `font-family: "${selectedFont}", sans-serif !important;`;
+        });
+      }
+      
+      // Appeler la fonction au chargement complet du DOM
+      document.addEventListener('DOMContentLoaded', handleTextareaFocus);
+      </script>
+    <style>
+      .font-select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #3f3f4f;
+  font-family: 'Inter', sans-serif;
+  margin-top: 5px;
+}
+
+.font-select optgroup {
+  background: #2a2a2a;
+}
+
+.font-select option {
+  padding: 4px;
+}
+    </style>
   </head>
   <body>
     <header role="banner">
@@ -270,6 +315,31 @@
             value="16"
             step="1"
           />
+        </div>
+
+        <!-- Ajout du sélecteur de polices -->
+        <div>
+          <label for="fontFamilySelect">Police :</label>
+          <select id="fontFamilySelect" class="font-select">
+            <option value="Inter" selected>Inter (Par défaut)</option>
+            <optgroup label="Sans-Serif Modernes">
+              <option value="Montserrat">Montserrat</option>
+              <option value="Roboto">Roboto</option>
+              <option value="Open Sans">Open Sans</option>
+            </optgroup>
+            <optgroup label="Serif Élégantes">
+              <option value="Playfair Display">Playfair Display</option>
+              <option value="Cormorant Garamond">Cormorant Garamond</option>
+            </optgroup>
+            <optgroup label="Manuscrites">
+              <option value="Caveat">Caveat</option>
+              <option value="Dancing Script">Dancing Script</option>
+            </optgroup>
+            <optgroup label="Monospace">
+              <option value="JetBrains Mono">JetBrains Mono</option>
+              <option value="Fira Code">Fira Code</option>
+            </optgroup>
+          </select>
         </div>
 
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
