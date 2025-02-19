@@ -832,3 +832,79 @@ body.dark-theme {
   font-weight: 500;
   font-size: unset;
 }
+.list-9fonts-3categories {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  margin-top: -20px;
+}
+
+.list-9fonts-3categories h5 {
+  margin: 15px 0 8px 0;
+  color: #888;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.list-9fonts-3categories li {
+  margin-bottom: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: #3f3f4f2f;
+}
+
+.list-9fonts-3categories li:hover {
+  background: #41415a;
+  transform: scale(1.05);
+}
+
+/* Apply specific fonts to the list items */
+.list-9fonts-3categories li[onclick*="Inter"] {
+  font-family: 'Inter', sans-serif;
+}
+
+.list-9fonts-3categories li[onclick*="Roboto"] {
+  font-family: 'Roboto', sans-serif;
+}
+
+.list-9fonts-3categories li[onclick*="Poppins"] {
+  font-family: 'Poppins', sans-serif;
+}
+
+.list-9fonts-3categories li[onclick*="Merriweather"] {
+  font-family: 'Merriweather', serif;
+}
+
+.list-9fonts-3categories li[onclick*="Playfair"] {
+  font-family: 'Playfair Display', serif;
+}
+
+.list-9fonts-3categories li[onclick*="Crimson"] {
+  font-family: 'Crimson Text', serif;
+}
+
+.list-9fonts-3categories li[onclick*="Fira"] {
+  font-family: 'Fira Code', monospace;
+}
+
+.list-9fonts-3categories li[onclick*="JetBrains"] {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.list-9fonts-3categories li[onclick*="IBM"] {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.list-9fonts-3categories li[onclick*="Dancing"] {
+  font-family: 'Dancing Script', cursive;
+}
+
+.list-9fonts-3categories li[onclick*="Great"] {
+  font-family: 'Great Vibes', cursive;
+}
+
+.list-9fonts-3categories li[onclick*="Pacifico"] {
+  font-family: 'Pacifico', cursive;
+}

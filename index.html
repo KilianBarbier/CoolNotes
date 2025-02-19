@@ -127,7 +127,27 @@
     <link rel="preconnect" href="https://rsms.me/" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <link rel="icon" href="/media/img/coolnotes_128.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/media/img/coolnotes_128.png" />
+    <!-- Fonts for the text editor -->
+    <!-- Sans-serif fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+    <!-- Serif fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Monospace fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Cursive fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   </head>
   <body>
@@ -236,7 +256,28 @@
           </li>
         </ul>
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
-
+        <h2>Text options</h2>
+        <h4 style="margin-top: 8px;">Font choice:</h4>
+        <ul class="list-9fonts-3categories">
+          <h5>Sans-Serif</h5>
+          <li onclick="applyFont('Inter', 'sans-serif')">Inter</li>
+          <li onclick="applyFont('Roboto', 'sans-serif')">Roboto</li>
+          <li onclick="applyFont('Poppins', 'sans-serif')">Poppins</li>
+          <h5>Serif</h5>
+          <li onclick="applyFont('Merriweather', 'serif')">Merriweather</li>
+          <li onclick="applyFont('Playfair Display', 'serif')">Playfair Display</li>
+          <li onclick="applyFont('Crimson Text', 'serif')">Crimson Text</li>
+          <h5>Monospace</h5>
+          <li onclick="applyFont('Fira Code', 'monospace')">Fira Code</li>
+          <li onclick="applyFont('JetBrains Mono', 'monospace')">JetBrains Mono</li>
+          <li onclick="applyFont('IBM Plex Mono', 'monospace')">IBM Plex Mono</li>
+          <h5>
+            Cursive
+          </h5>
+          <li onclick="applyFont('Dancing Script', 'cursive')">Dancing Script</li>
+          <li onclick="applyFont('Great Vibes', 'cursive')">Great Vibes</li>
+          <li onclick="applyFont('Pacifico', 'cursive')">Pacifico</li>
+        </ul>
         <div>
           <label for="paddingSlider">Padding:</label>
           <input
@@ -578,5 +619,30 @@
         </script>
       </div>
     </div>
+    <script>
+      function applyFont(fontFamily, fontType) {
+        const textarea = document.querySelector('.textarea');
+        const fontStyle = `"${fontFamily}", ${fontType}`;
+        textarea.style.cssText += `font-family: ${fontStyle} !important;`;
+      }
+
+      // Ajouter les gestionnaires d'événements pour chaque élément de la liste
+      document.addEventListener('DOMContentLoaded', function() {
+        const fontItems = document.querySelectorAll('.list-9fonts-3categories li');
+        
+        fontItems.forEach(item => {
+          item.addEventListener('click', function() {
+            // Extraire la famille de police et le type depuis l'attribut onclick
+            const onclickAttr = this.getAttribute('onclick');
+            const matches = onclickAttr.match(/applyFont\('([^']+)',\s*'([^']+)'\)/);
+            
+            if (matches) {
+              const [_, fontFamily, fontType] = matches;
+              applyFont(fontFamily, fontType);
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>
