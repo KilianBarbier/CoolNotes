@@ -123,12 +123,21 @@ applyAspectRatio(3, 2);
 const DEFAULT_FONT_SIZE = '16';
 const DEFAULT_FONT_WEIGHT = '400';
 const DEFAULT_PADDING = '60';
+const DEFAULT_FONT_FAMILY = 'Inter, sans-serif';
+const DEFAULT_TEXT_COLOR = '#ffffff';
+const DEFAULT_BG_COLOR = 'rgba(0, 0, 0, 0.5)'; // Remis à semi-transparent noir
 
 function initializeDefaults() {
   const textarea = document.querySelector('.textarea');
+  const centerDiv = document.querySelector('.center-div');
+  
   // Set initial font styles
   textarea.style.fontSize = `${DEFAULT_FONT_SIZE}px`;
   textarea.style.fontWeight = DEFAULT_FONT_WEIGHT;
+  textarea.style.fontFamily = DEFAULT_FONT_FAMILY;
+  textarea.style.color = DEFAULT_TEXT_COLOR;
+  textarea.style.backgroundColor = 'transparent';
+  centerDiv.style.backgroundColor = DEFAULT_BG_COLOR;
   
   // Set initial slider values
   document.getElementById('fontSizeSlider').value = DEFAULT_FONT_SIZE;
@@ -384,13 +393,14 @@ function initializeWiggleHandler() {
 function handleDownload() {
   const container = document.querySelector(".container");
   const textarea = document.querySelector(".textarea");
+  const centerDiv = document.querySelector(".center-div");
   const tempDiv = document.createElement("div");
   const innerDiv = document.createElement("div");
   const preElement = document.createElement("pre");
   preElement.textContent = textarea.value;
   const currentFontSize = parseInt(textarea.style.fontSize);
   const downloadFontSize = window.innerWidth <= 480 ? 
-    Math.max(currentFontSize - 4, 1) : // Réduction de 2pt avec minimum 1pt
+    Math.max(currentFontSize - 4, 1) : 
     currentFontSize;
 
   preElement.setAttribute(
@@ -400,11 +410,11 @@ function handleDownload() {
       height: 100%;
       text-align: center;
       box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
+      font-family: ${textarea.style.fontFamily};
       white-space: pre-wrap;
       line-height: normal !important;
       word-wrap: break-word;
-      background-color: ${container.style.backgroundColor};
+      background-color: transparent;
       font-weight: ${textarea.style.fontWeight};
       font-size: ${downloadFontSize}px;
       color: ${textarea.style.color};
@@ -446,7 +456,6 @@ function handleDownload() {
   textarea.style.display = "none";
   container.querySelector(".center-div").appendChild(tempDiv);
 
-  const centerDiv = container.querySelector(".center-div");
   centerDiv.style.backdropFilter = "blur(10px)";
 
   html2canvas(container, {
@@ -473,4 +482,22 @@ function handleDownload() {
       tempDiv.remove();
       textarea.style.display = "block";
     });
+}
+
+function applyFont(fontFamily, category) {
+  const textarea = document.querySelector('.textarea');
+  textarea.style.fontFamily = `${fontFamily}, ${category}`;
+}
+
+function invertColors() {
+  const textarea = document.querySelector('.textarea');
+  const centerDiv = document.querySelector('.center-div');
+  
+  const currentTextColor = textarea.style.color || DEFAULT_TEXT_COLOR;
+  
+  // Invert colors
+  const isLight = currentTextColor === '#000000' || currentTextColor === 'rgb(0, 0, 0)';
+  textarea.style.color = isLight ? '#ffffff' : '#000000';
+  centerDiv.style.backgroundColor = isLight ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+  textarea.style.backgroundColor = 'transparent';
 }

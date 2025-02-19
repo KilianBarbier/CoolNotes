@@ -54,7 +54,7 @@ body {
   display: flex;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.9);
   border-radius: 15px;
   justify-content: center;
   align-items: center;
@@ -64,6 +64,7 @@ body {
   overflow: hidden;
   padding: 20px;
   transition: all 0.3s ease;
+  background-color: transparent;
 }
 
 .textarea {
@@ -90,6 +91,7 @@ body {
   font-size: 16px;
   padding-inline: 15px;
   transition: all 0.3s ease;
+  background-color: transparent;
 }
 
 .sp-styling {
@@ -162,6 +164,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   background: #3f3f4f2f;
+  border: 1px solid #888;
 }
 
 .user-panel ul li:hover {
@@ -853,6 +856,7 @@ body.dark-theme {
   cursor: pointer;
   transition: all 0.3s ease;
   background: #3f3f4f2f;
+  border: 1px solid #888;
 }
 
 .list-9fonts-3categories li:hover {
@@ -907,4 +911,15 @@ body.dark-theme {
 
 .list-9fonts-3categories li[onclick*="Pacifico"] {
   font-family: 'Pacifico', cursive;
+}
+.list-9fonts-3categories li[onclick*="Caveat"] {
+  font-family: 'Caveat', cursive;
+}
+
+.list-9fonts-3categories li[onclick*="Sacramento"] {
+  font-family: 'Sacramento', cursive;
+}
+
+.list-9fonts-3categories li[onclick*="Shadows"] {
+  font-family: 'Shadows Into Light', cursive;
 }

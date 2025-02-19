@@ -127,8 +127,29 @@
     <link rel="preconnect" href="https://rsms.me/" />
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
     <link rel="icon" href="/media/img/coolnotes_128.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/media/img/coolnotes_128.png" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
   </head>
   <body>
     <header role="banner">
@@ -236,7 +257,34 @@
           </li>
         </ul>
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
-
+        <h2>Text options</h2>
+        <h4 style="margin-top: 8px;">Font choice:</h4>
+        <ul class="list-9fonts-3categories">
+          <h5>Sans-Serif</h5>
+          <li onclick="applyFont('Inter', 'sans-serif')">Inter <span style="color: #888;">(Default)</span> </li>
+          <li onclick="applyFont('Roboto', 'sans-serif')">Roboto</li>
+          <li onclick="applyFont('Poppins', 'sans-serif')">Poppins</li>
+          <h5>Serif</h5>
+          <li onclick="applyFont('Merriweather', 'serif')">Merriweather</li>
+          <li onclick="applyFont('Playfair Display', 'serif')">Playfair Display</li>
+          <li onclick="applyFont('Crimson Text', 'serif')">Crimson Text</li>
+          <h5>Monospace</h5>
+          <li onclick="applyFont('Fira Code', 'monospace')">Fira Code</li>
+          <li onclick="applyFont('JetBrains Mono', 'monospace')">JetBrains Mono</li>
+          <li onclick="applyFont('IBM Plex Mono', 'monospace')">IBM Plex Mono</li>
+          <h5>
+            Script
+          </h5>
+          <li onclick="applyFont('Dancing Script', 'cursive')">Dancing Script</li>
+          <li onclick="applyFont('Great Vibes', 'cursive')">Great Vibes</li>
+          <li onclick="applyFont('Pacifico', 'cursive')">Pacifico</li>
+          <h5>
+            Cursive
+          </h5>
+          <li onclick="applyFont('Sacramento', 'cursive')">Sacramento</li>
+          <li onclick="applyFont('Shadows Into Light', 'cursive')">Shadows Into Light</li>
+          <li onclick="applyFont('Caveat', 'cursive')">Caveat</li>
+        </ul>
         <div>
           <label for="paddingSlider">Marge intérieure (Padding) :</label>
           <input
@@ -270,6 +318,23 @@
             value="16"
             step="1"
           />
+        </div>
+
+        <!-- Ajout du bouton d'inversion -->
+        <div style="text-align: center; margin-top: 10px;">
+          <button 
+            onclick="invertColors()"
+            style="
+              padding: 8px 16px;
+              border-radius: 4px;
+              background: #333;
+              color: white;
+              border: none;
+              cursor: pointer;
+            "
+          >
+            Inverser les couleurs
+          </button>
         </div>
 
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
