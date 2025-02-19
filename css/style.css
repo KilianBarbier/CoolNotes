@@ -461,7 +461,8 @@ body.dark-theme {
 
 #fontWeightSlider,
 #fontSizeSlider,
-#paddingSlider {
+#paddingSlider,
+#opacitySlider {
   width: 95%;
   margin: 10px 0;
 }

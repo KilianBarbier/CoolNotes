@@ -126,6 +126,7 @@ const DEFAULT_PADDING = '60';
 const DEFAULT_FONT_FAMILY = 'Inter, sans-serif';
 const DEFAULT_TEXT_COLOR = '#ffffff';
 const DEFAULT_BG_COLOR = 'rgba(0, 0, 0, 0.5)'; // Remis à semi-transparent noir
+const DEFAULT_OPACITY = '0.5';
 
 function initializeDefaults() {
   const textarea = document.querySelector('.textarea');
@@ -143,6 +144,11 @@ function initializeDefaults() {
   document.getElementById('fontSizeSlider').value = DEFAULT_FONT_SIZE;
   document.getElementById('fontWeightSlider').value = DEFAULT_FONT_WEIGHT;
   document.getElementById('paddingSlider').value = DEFAULT_PADDING;
+  document.getElementById('opacitySlider').value = parseFloat(DEFAULT_OPACITY) * 100;
+  
+  const currentBgColor = centerDiv.style.backgroundColor;
+  const newBgColor = currentBgColor.replace(/[\d.]+\)$/g, `${DEFAULT_OPACITY})`);
+  centerDiv.style.backgroundColor = newBgColor;
 }
 
 function initializeTheme() {
@@ -348,6 +354,28 @@ function initializeSliders() {
       updatePadding(container, val, width, height);
     });
   }
+  
+  const opacitySlider = document.getElementById("opacitySlider");
+  if (opacitySlider) {
+    opacitySlider.addEventListener("input", () => {
+      const centerDiv = document.querySelector('.center-div');
+      const opacity = opacitySlider.value / 100;
+      
+      // Extrait les composantes RGB actuelles
+      const rgbaMatch = centerDiv.style.backgroundColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+      
+      if (rgbaMatch) {
+        const [_, r, g, b] = rgbaMatch;
+        centerDiv.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+      } else {
+        // Fallback si pas de correspondance (première initialisation ou erreur)
+        const isLight = centerDiv.style.backgroundColor.includes('255, 255, 255');
+        centerDiv.style.backgroundColor = isLight ? 
+          `rgba(255, 255, 255, ${opacity})` : 
+          `rgba(0, 0, 0, ${opacity})`;
+      }
+    });
+  }
 }
 
 function initializeButtons() {
@@ -397,6 +425,10 @@ function handleDownload() {
   const tempDiv = document.createElement("div");
   const innerDiv = document.createElement("div");
   const preElement = document.createElement("pre");
+  
+  // Capture l'opacité actuelle
+  const currentBgColor = centerDiv.style.backgroundColor;
+  
   preElement.textContent = textarea.value;
   const currentFontSize = parseInt(textarea.style.fontSize);
   const downloadFontSize = window.innerWidth <= 480 ? 
@@ -435,6 +467,8 @@ function handleDownload() {
       align-items: center;
       width: 100%;
       height: 100%;
+      background-color: ${currentBgColor};
+      backdrop-filter: blur(10px);
     `
   );
 
@@ -492,12 +526,19 @@ function applyFont(fontFamily, category) {
 function invertColors() {
   const textarea = document.querySelector('.textarea');
   const centerDiv = document.querySelector('.center-div');
+  const opacitySlider = document.getElementById('opacitySlider');
   
   const currentTextColor = textarea.style.color || DEFAULT_TEXT_COLOR;
+  const opacity = opacitySlider.value / 100;
   
-  // Invert colors
+  // Inversion des couleurs en préservant l'opacité
   const isLight = currentTextColor === '#000000' || currentTextColor === 'rgb(0, 0, 0)';
   textarea.style.color = isLight ? '#ffffff' : '#000000';
-  centerDiv.style.backgroundColor = isLight ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+  
+  // Utilisation directe de rgba pour la transparence
+  centerDiv.style.backgroundColor = isLight ? 
+    `rgba(0, 0, 0, ${opacity})` : 
+    `rgba(255, 255, 255, ${opacity})`;
+    
   textarea.style.backgroundColor = 'transparent';
 }
