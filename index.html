@@ -619,30 +619,5 @@
         </script>
       </div>
     </div>
-    <script>
-      function applyFont(fontFamily, fontType) {
-        const textarea = document.querySelector('.textarea');
-        const fontStyle = `"${fontFamily}", ${fontType}`;
-        textarea.style.cssText += `font-family: ${fontStyle} !important;`;
-      }
-
-      // Ajouter les gestionnaires d'événements pour chaque élément de la liste
-      document.addEventListener('DOMContentLoaded', function() {
-        const fontItems = document.querySelectorAll('.list-9fonts-3categories li');
-        
-        fontItems.forEach(item => {
-          item.addEventListener('click', function() {
-            // Extraire la famille de police et le type depuis l'attribut onclick
-            const onclickAttr = this.getAttribute('onclick');
-            const matches = onclickAttr.match(/applyFont\('([^']+)',\s*'([^']+)'\)/);
-            
-            if (matches) {
-              const [_, fontFamily, fontType] = matches;
-              applyFont(fontFamily, fontType);
-            }
-          });
-        });
-      });
-    </script>
   </body>
 </html>
