@@ -154,13 +154,6 @@
     <header role="banner">
       <nav role="navigation" aria-label="Main menu">
         <button
-          id="downloadBtn"
-          class="download-btn"
-          aria-label="Download text"
-        >
-          Download
-        </button>
-        <button
           id="themeToggleBtn"
           class="theme-toggle-btn"
           aria-label="Switch theme"
@@ -170,7 +163,17 @@
       </nav>
     </header>
 
-    <main role="main">
+    <main role="main" style="display: flex;flex-direction: column;gap: 15px;justify-content: center;align-items: center;">
+      <div class="button" data-tooltip="Size: 2MB">
+        <div class="button-wrapper">
+          <div class="text">Download</div>
+          <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
       <div class="container" style="position: relative">
         <div class="content">
           <div class="center-div">
@@ -182,7 +185,6 @@
         style="
           display: block;
           text-align: center;
-          margin-top: 20px;
           font-size: 12px;
           color: #888;
         "
@@ -284,8 +286,12 @@
           <li onclick="applyFont('Shadows Into Light', 'cursive')">Shadows Into Light</li>
           <li onclick="applyFont('Caveat', 'script')">Caveat</li>
         </ul>
-        <div>
-          <label for="paddingSlider">Padding:</label>
+        <div class="slider-container">
+          <label for="paddingSlider" class="slider-label">
+            <img src="/media/img/padding-white.svg" alt="Padding" class="light-icon">
+            <img src="/media/img/padding-black.svg" alt="Padding" class="dark-icon">
+            <span>Padding</span>
+          </label>
           <input
             type="range"
             id="paddingSlider"
@@ -296,8 +302,12 @@
           />
         </div>
 
-        <div>
-          <label for="fontWeightSlider">Font Weight:</label>
+        <div class="slider-container">
+          <label for="fontWeightSlider" class="slider-label">
+            <img src="/media/img/font-weight-white.svg" alt="Font weight" class="light-icon">
+            <img src="/media/img/font-weight-black.svg" alt="Font weight" class="dark-icon">
+            <span>Font Weight</span>
+          </label>
           <input
             type="range"
             id="fontWeightSlider"
@@ -307,8 +317,13 @@
             step="100"
           />
         </div>
-        <div>
-          <label for="fontSizeSlider">Font Size:</label>
+
+        <div class="slider-container">
+          <label for="fontSizeSlider" class="slider-label">
+            <img src="/media/img/text-size-white.svg" alt="Font size" class="light-icon">
+            <img src="/media/img/text-size-black.svg" alt="Font size" class="dark-icon">
+            <span>Font Size</span>
+          </label>
           <input
             type="range"
             id="fontSizeSlider"
@@ -320,8 +335,12 @@
         </div>
 
         <!-- Ajout du slider d'opacité -->
-        <div>
-          <label for="opacitySlider">Box Opacity:</label>
+        <div class="slider-container">
+          <label for="opacitySlider" class="slider-label">
+            <img src="/media/img/opacity-white.svg" alt="Opacity" class="light-icon">
+            <img src="/media/img/opacity-black.svg" alt="Opacity" class="dark-icon">
+            <span>Box Opacity</span>
+          </label>
           <input
             type="range"
             id="opacitySlider"
@@ -330,6 +349,40 @@
             value="50"
             step="1"
           />
+        </div>
+
+        <!-- Après les sliders -->
+        <div class="align-buttons">
+          <!-- Horizontal alignment -->
+          <div class="align-group">
+            <button class="align-btn" onclick="applyTextAlign('left')" title="Align left">
+              <img src="/media/img/justify-left-white.svg" alt="Left align" class="light-icon">
+              <img src="/media/img/justify-left-black.svg" alt="Left align" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('center')" title="Align center">
+              <img src="/media/img/justify-center-white.svg" alt="Center align" class="light-icon">
+              <img src="/media/img/justify-center-black.svg" alt="Center align" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('right')" title="Align right">
+              <img src="/media/img/justify-right-white.svg" alt="Right align" class="light-icon">
+              <img src="/media/img/justify-right-black.svg" alt="Right align" class="dark-icon">
+            </button>
+          </div>
+          <!-- Vertical alignment -->
+          <div class="align-group">
+            <button class="align-btn" onclick="applyTextAlign('top', true)" title="Align top">
+              <img src="/media/img/align-top-white.svg" alt="Top align" class="light-icon">
+              <img src="/media/img/align-top-black.svg" alt="Top align" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('center', true)" title="Align middle">
+              <img src="/media/img/align-vertical-center-white.svg" alt="Middle align" class="light-icon">
+              <img src="/media/img/align-vertical-center-black.svg" alt="Middle align" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('bottom', true)" title="Align bottom">
+              <img src="/media/img/align-bottom-white.svg" alt="Bottom align" class="light-icon">
+              <img src="/media/img/align-bottom-black.svg" alt="Bottom align" class="dark-icon">
+            </button>
+          </div>
         </div>
 
         <!-- Ajout du bouton d'inversion -->

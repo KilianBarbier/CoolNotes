@@ -127,6 +127,8 @@ const DEFAULT_FONT_FAMILY = 'Inter, sans-serif';
 const DEFAULT_TEXT_COLOR = '#ffffff';
 const DEFAULT_BG_COLOR = 'rgba(0, 0, 0, 0.5)'; // Remis à semi-transparent noir
 const DEFAULT_OPACITY = '0.5';
+const DEFAULT_TEXT_ALIGN = 'center';
+const DEFAULT_VERTICAL_ALIGN = 'center'; // Nouvelle constante
 
 function initializeDefaults() {
   const textarea = document.querySelector('.textarea');
@@ -139,6 +141,8 @@ function initializeDefaults() {
   textarea.style.color = DEFAULT_TEXT_COLOR;
   textarea.style.backgroundColor = 'transparent';
   centerDiv.style.backgroundColor = DEFAULT_BG_COLOR;
+  textarea.style.textAlign = DEFAULT_TEXT_ALIGN;
+  textarea.style.alignItems = DEFAULT_VERTICAL_ALIGN; // Ajout de l'alignement vertical
   
   // Set initial slider values
   document.getElementById('fontSizeSlider').value = DEFAULT_FONT_SIZE;
@@ -435,27 +439,39 @@ function handleDownload() {
     Math.max(currentFontSize - 4, 1) : 
     currentFontSize;
 
+  // Capture des alignements actuels
+  const textAlignment = textarea.style.textAlign || 'center';
+  const verticalAlignment = textarea.style.alignItems || 'center';
+  
+  const alignmentStyles = {
+    'left': { justify: 'flex-start', text: 'left' },
+    'center': { justify: 'center', text: 'center' },
+    'right': { justify: 'flex-end', text: 'right' }
+  };
+
+  const verticalAlignmentStyles = {
+    'flex-start': 'flex-start',
+    'center': 'center',
+    'flex-end': 'flex-end'
+  };
+
   preElement.setAttribute(
     "style",
     `
       width: 100%;
       height: 100%;
-      text-align: center;
-      box-sizing: border-box;
+      text-align: ${alignmentStyles[textAlignment].text};
       font-family: ${textarea.style.fontFamily};
       white-space: pre-wrap;
       line-height: normal !important;
       word-wrap: break-word;
-      background-color: transparent;
       font-weight: ${textarea.style.fontWeight};
       font-size: ${downloadFontSize}px;
       color: ${textarea.style.color};
       margin: 0;
       display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      margin-top: -18px;
+      justify-content: ${alignmentStyles[textAlignment].justify};
+      align-items: ${verticalAlignmentStyles[verticalAlignment]};
     `
   );
 
@@ -467,8 +483,7 @@ function handleDownload() {
       align-items: center;
       width: 100%;
       height: 100%;
-      background-color: ${currentBgColor};
-      backdrop-filter: blur(10px);
+      border-radius: 15px;
     `
   );
 
@@ -541,4 +556,18 @@ function invertColors() {
     `rgba(255, 255, 255, ${opacity})`;
     
   textarea.style.backgroundColor = 'transparent';
+}
+
+function applyTextAlign(alignment, isVertical = false) {
+  const textarea = document.querySelector('.textarea');
+  if (isVertical) {
+    const verticalAlignMap = {
+      'top': 'flex-start',
+      'center': 'center',
+      'bottom': 'flex-end'
+    };
+    textarea.style.alignItems = verticalAlignMap[alignment];
+  } else {
+    textarea.style.textAlign = alignment;
+  }
 }

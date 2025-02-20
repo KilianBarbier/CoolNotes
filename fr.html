@@ -155,13 +155,6 @@
     <header role="banner">
       <nav role="navigation" aria-label="Menu principal">
         <button
-          id="downloadBtn"
-          class="download-btn"
-          aria-label="Télécharger votre note"
-        >
-          Télécharger
-        </button>
-        <button
           id="themeToggleBtn"
           class="theme-toggle-btn"
           aria-label="Changer de thème"
@@ -171,7 +164,17 @@
       </nav>
     </header>
 
-    <main role="main">
+    <main role="main" style="display: flex;flex-direction: column;gap: 15px;justify-content: center;align-items: center;">
+      <div class="button" data-tooltip="Taille : 2Mo">
+        <div class="button-wrapper">
+          <div class="text">Télécharger</div>
+          <span class="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
       <div class="container" style="position: relative">
         <div class="content">
           <div class="center-div">
@@ -183,7 +186,6 @@
         style="
           display: block;
           text-align: center;
-          margin-top: 20px;
           font-size: 12px;
           color: #888;
         "
@@ -257,36 +259,40 @@
           </li>
         </ul>
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
-        <h2>Text options</h2>
-        <h4 style="margin-top: 8px;">Font choice:</h4>
+        <h2>Options de texte</h2>
+        <h4 style="margin-top: 8px;">Choix de la police :</h4>
         <ul class="list-9fonts-3categories">
-          <h5>Sans-Serif</h5>
-          <li onclick="applyFont('Inter', 'sans-serif')">Inter <span style="color: #888;">(Default)</span> </li>
+          <h5>Sans empattements</h5>
+          <li onclick="applyFont('Inter', 'sans-serif')">Inter <span style="color: #888;">(Par défaut)</span> </li>
           <li onclick="applyFont('Roboto', 'sans-serif')">Roboto</li>
           <li onclick="applyFont('Poppins', 'sans-serif')">Poppins</li>
-          <h5>Serif</h5>
+          <h5>Avec empattements</h5>
           <li onclick="applyFont('Merriweather', 'serif')">Merriweather</li>
           <li onclick="applyFont('Playfair Display', 'serif')">Playfair Display</li>
           <li onclick="applyFont('Crimson Text', 'serif')">Crimson Text</li>
-          <h5>Monospace</h5>
+          <h5>Chasse fixe</h5>
           <li onclick="applyFont('Fira Code', 'monospace')">Fira Code</li>
           <li onclick="applyFont('JetBrains Mono', 'monospace')">JetBrains Mono</li>
           <li onclick="applyFont('IBM Plex Mono', 'monospace')">IBM Plex Mono</li>
           <h5>
-            Script
+            Scripte
           </h5>
-          <li onclick="applyFont('Dancing Script', 'cursive')">Dancing Script</li>
-          <li onclick="applyFont('Great Vibes', 'cursive')">Great Vibes</li>
-          <li onclick="applyFont('Pacifico', 'cursive')">Pacifico</li>
+          <li onclick="applyFont('Dancing Script', 'script')">Dancing Script</li>
+          <li onclick="applyFont('Great Vibes', 'script')">Great Vibes</li>
+          <li onclick="applyFont('Pacifico', 'script')">Pacifico</li>
           <h5>
-            Cursive
+            Manuscrite
           </h5>
           <li onclick="applyFont('Sacramento', 'cursive')">Sacramento</li>
           <li onclick="applyFont('Shadows Into Light', 'cursive')">Shadows Into Light</li>
-          <li onclick="applyFont('Caveat', 'cursive')">Caveat</li>
+          <li onclick="applyFont('Caveat', 'script')">Caveat</li>
         </ul>
-        <div>
-          <label for="paddingSlider">Marge intérieure (Padding) :</label>
+        <div class="slider-container" style="margin-top: 20px;">
+          <label for="paddingSlider" class="slider-label">
+            <img src="/media/img/padding-white.svg" alt="Marge" class="light-icon">
+            <img src="/media/img/padding-black.svg" alt="Marge" class="dark-icon">
+            <span>Marge</span>
+          </label>
           <input
             type="range"
             id="paddingSlider"
@@ -297,8 +303,12 @@
           />
         </div>
 
-        <div>
-          <label for="fontWeightSlider">Épaisseur de la police :</label>
+        <div class="slider-container">
+          <label for="fontWeightSlider" class="slider-label">
+            <img src="/media/img/font-weight-white.svg" alt="Épaisseur" class="light-icon">
+            <img src="/media/img/font-weight-black.svg" alt="Épaisseur" class="dark-icon">
+            <span>Épaisseur</span>
+          </label>
           <input
             type="range"
             id="fontWeightSlider"
@@ -308,8 +318,13 @@
             step="100"
           />
         </div>
-        <div>
-          <label for="fontSizeSlider">Taille de la police :</label>
+
+        <div class="slider-container">
+          <label for="fontSizeSlider" class="slider-label">
+            <img src="/media/img/text-size-white.svg" alt="Taille" class="light-icon">
+            <img src="/media/img/text-size-black.svg" alt="Taille" class="dark-icon">
+            <span>Taille du texte</span>
+          </label>
           <input
             type="range"
             id="fontSizeSlider"
@@ -320,8 +335,12 @@
           />
         </div>
 
-        <div>
-          <label for="opacitySlider">Opacité de la boîte :</label>
+        <div class="slider-container">
+          <label for="opacitySlider" class="slider-label">
+            <img src="/media/img/opacity-white.svg" alt="Opacité" class="light-icon">
+            <img src="/media/img/opacity-black.svg" alt="Opacité" class="dark-icon">
+            <span>Opacité</span>
+          </label>
           <input
             type="range"
             id="opacitySlider"
@@ -332,6 +351,36 @@
           />
         </div>
 
+        <div class="align-buttons" >
+          <div class="align-group">
+            <button class="align-btn" onclick="applyTextAlign('left')" title="Aligner à gauche">
+              <img src="/media/img/justify-left-white.svg" alt="Gauche" class="light-icon">
+              <img src="/media/img/justify-left-black.svg" alt="Gauche" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('center')" title="Centrer">
+              <img src="/media/img/justify-center-white.svg" alt="Centre" class="light-icon">
+              <img src="/media/img/justify-center-black.svg" alt="Centre" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('right')" title="Aligner à droite">
+              <img src="/media/img/justify-right-white.svg" alt="Droite" class="light-icon">
+              <img src="/media/img/justify-right-black.svg" alt="Droite" class="dark-icon">
+            </button>
+          </div>
+          <div class="align-group">
+            <button class="align-btn" onclick="applyTextAlign('top', true)" title="Aligner en haut">
+              <img src="/media/img/align-top-white.svg" alt="Haut" class="light-icon">
+              <img src="/media/img/align-top-black.svg" alt="Haut" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('center', true)" title="Centrer verticalement">
+              <img src="/media/img/align-vertical-center-white.svg" alt="Milieu" class="light-icon">
+              <img src="/media/img/align-vertical-center-black.svg" alt="Milieu" class="dark-icon">
+            </button>
+            <button class="align-btn" onclick="applyTextAlign('bottom', true)" title="Aligner en bas">
+              <img src="/media/img/align-bottom-white.svg" alt="Bas" class="light-icon">
+              <img src="/media/img/align-bottom-black.svg" alt="Bas" class="dark-icon">
+            </button>
+          </div>
+        </div>
         <!-- Ajout du bouton d'inversion -->
         <div style="text-align: center; margin-top: 10px;">
           <button 
@@ -348,7 +397,6 @@
             Inverser les couleurs
           </button>
         </div>
-
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
         <h2>Arrière-plans</h2>
         <div class="wrapper">
@@ -397,20 +445,7 @@
               style="display: none"
             />
           </div>
-          <script>
-            document
-              .querySelector(".bg-thumbnail")
-              .addEventListener("mouseover", function () {
-                this.querySelector("img").style.opacity = "0";
-                this.querySelector(".upload-text").style.opacity = "1";
-              });
-            document
-              .querySelector(".bg-thumbnail")
-              .addEventListener("mouseout", function () {
-                this.querySelector("img").style.opacity = "1";
-                this.querySelector(".upload-text").style.opacity = "0";
-              });
-          </script>
+          <!-- Les backgrounds -->
           <div class="thumbnail-container">
             <img
               id="bg1"
