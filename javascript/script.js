@@ -126,7 +126,7 @@ const DEFAULT_PADDING = '60';
 const DEFAULT_FONT_FAMILY = 'Inter, sans-serif';
 const DEFAULT_TEXT_COLOR = '#ffffff';
 const DEFAULT_BG_COLOR = 'rgba(0, 0, 0, 0.5)'; // Remis à semi-transparent noir
-const DEFAULT_OPACITY = '0.5';
+const DEFAULT_OPACITY = '0.7';
 const DEFAULT_TEXT_ALIGN = 'center';
 const DEFAULT_VERTICAL_ALIGN = 'center'; // Nouvelle constante
 
@@ -155,21 +155,8 @@ function initializeDefaults() {
   centerDiv.style.backgroundColor = newBgColor;
 }
 
-function initializeTheme() {
-  const savedTheme = localStorage.getItem('theme') || 'dark-theme';
-  document.body.classList.add(savedTheme);
-}
-
-function toggleTheme() {
-  document.body.classList.toggle('dark-theme');
-  document.body.classList.toggle('light-theme');
-  const currentTheme = document.body.classList.contains('dark-theme') ? 'dark-theme' : 'light-theme';
-  localStorage.setItem('theme', currentTheme);
-}
-
 document.addEventListener("DOMContentLoaded", function () {
   initializeDefaults();
-  initializeTheme();
   // Text area handling
   const textarea = document.querySelector('.textarea');
   initializeTextArea(textarea);
@@ -384,16 +371,11 @@ function initializeSliders() {
 
 function initializeButtons() {
   const downloadBtn = document.getElementById("downloadBtn");
-  const themeToggleBtn = document.getElementById("themeToggleBtn");
   const shrinkBtn = document.querySelector('.shrink-btn');
   const bgUploadInput = document.getElementById("bgUploadInput");
   
   if (downloadBtn) {
     downloadBtn.addEventListener("click", handleDownload);
-  }
-  
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener("click", toggleTheme);
   }
   
   if (shrinkBtn) {
@@ -403,6 +385,21 @@ function initializeButtons() {
   if (bgUploadInput) {
     bgUploadInput.addEventListener("change", handleBackgroundUpload);
   }
+
+  // Initialize alignment buttons
+  const alignButtons = document.querySelectorAll('.align-btn');
+  alignButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remove active state from all buttons in the group
+      const group = this.parentElement;
+      group.querySelectorAll('.align-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Add active state to clicked button
+      this.classList.add('active');
+    });
+  });
 }
 
 function initializeWiggleHandler() {
@@ -560,14 +557,39 @@ function invertColors() {
 
 function applyTextAlign(alignment, isVertical = false) {
   const textarea = document.querySelector('.textarea');
+  const centerDiv = document.querySelector('.center-div');
+  
   if (isVertical) {
-    const verticalAlignMap = {
-      'top': 'flex-start',
-      'center': 'center',
-      'bottom': 'flex-end'
-    };
-    textarea.style.alignItems = verticalAlignMap[alignment];
+    console.log('Setting vertical alignment:', alignment);
+    
+    switch(alignment) {
+      case 'top':
+        textarea.style.justifyContent = 'flex-start';
+        break;
+      case 'center':
+        textarea.style.justifyContent = 'center';
+        break;
+      case 'bottom':
+        textarea.style.justifyContent = 'flex-end';
+        break;
+    }
+    
+    // Les valeurs actuelles
+    console.log({
+      alignment,
+      'textarea.style.justifyContent': textarea.style.justifyContent,
+      'textarea.style.flexDirection': textarea.style.flexDirection,
+      'computed.display': getComputedStyle(textarea).display,
+      'computed.flexDirection': getComputedStyle(textarea).flexDirection,
+      'computed.justifyContent': getComputedStyle(textarea).justifyContent
+    });
   } else {
     textarea.style.textAlign = alignment;
   }
 }
+
+const alignmentStyles = {
+  'left': { justify: 'flex-start', text: 'left' },
+  'center': { justify: 'center', text: 'center' },
+  'right': { justify: 'flex-end', text: 'right' }
+};

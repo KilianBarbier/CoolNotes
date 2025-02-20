@@ -154,18 +154,11 @@
   <body>
     <header role="banner">
       <nav role="navigation" aria-label="Menu principal">
-        <button
-          id="themeToggleBtn"
-          class="theme-toggle-btn"
-          aria-label="Changer de thème"
-        >
-          Changer de thème
-        </button>
       </nav>
     </header>
 
     <main role="main" style="display: flex;flex-direction: column;gap: 15px;justify-content: center;align-items: center;">
-      <div class="button" data-tooltip="Taille : 2Mo">
+      <div class="button" data-tooltip="Taille max : 2Mo" onclick="handleDownload()" style="border: none;display: flex; padding-inline: 12px ;">
         <div class="button-wrapper">
           <div class="text">Télécharger</div>
           <span class="icon">
@@ -228,34 +221,34 @@
         <h2>Ratio d'aspect</h2>
         <ul>
           <li id="btn-postinsta" onclick="applyAspectRatio(1080, 1080)">
-            Publication Instagram (1080x1080)
+            Publication Instagram
           </li>
           <li id="btn-storyinsta" onclick="applyAspectRatio(1080, 1920)">
-            Story Instagram (1080x1920)
+            Story Instagram
           </li>
           <li id="btn-postfb" onclick="applyAspectRatio(1200, 630)">
-            Publication Facebook (1200x630)
+            Publication Facebook
           </li>
           <li id="btn-coverfb" onclick="applyAspectRatio(820, 312)">
-            Couverture Facebook (820x312)
+            Couverture Facebook
           </li>
           <li id="btn-posttwitter" onclick="applyAspectRatio(1200, 675)">
-            Publication Twitter (1200x675)
+            Publication Twitter 
           </li>
           <li id="btn-headertwitter" onclick="applyAspectRatio(1500, 500)">
-            En-tête Twitter (1500x500)
+            En-tête Twitter
           </li>
           <li id="btn-postlinkedin" onclick="applyAspectRatio(1200, 627)">
-            Publication LinkedIn (1200x627)
+            Publication LinkedIn
           </li>
           <li id="btn-coverlinkedin" onclick="applyAspectRatio(1584, 396)">
-            Couverture LinkedIn (1584x396)
+            Couverture LinkedIn
           </li>
           <li id="btn-thumbnailyt" onclick="applyAspectRatio(1280, 720)">
-            Miniature YouTube (1280x720)
+            Miniature YouTube
           </li>
           <li id="btn-channelyt" onclick="applyAspectRatio(2560, 1440)">
-            Bannière chaîne YouTube (2560x1440)
+            Bannière YouTube
           </li>
         </ul>
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
@@ -352,7 +345,10 @@
         </div>
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
 
-        <div class="align-buttons" >
+        <div class="align-buttons">
+          <h4 style="margin-top: 0px; margin-bottom: 4px; text-align: center;">
+            Alignement du texte
+          </h4>
           <div class="align-group">
             <button class="align-btn" onclick="applyTextAlign('left')" title="Aligner à gauche">
               <img src="/media/img/justify-left-white.svg" alt="Gauche" class="light-icon">
@@ -367,23 +363,8 @@
               <img src="/media/img/justify-right-black.svg" alt="Droite" class="dark-icon">
             </button>
           </div>
-          <div class="align-group">
-            <button class="align-btn" onclick="applyTextAlign('top', true)" title="Aligner en haut">
-              <img src="/media/img/align-top-white.svg" alt="Haut" class="light-icon">
-              <img src="/media/img/align-top-black.svg" alt="Haut" class="dark-icon">
-            </button>
-            <button class="align-btn" onclick="applyTextAlign('center', true)" title="Centrer verticalement">
-              <img src="/media/img/align-vertical-center-white.svg" alt="Milieu" class="light-icon">
-              <img src="/media/img/align-vertical-center-black.svg" alt="Milieu" class="dark-icon">
-            </button>
-            <button class="align-btn" onclick="applyTextAlign('bottom', true)" title="Aligner en bas">
-              <img src="/media/img/align-bottom-white.svg" alt="Bas" class="light-icon">
-              <img src="/media/img/align-bottom-black.svg" alt="Bas" class="dark-icon">
-            </button>
-          </div>
         </div>
-        <!-- Ajout du bouton d'inversion -->
-        <div style="text-align: center; margin-top: 10px;">
+        <div style="text-align: center; margin-top: 10px;margin-bottom: 10px;">
           <button 
             onclick="invertColors()"
             style="

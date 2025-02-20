@@ -153,18 +153,11 @@
   <body>
     <header role="banner">
       <nav role="navigation" aria-label="Main menu">
-        <button
-          id="themeToggleBtn"
-          class="theme-toggle-btn"
-          aria-label="Switch theme"
-        >
-          Switch theme
-        </button>
       </nav>
     </header>
 
     <main role="main" style="display: flex;flex-direction: column;gap: 15px;justify-content: center;align-items: center;">
-      <div class="button" data-tooltip="Size: 2MB">
+      <button class="button" data-tooltip="Max size: 2MB" onclick="handleDownload()" style="border: none;display: flex; padding-inline: 12px ;">
         <div class="button-wrapper">
           <div class="text">Download</div>
           <span class="icon">
@@ -173,10 +166,10 @@
             </svg>
           </span>
         </div>
-      </div>
+      </button>
       <div class="container" style="position: relative">
         <div class="content">
-          <div class="center-div">
+          <div class="center-div" style="background-color: rgb(0, 0, 0, 0.7);">
             <textarea class="textarea"></textarea>
           </div>
         </div>
@@ -227,34 +220,34 @@
         <h2>Aspect ratio</h2>
         <ul>
           <li id="btn-postinsta" onclick="applyAspectRatio(1080, 1080)">
-            Instagram Post (1080x1080)
+            Instagram Post
           </li>
           <li id="btn-storyinsta" onclick="applyAspectRatio(1080, 1920)">
-            Instagram Story (1080x1920)
+            Instagram Story
           </li>
           <li id="btn-postfb" onclick="applyAspectRatio(1200, 630)">
-            Facebook Post (1200x630)
+            Facebook Post
           </li>
           <li id="btn-coverfb" onclick="applyAspectRatio(820, 312)">
-            Facebook Cover (820x312)
+            Facebook Cover
           </li>
           <li id="btn-posttwitter" onclick="applyAspectRatio(1200, 675)">
-            Twitter Post (1200x675)
+            Twitter Post
           </li>
           <li id="btn-headertwitter" onclick="applyAspectRatio(1500, 500)">
-            Twitter Header (1500x500)
+            Twitter Header
           </li>
           <li id="btn-postlinkedin" onclick="applyAspectRatio(1200, 627)">
-            LinkedIn Post (1200x627)
+            LinkedIn Post
           </li>
           <li id="btn-coverlinkedin" onclick="applyAspectRatio(1584, 396)">
-            LinkedIn Cover (1584x396)
+            LinkedIn Cover
           </li>
           <li id="btn-thumbnailyt" onclick="applyAspectRatio(1280, 720)">
-            YouTube Thumbnail (1280x720)
+            YouTube Thumbnail
           </li>
           <li id="btn-channelyt" onclick="applyAspectRatio(2560, 1440)">
-            YouTube Channel (2560x1440)
+            YouTube Channel
           </li>
         </ul>
         <hr style="border: 1px solid #3f3f4f; margin: 10px" />
@@ -286,7 +279,7 @@
           <li onclick="applyFont('Shadows Into Light', 'cursive')">Shadows Into Light</li>
           <li onclick="applyFont('Caveat', 'script')">Caveat</li>
         </ul>
-        <div class="slider-container">
+        <div class="slider-container" style="margin-top:20px;">
           <label for="paddingSlider" class="slider-label">
             <img src="/media/img/padding-white.svg" alt="Padding" class="light-icon">
             <img src="/media/img/padding-black.svg" alt="Padding" class="dark-icon">
@@ -350,10 +343,11 @@
             step="1"
           />
         </div>
-
-        <!-- Après les sliders -->
+        <hr style="border: 1px solid #3f3f4f; margin: 10px" />
         <div class="align-buttons">
-          <!-- Horizontal alignment -->
+          <h4 style="margin-top: 0px; margin-bottom: 4px; text-align: center;">
+            Text align
+          </h4>
           <div class="align-group">
             <button class="align-btn" onclick="applyTextAlign('left')" title="Align left">
               <img src="/media/img/justify-left-white.svg" alt="Left align" class="light-icon">
@@ -368,25 +362,8 @@
               <img src="/media/img/justify-right-black.svg" alt="Right align" class="dark-icon">
             </button>
           </div>
-          <!-- Vertical alignment -->
-          <div class="align-group">
-            <button class="align-btn" onclick="applyTextAlign('top', true)" title="Align top">
-              <img src="/media/img/align-top-white.svg" alt="Top align" class="light-icon">
-              <img src="/media/img/align-top-black.svg" alt="Top align" class="dark-icon">
-            </button>
-            <button class="align-btn" onclick="applyTextAlign('center', true)" title="Align middle">
-              <img src="/media/img/align-vertical-center-white.svg" alt="Middle align" class="light-icon">
-              <img src="/media/img/align-vertical-center-black.svg" alt="Middle align" class="dark-icon">
-            </button>
-            <button class="align-btn" onclick="applyTextAlign('bottom', true)" title="Align bottom">
-              <img src="/media/img/align-bottom-white.svg" alt="Bottom align" class="light-icon">
-              <img src="/media/img/align-bottom-black.svg" alt="Bottom align" class="dark-icon">
-            </button>
-          </div>
         </div>
-
-        <!-- Ajout du bouton d'inversion -->
-        <div style="text-align: center; margin-top: 10px;">
+        <div style="text-align: center; margin-top: 10px;margin-bottom: 10px;">
           <button 
             onclick="invertColors()"
             style="
@@ -402,7 +379,7 @@
           </button>
         </div>
 
-        <hr style="border: 1px solid #3f3f4f; margin: 10px" />
+        <hr style="border: 1px solid #3f3f4f; margin: 10px;"/>
         <h2>Backgrounds</h2>
         <div class="wrapper">
           <div class="thumbnail-container">
