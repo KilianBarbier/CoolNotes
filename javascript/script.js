@@ -502,8 +502,6 @@ function handleDownload() {
   textarea.style.display = "none";
   container.querySelector(".center-div").appendChild(tempDiv);
 
-  centerDiv.style.backdropFilter = "blur(10px)";
-
   html2canvas(container, {
     backgroundColor: null,
     scale: 2,
@@ -520,7 +518,6 @@ function handleDownload() {
 
       tempDiv.remove();
       textarea.style.display = "block";
-      centerDiv.style.backdropFilter = "blur(10px)";
     })
     .catch((error) => {
       console.error("Erreur lors de la capture de l'image :", error);
