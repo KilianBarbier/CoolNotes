@@ -125,6 +125,12 @@ input::placeholder {
 .group {
   transform: perspective(1000px) rotateX(0deg);
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 200px;        /* Fixed height for consistent spacing */
+  padding: 24px;
 }
 
 .group:hover {
@@ -452,29 +458,37 @@ select option[value="i"] {
 /* Update shortcut icon styles */
 .shortcut-icon[data-empty="true"] {
     position: relative;
-    width: 72px;          /* Increased to 72px */
-    height: 72px;         /* Increased to 72px */
+    width: 64px;          /* Even larger icon */
+    height: 64px;         /* Even larger icon */
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 18px;  /* Adjusted for larger size */
+    border-radius: 24px;  /* Adjusted for larger size */
     transition: all 0.3s ease;
-    margin: 0 auto 16px;  /* Reduced from 20px to 16px */
+    margin: auto;         /* Center vertically */
 }
 
 /* Make the plus icon bigger */
 .shortcut-icon[data-empty="true"]::before {
-    width: 32px;          /* Increased from 28px */
-    height: 3px;          /* Slightly thicker */
+    content: '';
+    position: absolute;
+    width: 40px;          /* Larger plus */
+    height: 4px;          /* Thicker line */
+    background: white;
+    border-radius: 2px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
 .shortcut-icon[data-empty="true"]::after {
-    width: 3px;           /* Slightly thicker */
-    height: 32px;         /* Increased from 28px */
+    content: '';
+    position: absolute;
+    width: 4px;           /* Thicker line */
+    height: 40px;         /* Larger plus */
+    background: white;
+    border-radius: 2px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -488,48 +502,12 @@ select option[value="i"] {
 
 /* Adjust title spacing */
 .shortcut-title {
-    margin-top: 16px;     /* Reduced from 20px */
-    font-size: 1.1rem;    /* Slightly larger font */
-}
-
-.shortcut-icon[data-empty="true"] {
-    position: relative;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    margin: 0 auto 12px;
+    margin-top: 24px;     /* More space between icon and text */
+    font-size: 1.1rem;
+    text-align: center;
 }
 
 .shortcut-icon[data-empty="true"]:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.05);
-}
-
-.shortcut-icon[data-empty="true"]::before,
-.shortcut-icon[data-empty="true"]::after {
-    content: '';
-    position: absolute;
-    background: white;
-    border-radius: 2px;
-}
-
-.shortcut-icon[data-empty="true"]::before {
-    width: 20px;
-    height: 2px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.shortcut-icon[data-empty="true"]::after {
-    width: 2px;
-    height: 20px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }

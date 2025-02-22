@@ -86,27 +86,23 @@
                 url = 'https://' + url;
             }
 
-            // Update URL input to show the corrected URL
-            document.getElementById('shortcutUrl').value = url;
-
             const faviconUrl = getFaviconUrl(url);
 
             const shortcut = document.querySelector(`[data-position="${position}"]`);
             shortcut.href = url;
             shortcut.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-            shortcut.querySelector('.shortcut-title').textContent = title;
             
-            // Update icon
             const iconContainer = shortcut.querySelector('.shortcut-icon');
+            // Remove the data-empty attribute and update icon
+            iconContainer.removeAttribute('data-empty');
             iconContainer.innerHTML = `
                 <img src="${faviconUrl}" 
                      class="w-8 h-8 mx-auto group-hover:scale-110 transition-transform duration-300" 
                      alt="${title}"
                      onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>'">
             `;
-
-            // Remove data-empty attribute after saving
-            iconContainer.removeAttribute('data-empty');
+            
+            shortcut.querySelector('.shortcut-title').textContent = title;
 
             // Save to localStorage
             const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
@@ -243,6 +239,43 @@
         // Add event listeners
         document.getElementById('searchInput').addEventListener('keyup', handleSearch);
         document.querySelector('.absolute svg').addEventListener('click', handleSearch);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set background attachment
+            document.body.style.backgroundAttachment = 'fixed';
+            
+            // Load and render saved shortcuts
+            const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
+            
+            // Generate grid with saved shortcuts
+            const shortcutGrid = document.getElementById('shortcutGrid');
+            for (let i = 0; i < 8; i++) {
+                const savedShortcut = shortcuts[i];
+                if (savedShortcut) {
+                    // Create shortcut with saved data
+                    const shortcutHtml = `
+                        <a href="${savedShortcut.url}" 
+                           onclick="handleShortcutClick(event, '${i}')" 
+                           oncontextmenu="handleShortcutClick(event, '${i}')"
+                           data-position="${i}"
+                           class="group p-6 backdrop-blur-xl bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
+                            <div class="text-center">
+                                <div class="shortcut-icon">
+                                    <img src="${savedShortcut.faviconUrl}" 
+                                         class="w-8 h-8 mx-auto group-hover:scale-110 transition-transform duration-300" 
+                                         alt="${savedShortcut.title}"
+                                         onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>'">
+                                </div>
+                                <div class="text-white font-medium shortcut-title">${savedShortcut.title}</div>
+                            </div>
+                        </a>`;
+                    shortcutGrid.insertAdjacentHTML('beforeend', shortcutHtml);
+                } else {
+                    // Create empty shortcut
+                    shortcutGrid.insertAdjacentHTML('beforeend', generateShortcut(i));
+                }
+            }
+        });
     </script>
 </head>
 <body class="min-h-screen font-sf">
@@ -286,7 +319,7 @@
                     <option value="sp">Spotify</option>
                     <option value="tw">Twitter</option>
                     <option value="ig">Instagram</option>
-                    <option value="maps">Google Maps</option>
+                    <option value="maps">Google Maps</option>rl" 
                     <option value="i">Google Images</option>
                 </select>
                 <div class="relative flex-1">
