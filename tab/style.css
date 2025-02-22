@@ -112,6 +112,16 @@ input::placeholder {
   color: rgba(255, 255, 255, 0.6) !important;
 }
 
+/* Override the white placeholder color for the config modal inputs */
+#configModal input::placeholder {
+    color: rgba(75, 85, 99, 0.7) !important; /* gray-600 with opacity */
+}
+
+/* Reset the global input placeholder styles for config modal */
+#configModal input {
+    color: rgb(17, 24, 39) !important; /* gray-900 */
+}
+
 /* Subtle shadow for better depth */
 .shadow-lg {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2) !important;
@@ -125,6 +135,10 @@ input::placeholder {
 .group {
   transform: perspective(1000px) rotateX(0deg);
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
 }
 
 .group:hover {
@@ -132,6 +146,14 @@ input::placeholder {
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.3),
     inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+.group > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Enhanced icons */
@@ -170,7 +192,8 @@ button:active {
         0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
     animation: fadeIn 0.1s ease-out;
-    background: rgba(255, 255, 255, 0.95) !important;
+    background: none !important;
+    backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     opacity: 0;
     visibility: hidden;
@@ -204,12 +227,12 @@ button:active {
 @keyframes fadeIn {
     from { 
         opacity: 0; 
-        transform: scale(0.95); 
+        transform: scale(1.2); 
         visibility: hidden;
     }
     to { 
         opacity: 1; 
-        transform: scale(1); 
+        transform: scale(1.2); 
         visibility: visible;
     }
 }
@@ -465,11 +488,9 @@ select option[value="i"] {
 
 /* Make the plus icon bigger */
 .shortcut-icon[data-empty="true"]::before {
-    width: 32px;          /* Increased from 28px */
-    height: 3px;          /* Slightly thicker */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    content: '+';
+    font-size: 2rem;
+    color: white;
 }
 
 .shortcut-icon[data-empty="true"]::after {
@@ -482,14 +503,33 @@ select option[value="i"] {
 
 /* Update favicon image size for configured shortcuts */
 .shortcut-icon img {
+    width: 36px !important;  
+    height: 36px !important;
+    transform: scale(1.3); /* Added scale for saved shortcuts */
+}
+
+/* Hover effect only for saved shortcuts */
+.shortcut-icon:not([data-empty="true"]) img:hover {
+    transform: scale(1.4);
+}
+
+/* Keep empty shortcut styles unchanged */
+.shortcut-icon[data-empty="true"]:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.2);
+}
+
+/* Update favicon image size for configured shortcuts */
+.shortcut-icon img {
     width: 36px !important;  /* Increased from 32px */
     height: 36px !important; /* Increased from 32px */
 }
 
 /* Adjust title spacing */
 .shortcut-title {
-    margin-top: 16px;     /* Reduced from 20px */
-    font-size: 1.1rem;    /* Slightly larger font */
+    font-size: 1.1rem;
+    text-align: center;
+    width: 100%;
 }
 
 .shortcut-icon[data-empty="true"] {
@@ -507,7 +547,7 @@ select option[value="i"] {
 
 .shortcut-icon[data-empty="true"]:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
+    transform: scale(1.2);
 }
 
 .shortcut-icon[data-empty="true"]::before,
@@ -532,4 +572,11 @@ select option[value="i"] {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.shortcut-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
 }

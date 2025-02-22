@@ -45,12 +45,16 @@
         function showContextMenu(event, position) {
             event.preventDefault();
             const contextMenu = document.getElementById('contextMenu');
+            // Ne garder que le positionnement, pas de style de fond
             contextMenu.style.left = `${event.pageX}px`;
             contextMenu.style.top = `${event.pageY}px`;
             contextMenu.setAttribute('data-position', position);
             contextMenu.classList.remove('hidden');
+            
+            // S'assurer qu'aucun style de fond n'est présent
+            contextMenu.style.background = 'none';
+            contextMenu.style.backgroundColor = 'transparent';
 
-            // Close context menu when clicking outside
             document.addEventListener('click', closeContextMenu);
         }
 
@@ -86,48 +90,25 @@
                 url = 'https://' + url;
             }
 
-            // Update URL input to show the corrected URL
-            document.getElementById('shortcutUrl').value = url;
-
-            const faviconUrl = getFaviconUrl(url);
-
-            const shortcut = document.querySelector(`[data-position="${position}"]`);
-            shortcut.href = url;
-            shortcut.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-            shortcut.querySelector('.shortcut-title').textContent = title;
-            
-            // Update icon
-            const iconContainer = shortcut.querySelector('.shortcut-icon');
-            iconContainer.innerHTML = `
-                <img src="${faviconUrl}" 
-                     class="w-8 h-8 mx-auto group-hover:scale-110 transition-transform duration-300" 
-                     alt="${title}"
-                     onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>'">
-            `;
-
-            // Remove data-empty attribute after saving
-            iconContainer.removeAttribute('data-empty');
-
             // Save to localStorage
             const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
-            shortcuts[position] = { title, url, faviconUrl };
+            shortcuts[position] = { title, url, faviconUrl: getFaviconUrl(url) };
             localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
 
             closeConfigModal();
+            // Recharger la page pour assurer une mise à jour propre
+            window.location.reload();
         }
 
         function openConfigModal(position) {
             const modal = document.getElementById('configModal');
             modal.setAttribute('data-position', position);
             
-            // Clear form
             document.getElementById('shortcutTitle').value = '';
             document.getElementById('shortcutUrl').value = '';
+            document.getElementById('saveButton').disabled = true;
             
-            // Show modal
             modal.classList.remove('hidden');
-            
-            // Focus on title input
             document.getElementById('shortcutTitle').focus();
         }
 
@@ -142,17 +123,6 @@
 
         function deleteShortcut() {
             const position = document.getElementById('contextMenu').getAttribute('data-position');
-            const shortcut = document.querySelector(`[data-position="${position}"]`);
-            
-            // Reset shortcut to default state with new SVG icon
-            shortcut.href = '#';
-            shortcut.querySelector('.shortcut-title').textContent = 'Add Shortcut';
-            shortcut.querySelector('.shortcut-icon').innerHTML = `
-                <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="16"/>
-                    <line x1="8" y1="12" x2="16" y1="12"/>
-                </svg>`;
             
             // Remove from localStorage
             const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
@@ -160,17 +130,21 @@
             localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
             
             closeContextMenu();
+            // Recharger la page pour assurer une mise à jour propre
+            window.location.reload();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Generate shortcuts
+            // Generate grid container first
             const grid = document.getElementById('shortcutGrid');
+            const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
+            
+            // First create all shortcut cards
             for (let i = 0; i < 8; i++) {
                 grid.innerHTML += generateShortcut(i);
             }
 
-            // Load saved shortcuts
-            const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
+            // Then populate saved shortcuts
             Object.entries(shortcuts).forEach(([position, data]) => {
                 const shortcut = document.querySelector(`[data-position="${position}"]`);
                 if (shortcut) {
@@ -178,14 +152,16 @@
                     shortcut.onclick = (e) => { e.preventDefault(); window.location.href = data.url; };
                     shortcut.querySelector('.shortcut-title').textContent = data.title;
                     const iconContainer = shortcut.querySelector('.shortcut-icon');
+                    iconContainer.removeAttribute('data-empty');
                     iconContainer.innerHTML = `
                         <img src="${data.faviconUrl}" 
-                             class="w-8 h-8 mx-auto group-hover:scale-110 transition-transform duration-300" 
-                             alt="${data.title}"
-                             onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`
+                             class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
+                             alt="${data.title}" 
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`;
                 }
             });
 
+            // Rest of the initialization code (gradients, etc.)
             const gradients = [
                 "radial-gradient(circle at 50% 400%, rgb(7, 227, 244) 10%, rgb(24, 170, 181) 50%, rgb(8, 108, 118) 67%, black 100%)",
                 "radial-gradient(circle at 50% 400%, rgb(255, 0, 255) 10%, rgb(204, 0, 204) 50%, rgb(153, 0, 153) 67%, black 100%)",
@@ -313,37 +289,112 @@
             </div>
 
             <!-- Configuration Modal simplifié -->
-            <div id="configModal" class="hidden fixed inset-0 bg-white/40 backdrop-blur-xl flex items-center justify-center">
+            <div id="configModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center">
                 <div class="bg-white/95 rounded-2xl p-6 w-96 shadow-2xl backdrop-blur-xl">
-                    <h2 class="text-2xl font-bold mb-4 text-white">Add Shortcut</h2>
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900">Add Shortcut</h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-white">Title</label>
-                            <input type="text" id="shortcutTitle" class="mt-1 w-full rounded-lg px-3 py-2 text-white-900 dark:text-white bg-gray-50 dark:bg-gray-700">
+                            <label class="block text-sm font-medium text-gray-700">Title</label>
+                            <input type="text" 
+                                   id="shortcutTitle" 
+                                   oninput="validateForm()"
+                                   placeholder="My Shortcut"
+                                   class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">URL</label>
+                            <label class="block text-sm font-medium text-gray-700">URL</label>
                             <input type="url" 
                                    id="shortcutUrl" 
-                                   placeholder="example.com or https://example.com"
-                                   class="mt-1 w-full rounded-lg px-3 py-2 text-white-900 dark:text-white bg-gray-50 dark:bg-gray-700">
+                                   oninput="validateForm()"
+                                   placeholder="example.com"
+                                   class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400">
+                            <p id="urlError" class="mt-1 text-sm text-red-500 hidden">Veuillez entrer une URL valide (ex: google.com)</p>
                         </div>
                         <div class="flex justify-end gap-2 mt-6">
-                            <button onclick="closeConfigModal()" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700">Cancel</button>
-                            <button onclick="saveShortcut()" class="px-4 py-2 rounded-lg bg-blue-600 text-white">Save</button>
+                            <button onclick="closeConfigModal()" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">Cancel</button>
+                            <button id="saveButton" 
+                                    onclick="saveShortcut()" 
+                                    disabled
+                                    class="px-4 py-2 rounded-lg bg-blue-400/80 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500/80">
+                                Save
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Add Context Menu -->
-            <div id="contextMenu" class="hidden fixed bg-white/90 rounded-lg shadow-lg py-2 min-w-[150px] z-50 backdrop-blur-xl">
+            <script>
+                // Liste des extensions de domaine courantes
+                const validTLDs = [
+                    'com', 'net', 'org', 'edu', 'gov', 'mil', 'io', 'co', 'ai', 'app',
+                    'dev', 'me', 'tv', 'info', 'biz', 'name', 'mobi', 'pro', 'travel',
+                    // Domaines nationaux courants
+                    'fr', 'uk', 'de', 'it', 'es', 'nl', 'ru', 'cn', 'jp', 'kr', 'br',
+                    'au', 'ca', 'in', 'eu'
+                ];
+
+                function isValidUrl(string) {
+                    try {
+                        const url = string.trim();
+                        if (!url) return false;
+                        
+                        // Ajouter https:// si nécessaire
+                        const urlToTest = url.match(/^https?:\/\//i) ? url : `https://${url}`;
+                        const urlObj = new URL(urlToTest);
+                        
+                        // Vérifier le hostname
+                        const parts = urlObj.hostname.split('.');
+                        if (parts.length < 2) return false;
+                        
+                        // Vérifier que l'extension respecte le format standard
+                        // Une extension est typiquement 2-12 caractères et contient uniquement des lettres
+                        const tld = parts[parts.length - 1].toLowerCase();
+                        return /^[a-z]{2,12}$/.test(tld);
+                    } catch (err) {
+                        return false;
+                    }
+                }
+
+                // Fonction de validation améliorée
+                function validateForm() {
+                    const title = document.getElementById('shortcutTitle').value.trim();
+                    const url = document.getElementById('shortcutUrl').value.trim();
+                    const saveButton = document.getElementById('saveButton');
+                    const urlError = document.getElementById('urlError');
+                    
+                    const isTitleValid = title.length > 0;
+                    const isUrlValid = isValidUrl(url);
+                    
+                    // Afficher/masquer le message d'erreur
+                    if (url && !isUrlValid) {
+                        urlError.classList.remove('hidden');
+                    } else {
+                        urlError.classList.add('hidden');
+                    }
+                    
+                    saveButton.disabled = !isTitleValid || !isUrlValid;
+                }
+
+                // Modification de openConfigModal pour réinitialiser l'état du bouton
+                function openConfigModal(position) {
+                    const modal = document.getElementById('configModal');
+                    modal.setAttribute('data-position', position);
+                    
+                    document.getElementById('shortcutTitle').value = '';
+                    document.getElementById('shortcutUrl').value = '';
+                    document.getElementById('saveButton').disabled = true;
+                    
+                    modal.classList.remove('hidden');
+                    document.getElementById('shortcutTitle').focus();
+                }
+            </script>
+            <div id="contextMenu" class="hidden fixed rounded-lg shadow-2xl py-2 min-w-[150px] z-50 bg-black/40 backdrop-blur-xl border border-white/10">
                 <button onclick="editShortcut(document.getElementById('contextMenu').getAttribute('data-position'))" 
-                        class="w-full px-4 py-2 text-left hover:bg-white/20 text-white">
+                        class="w-full border-t-0 border-r-0 border-l-0 border-b-0 px-4 py-2 text-left hover:bg-white/10 text-gray-200 transition-colors duration-200">
                     Edit Shortcut
                 </button>
                 <button onclick="deleteShortcut()" 
-                        class="w-full px-4 py-2 text-left hover:bg-red-500/20 text-white">
+                        class="w-full border-b-0 border-r-0 border-l-0 px-4 py-2 text-left hover:bg-red-500/20 text-red-300 transition-colors duration-200">
                     Delete Shortcut
                 </button>
             </div>
