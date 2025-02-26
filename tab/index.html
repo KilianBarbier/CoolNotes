@@ -183,13 +183,27 @@
             document.body.style.background = randomGradient;  // Changed from backgroundImage to background
             document.body.style.backgroundSize = 'cover';
             document.body.style.backgroundAttachment = 'fixed';
+
+            // Configurer les écouteurs d'événement pour la recherche
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.querySelector('.absolute svg');
+            
+            // Écouteur pour la touche Entrée sur le champ de recherche
+            searchInput.addEventListener('keydown', handleSearch);
+            
+            // Écouteur pour le clic sur l'icône de recherche
+            searchButton.addEventListener('click', handleSearch);
         });
 
         function handleSearch(event) {
-            if (event.key === 'Enter' || event.type === 'click') {
-                const query = document.getElementById('searchInput').value.trim();
-                const selectedEngine = document.getElementById('searchEngine').value;
+            // Vérifier si c'est la touche Entrée ou un clic
+            if ((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+                event.preventDefault(); // Empêcher le comportement par défaut
                 
+                let query = document.getElementById('searchInput').value.trim();
+                let selectedEngine = document.getElementById('searchEngine').value;
+                
+                // Liste des moteurs de recherche
                 const searchEngines = {
                     'g': 'https://www.google.com/search?q=',
                     'yt': 'https://www.youtube.com/results?search_query=',
@@ -206,14 +220,25 @@
                     'i': 'https://www.google.com/images?q='
                 };
 
+                // Vérifier si la requête commence par un /commande
+                if (query.startsWith('/')) {
+                    const parts = query.substring(1).split(' ');
+                    if (parts.length > 1) {
+                        const possibleCommand = parts[0].toLowerCase();
+                        if (searchEngines[possibleCommand]) {
+                            selectedEngine = possibleCommand;
+                            // Supprimer la commande de la requête (y compris le /)
+                            query = parts.slice(1).join(' ');
+                        }
+                    }
+                }
+
                 const searchUrl = searchEngines[selectedEngine] || searchEngines['g'];
-                window.location.href = searchUrl + encodeURIComponent(query);
+                if (query) {
+                    window.location.href = searchUrl + encodeURIComponent(query);
+                }
             }
         }
-
-        // Add event listeners
-        document.getElementById('searchInput').addEventListener('keyup', handleSearch);
-        document.querySelector('.absolute svg').addEventListener('click', handleSearch);
 
         // Ajouter la gestion de la transition lors du reload
         function reloadWithTransition() {
@@ -475,26 +500,26 @@
                     <h2 class="text-2xl font-bold mb-4 text-white">Search Commands</h2>
                     <div class="grid grid-cols-2 gap-4 text-white">
                         <div>
-                            <p><strong>g</strong> - Google</p>
-                            <p><strong>yt</strong> - YouTube</p>
-                            <p><strong>gh</strong> - GitHub</p>
-                            <p><strong>w</strong> - Wikipedia</p>
-                            <p><strong>r</strong> - Reddit</p>
-                            <p><strong>so</strong> - Stack Overflow</p>
-                            <p><strong>i</strong> - Google Images</p>
+                            <p><strong>&#47;g</strong> - Google</p>
+                            <p><strong>&#47;yt</strong> - YouTube</p>
+                            <p><strong>&#47;gh</strong> - GitHub</p>
+                            <p><strong>&#47;w</strong> - Wikipedia</p>
+                            <p><strong>&#47;r</strong> - Reddit</p>
+                            <p><strong>&#47;so</strong> - Stack Overflow</p>
+                            <p><strong>&#47;i</strong> - Google Images</p>
                         </div>
                         <div>
-                            <p><strong>a</strong> - Amazon</p>
-                            <p><strong>n</strong> - Netflix</p>
-                            <p><strong>sp</strong> - Spotify</p>
-                            <p><strong>tw</strong> - Twitter</p>
-                            <p><strong>ig</strong> - Instagram</p>
-                            <p><strong>maps</strong> - Google Maps</p>
+                            <p><strong>&#47;a</strong> - Amazon</p>
+                            <p><strong>&#47;n</strong> - Netflix</p>
+                            <p><strong>&#47;sp</strong> - Spotify</p>
+                            <p><strong>&#47;tw</strong> - Twitter</p>
+                            <p><strong>&#47;ig</strong> - Instagram</p>
+                            <p><strong>&#47;maps</strong> - Google Maps</p>
                         </div>
                     </div>
                     <div class="mt-6 text-white/80">
-                        <p>Example: <code>yt cats</code> searches YouTube for cats</p>
-                        <p>Tip: Just type normally for Google search</p>
+                        <p>Example: <code>/yt cats</code> searches YouTube for cats</p>
+                        <p>Tip: Use a forward slash (/) to start commands, or just type normally for Google search</p>
                     </div>
                     <button onclick="closeSearchHelp()" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-white">
                         Close
