@@ -96,8 +96,7 @@
             localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
 
             closeConfigModal();
-            // Recharger la page pour assurer une mise à jour propre
-            window.location.reload();
+            reloadWithTransition();
         }
 
         function openConfigModal(position) {
@@ -130,8 +129,7 @@
             localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
             
             closeContextMenu();
-            // Recharger la page pour assurer une mise à jour propre
-            window.location.reload();
+            reloadWithTransition();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -181,14 +179,12 @@
                 "radial-gradient(circle at 50% 400%, rgb(250, 128, 114) 10%, rgb(233, 99, 87) 50%, rgb(207, 77, 64) 67%, black 100%)"
             ];
 
-            // Simplified background setting without animation
             const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
             document.body.style.background = randomGradient;  // Changed from backgroundImage to background
             document.body.style.backgroundSize = 'cover';
             document.body.style.backgroundAttachment = 'fixed';
         });
 
-        // Add search functionality
         function handleSearch(event) {
             if (event.key === 'Enter' || event.type === 'click') {
                 const query = document.getElementById('searchInput').value.trim();
@@ -210,7 +206,6 @@
                     'i': 'https://www.google.com/images?q='
                 };
 
-                // Use selected engine or fallback to Google
                 const searchUrl = searchEngines[selectedEngine] || searchEngines['g'];
                 window.location.href = searchUrl + encodeURIComponent(query);
             }
@@ -219,12 +214,20 @@
         // Add event listeners
         document.getElementById('searchInput').addEventListener('keyup', handleSearch);
         document.querySelector('.absolute svg').addEventListener('click', handleSearch);
+
+        // Ajouter la gestion de la transition lors du reload
+        function reloadWithTransition() {
+            document.body.classList.add('page-transition');
+            setTimeout(() => {
+                window.location.reload();
+            }, 200);
+        }
     </script>
 </head>
 <body class="min-h-screen font-sf">
     <div class="flex min-h-screen p-6">
         <!-- Sidebar -->
-        <aside class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6">
+        <aside class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 sidebar">
             <div class="text-xl font-medium text-white mb-8">Quick Access</div>
             <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -239,8 +242,8 @@
                 <span>Favorites</span>
             </div>
             <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
-                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 15l-6 6-1.42-1.42L15.17 16H4V4h2v10h9.17l-3.59-3.58L13 9l6 6z"/>
+                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <span>Quick Links</span>
             </div>
@@ -249,22 +252,89 @@
         <!-- Main Content -->
         <main class="flex-1 flex flex-col">
             <!-- Search Bar -->
-            <div class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4">
-                <select id="searchEngine" class="bg-white/20 text-white backdrop-blur-xl px-2 py-2 rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300">
-                    <option value="g" selected>Google</option>
-                    <option value="yt">YouTube</option>
-                    <option value="gh">GitHub</option>
-                    <option value="w">Wikipedia</option>
-                    <option value="r">Reddit</option>
-                    <option value="so">Stack Overflow</option>
-                    <option value="a">Amazon</option>
-                    <option value="n">Netflix</option>
-                    <option value="sp">Spotify</option>
-                    <option value="tw">Twitter</option>
-                    <option value="ig">Instagram</option>
-                    <option value="maps">Google Maps</option>
-                    <option value="i">Google Images</option>
-                </select>
+            <div class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4 search-container relative z-30">
+                <div class="relative">
+                    <button id="currentSearch" class="relative z-[999999] w-12 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center">
+                        <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="w-6 h-6" alt="Google">
+                    </button>
+                    <div id="searchEngineDropdown" class="hidden absolute top-full left-0 mt-2 rounded-xl p-2 grid grid-cols-4 gap-2 w-[320px] z-40">
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="g">
+                            <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="w-6 h-6" alt="Google">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="yt">
+                            <img src="https://www.youtube.com/favicon.ico" class="w-6 h-6" alt="YouTube">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="gh">
+                            <img src="https://github.githubassets.com/favicons/favicon.svg" class="w-6 h-6" alt="GitHub">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="w">
+                            <img src="https://wikipedia.org/static/favicon/wikipedia.ico" class="w-6 h-6" alt="Wikipedia">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="r">
+                            <img src="https://www.redditstatic.com/desktop2x/img/favicon/favicon-32x32.png" class="w-6 h-6" alt="Reddit">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="so">
+                            <img src="https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico" class="w-6 h-6" alt="Stack">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="a">
+                            <img src="https://www.amazon.com/favicon.ico" class="w-6 h-6" alt="Amazon">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="n">
+                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico" class="w-6 h-6" alt="Netflix">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="sp">
+                            <img src="https://open.spotifycdn.com/cdn/images/favicon.0f31d2ea.ico" class="w-6 h-6" alt="Spotify">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="tw">
+                            <img src="https://abs.twimg.com/favicons/twitter.3.ico" class="w-6 h-6" alt="Twitter">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="ig">
+                            <img src="https://static.cdninstagram.com/rsrc.php/v3/yt/r/30PrGfR3xhB.png" class="w-6 h-6" alt="Instagram">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="maps">
+                            <img src="https://www.google.com/images/branding/product/ico/maps_lodp.ico" class="w-6 h-6" alt="Maps">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="i">
+                            <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="w-6 h-6" alt="Images">
+                        </button>
+                    </div>
+                    <select id="searchEngine" class="hidden">
+                        <option value="g">Google</option>
+                        <option value="yt">YouTube</option>
+                        <option value="gh">GitHub</option>
+                        <!-- ... garder les valeurs pour la fonctionnalité de recherche ... -->
+                    </select>
+                </div>
+
+                <script>
+                    document.getElementById('currentSearch').addEventListener('click', () => {
+                        const dropdown = document.getElementById('searchEngineDropdown');
+                        dropdown.classList.toggle('hidden');
+                    });
+
+                    document.querySelectorAll('.search-option').forEach(option => {
+                        option.addEventListener('click', (e) => {
+                            const value = e.currentTarget.dataset.value;
+                            const img = e.currentTarget.querySelector('img');
+                            
+                            // Mettre à jour l'icône visible
+                            document.querySelector('#currentSearch img').src = img.src;
+                            
+                            // Mettre à jour le select caché
+                            document.getElementById('searchEngine').value = value;
+                            
+                            // Fermer le dropdown
+                            document.getElementById('searchEngineDropdown').classList.add('hidden');
+                        });
+                    });
+
+                    // Fermer le dropdown si on clique ailleurs
+                    document.addEventListener('click', (e) => {
+                        if (!e.target.closest('.relative')) {
+                            document.getElementById('searchEngineDropdown').classList.add('hidden');
+                        }
+                    });
+                </script>
                 <div class="relative flex-1">
                     <input type="text" 
                            placeholder="Search..."

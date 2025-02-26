@@ -59,7 +59,7 @@ body {
   animation: none;
 }
 
-/* Adjust the container backgrounds for better contrast */
+/* Remettre l'ancien style pour .backdrop-blur-xl */
 .backdrop-blur-xl {
   background: rgba(255, 255, 255, 0.25) !important;
   backdrop-filter: blur(25px) !important;
@@ -167,7 +167,6 @@ svg {
   /* Remove this entire keyframe */
 }
 
-/* Enhanced button effects */
 button {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -579,4 +578,245 @@ select option[value="i"] {
     align-items: center;
     justify-content: center;
     margin: 0 auto 12px;
+}
+
+/* Animations pour le chargement initial */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation pour le reload */
+@keyframes fadeInOut {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Appliquer les animations aux éléments */
+.sidebar {
+    animation: fadeInScale 0.6s ease-out;
+}
+
+.search-container {
+    animation: fadeInScale 0.6s ease-out 0.2s both;
+}
+
+#shortcutGrid {
+    animation: fadeInScale 0.6s ease-out 0.3s both;
+}
+
+#shortcutGrid > * {
+    animation: slideInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+/* Animation delays for shortcuts */
+#shortcutGrid > *:nth-child(1) { animation-delay: 0s; }
+#shortcutGrid > *:nth-child(2) { animation-delay: 0.1s; }
+#shortcutGrid > *:nth-child(3) { animation-delay: 0.2s; }
+#shortcutGrid > *:nth-child(4) { animation-delay: 0.3s; }
+#shortcutGrid > *:nth-child(5) { animation-delay: 0.4s; }
+#shortcutGrid > *:nth-child(6) { animation-delay: 0.5s; }
+#shortcutGrid > *:nth-child(7) { animation-delay: 0.6s; }
+#shortcutGrid > *:nth-child(8) { animation-delay: 0.7s; }
+
+/* Animation de transition pour le reload */
+.page-transition {
+    animation: fadeInOut 0.4s ease-out;
+}
+
+/* Assurer que les animations sont désactivées si l'utilisateur préfère les réduire */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Style amélioré pour le select */
+#searchEngine {
+    width: 48px !important;
+    padding: 12px !important;
+    background-position: center !important;
+    background-size: 24px !important;
+    text-indent: -9999px; /* Cache le texte */
+    overflow: hidden;
+}
+
+/* Style pour le select et les options */
+#searchEngine {
+    padding: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+#searchEngine option {
+    font-size: 0;
+    line-height: 0;
+    padding: 8px !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+#searchEngine option img {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain;
+}
+
+/* Cacher le texte mais garder accessible */
+#searchEngine option::after {
+    content: attr(alt);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Style pour les options du select */
+#searchEngine option {
+    text-indent: 0; /* Réinitialise l'indentation pour les options */
+    padding-left: 35px !important;
+    background-position: 8px center !important;
+    background-size: 20px !important;
+    line-height: 32px !important;
+    min-height: 32px !important;
+}
+
+/* Style simplifié pour le select et ses options */
+#searchEngine {
+    width: auto !important;
+    min-width: 120px;
+    padding: 8px !important;
+}
+
+#searchEngine option {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#searchEngine option img {
+    margin-right: 8px;
+}
+
+/* On supprime tous les anciens styles compliqués de background-image */
+
+/* Nouveau style pour le select personnalisé */
+.custom-select {
+    position: relative;
+    width: 48px;
+    height: 48px;
+}
+
+.selected-option {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.selected-option:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.engine-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.options-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 8px;
+    width: 200px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    z-index: 50;
+}
+
+.option {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.hidden {
+    display: none;
+}
+#searchEngineDropdown {
+    z-index: 9999 !important;
+}
+
+#searchEngineDropdown .search-option {
+    transition: transform 0.2s;
+    background: rgba(55, 55, 55, 0.05);
+}
+
+#searchEngineDropdown .search-option:hover {
+    background: rgba(0, 0, 0, 0.605);
+    transform: translateZ(10px);
+}
+
+.popup-wrapper {
+    isolation: isolate;
+}
+
+.popup-backdrop {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+#searchEngineDropdown:not(.hidden) + .popup-backdrop {
+    opacity: 1;
 }
