@@ -820,3 +820,25 @@ select option[value="i"] {
 #searchEngineDropdown:not(.hidden) + .popup-backdrop {
     opacity: 1;
 }
+
+/* Styles pour le modal et l'effet de flou */
+#configModal {
+    z-index: 50;
+}
+
+#configModal:not(.hidden) ~ .search-container {
+    filter: blur(8px);
+    pointer-events: none;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.search-container {
+    transition: all 0.3s ease;
+}
+
+/* Assurez-vous que le modal est toujours au-dessus */
+.modal-content {
+    z-index: 51;
+    position: relative;
+}
