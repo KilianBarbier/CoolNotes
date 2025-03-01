@@ -254,47 +254,29 @@
         <!-- Sidebar -->
         <aside class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 sidebar">
             <div class="text-xl font-medium text-white mb-8">Quick Access</div>
-            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3"  style="margin-left: -15px !important;">
+            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
                 </svg>
                 <span>Bookmarks</span>
             </div>
-            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3"  style="margin-left: -15px !important;">
+            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                 </svg>
                 <span>Favorites</span>
             </div>
-            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3"  style="margin-left: -15px !important;">
-                    <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3" style="display: flex; flex-direction: column;">
+                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>My apps</span><br>
+                <span style="display: flex; flex-direction: column;">My apps</span><br>
+                <ul>
+                    <li>
+                        <a href="https://dev.kilianbarbier.fr" style="display: flex; flex-direction: column;justify-content: flex-start;">CoolNotes</a>
+                    </li>
+                </ul>
             </div>
-            <ul style="margin-left: 35px;margin-top: 5px;">
-                <li>
-                    <a id="list-elem-links" href="https://dev.kilianbarbier.fr" style="display: flex; flex-direction: column;justify-content: flex-start;">• CoolNotes EN</a>
-                </li>
-                <li>
-                    <a id="list-elem-links" href="https://dev.kilianbarbier.fr/fr" style="display: flex; flex-direction: column;justify-content: flex-start;margin-bottom: 10px;margin-top: 10px;">• CoolNotes FR</a>
-                </li>
-                <li>
-                    <a id="list-elem-links" href="https://dev.kilianbarbier.fr" style="display: flex; flex-direction: column;justify-content: flex-start;margin-bottom: 10px;">• CoolNotes</a>
-                </li>
-                <style>
-                    #list-elem-links {
-                        color: white;
-                        text-decoration: none;
-                        font-size: 15px;
-                        font-weight: 500;
-                        transition: all 0.3s;
-                    }
-                    #list-elem-links:hover {
-                        text-decoration: underline;
-                    }
-                </style>
-            </ul>
         </aside>
 
         <!-- Main Content -->
