@@ -45,12 +45,16 @@
         function showContextMenu(event, position) {
             event.preventDefault();
             const contextMenu = document.getElementById('contextMenu');
+            // Ne garder que le positionnement, pas de style de fond
             contextMenu.style.left = `${event.pageX}px`;
             contextMenu.style.top = `${event.pageY}px`;
             contextMenu.setAttribute('data-position', position);
             contextMenu.classList.remove('hidden');
+            
+            // S'assurer qu'aucun style de fond n'est présent
+            contextMenu.style.background = 'none';
+            contextMenu.style.backgroundColor = 'transparent';
 
-            // Close context menu when clicking outside
             document.addEventListener('click', closeContextMenu);
         }
 
@@ -86,44 +90,24 @@
                 url = 'https://' + url;
             }
 
-            const faviconUrl = getFaviconUrl(url);
-
-            const shortcut = document.querySelector(`[data-position="${position}"]`);
-            shortcut.href = url;
-            shortcut.onclick = (e) => { e.preventDefault(); window.location.href = url; };
-            
-            const iconContainer = shortcut.querySelector('.shortcut-icon');
-            // Remove the data-empty attribute and update icon
-            iconContainer.removeAttribute('data-empty');
-            iconContainer.innerHTML = `
-                <img src="${faviconUrl}" 
-                     class="w-8 h-8 mx-auto group-hover:scale-110 transition-transform duration-300" 
-                     alt="${title}"
-                     onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>'">
-            `;
-            
-            shortcut.querySelector('.shortcut-title').textContent = title;
-
             // Save to localStorage
             const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
-            shortcuts[position] = { title, url, faviconUrl };
+            shortcuts[position] = { title, url, faviconUrl: getFaviconUrl(url) };
             localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
 
             closeConfigModal();
+            reloadWithTransition();
         }
 
         function openConfigModal(position) {
             const modal = document.getElementById('configModal');
             modal.setAttribute('data-position', position);
             
-            // Clear form
             document.getElementById('shortcutTitle').value = '';
             document.getElementById('shortcutUrl').value = '';
+            document.getElementById('saveButton').disabled = true;
             
-            // Show modal
             modal.classList.remove('hidden');
-            
-            // Focus on title input
             document.getElementById('shortcutTitle').focus();
         }
 
@@ -138,17 +122,6 @@
 
         function deleteShortcut() {
             const position = document.getElementById('contextMenu').getAttribute('data-position');
-            const shortcut = document.querySelector(`[data-position="${position}"]`);
-            
-            // Reset shortcut to default state with new SVG icon
-            shortcut.href = '#';
-            shortcut.querySelector('.shortcut-title').textContent = 'Add Shortcut';
-            shortcut.querySelector('.shortcut-icon').innerHTML = `
-                <svg class="w-8 h-8 text-gray-400 dark:text-gray-500 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="8" x2="12" y2="16"/>
-                    <line x1="8" y1="12" x2="16" y1="12"/>
-                </svg>`;
             
             // Remove from localStorage
             const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
@@ -156,17 +129,20 @@
             localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
             
             closeContextMenu();
+            reloadWithTransition();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Generate shortcuts
+            // Generate grid container first
             const grid = document.getElementById('shortcutGrid');
+            const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
+            
+            // First create all shortcut cards
             for (let i = 0; i < 8; i++) {
                 grid.innerHTML += generateShortcut(i);
             }
 
-            // Load saved shortcuts
-            const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
+            // Then populate saved shortcuts
             Object.entries(shortcuts).forEach(([position, data]) => {
                 const shortcut = document.querySelector(`[data-position="${position}"]`);
                 if (shortcut) {
@@ -174,14 +150,16 @@
                     shortcut.onclick = (e) => { e.preventDefault(); window.location.href = data.url; };
                     shortcut.querySelector('.shortcut-title').textContent = data.title;
                     const iconContainer = shortcut.querySelector('.shortcut-icon');
+                    iconContainer.removeAttribute('data-empty');
                     iconContainer.innerHTML = `
                         <img src="${data.faviconUrl}" 
-                             class="w-8 h-8 mx-auto group-hover:scale-110 transition-transform duration-300" 
-                             alt="${data.title}"
-                             onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`
+                             class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
+                             alt="${data.title}" 
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`;
                 }
             });
 
+            // Rest of the initialization code (gradients, etc.)
             const gradients = [
                 "radial-gradient(circle at 50% 400%, rgb(7, 227, 244) 10%, rgb(24, 170, 181) 50%, rgb(8, 108, 118) 67%, black 100%)",
                 "radial-gradient(circle at 50% 400%, rgb(255, 0, 255) 10%, rgb(204, 0, 204) 50%, rgb(153, 0, 153) 67%, black 100%)",
@@ -201,19 +179,31 @@
                 "radial-gradient(circle at 50% 400%, rgb(250, 128, 114) 10%, rgb(233, 99, 87) 50%, rgb(207, 77, 64) 67%, black 100%)"
             ];
 
-            // Simplified background setting without animation
             const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
             document.body.style.background = randomGradient;  // Changed from backgroundImage to background
             document.body.style.backgroundSize = 'cover';
             document.body.style.backgroundAttachment = 'fixed';
+
+            // Configurer les écouteurs d'événement pour la recherche
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.querySelector('.absolute svg');
+            
+            // Écouteur pour la touche Entrée sur le champ de recherche
+            searchInput.addEventListener('keydown', handleSearch);
+            
+            // Écouteur pour le clic sur l'icône de recherche
+            searchButton.addEventListener('click', handleSearch);
         });
 
-        // Add search functionality
         function handleSearch(event) {
-            if (event.key === 'Enter' || event.type === 'click') {
-                const query = document.getElementById('searchInput').value.trim();
-                const selectedEngine = document.getElementById('searchEngine').value;
+            // Vérifier si c'est la touche Entrée ou un clic
+            if ((event.type === 'keydown' && event.key === 'Enter') || event.type === 'click') {
+                event.preventDefault(); // Empêcher le comportement par défaut
                 
+                let query = document.getElementById('searchInput').value.trim();
+                let selectedEngine = document.getElementById('searchEngine').value;
+                
+                // Liste des moteurs de recherche
                 const searchEngines = {
                     'g': 'https://www.google.com/search?q=',
                     'yt': 'https://www.youtube.com/results?search_query=',
@@ -230,58 +220,39 @@
                     'i': 'https://www.google.com/images?q='
                 };
 
-                // Use selected engine or fallback to Google
+                // Vérifier si la requête commence par un /commande
+                if (query.startsWith('/')) {
+                    const parts = query.substring(1).split(' ');
+                    if (parts.length > 1) {
+                        const possibleCommand = parts[0].toLowerCase();
+                        if (searchEngines[possibleCommand]) {
+                            selectedEngine = possibleCommand;
+                            // Supprimer la commande de la requête (y compris le /)
+                            query = parts.slice(1).join(' ');
+                        }
+                    }
+                }
+
                 const searchUrl = searchEngines[selectedEngine] || searchEngines['g'];
-                window.location.href = searchUrl + encodeURIComponent(query);
+                if (query) {
+                    window.location.href = searchUrl + encodeURIComponent(query);
+                }
             }
         }
 
-        // Add event listeners
-        document.getElementById('searchInput').addEventListener('keyup', handleSearch);
-        document.querySelector('.absolute svg').addEventListener('click', handleSearch);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set background attachment
-            document.body.style.backgroundAttachment = 'fixed';
-            
-            // Load and render saved shortcuts
-            const shortcuts = JSON.parse(localStorage.getItem('shortcuts') || '{}');
-            
-            // Generate grid with saved shortcuts
-            const shortcutGrid = document.getElementById('shortcutGrid');
-            for (let i = 0; i < 8; i++) {
-                const savedShortcut = shortcuts[i];
-                if (savedShortcut) {
-                    // Create shortcut with saved data
-                    const shortcutHtml = `
-                        <a href="${savedShortcut.url}" 
-                           onclick="handleShortcutClick(event, '${i}')" 
-                           oncontextmenu="handleShortcutClick(event, '${i}')"
-                           data-position="${i}"
-                           class="group p-6 backdrop-blur-xl bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
-                            <div class="text-center">
-                                <div class="shortcut-icon">
-                                    <img src="${savedShortcut.faviconUrl}" 
-                                         class="w-8 h-8 mx-auto group-hover:scale-110 transition-transform duration-300" 
-                                         alt="${savedShortcut.title}"
-                                         onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>'">
-                                </div>
-                                <div class="text-white font-medium shortcut-title">${savedShortcut.title}</div>
-                            </div>
-                        </a>`;
-                    shortcutGrid.insertAdjacentHTML('beforeend', shortcutHtml);
-                } else {
-                    // Create empty shortcut
-                    shortcutGrid.insertAdjacentHTML('beforeend', generateShortcut(i));
-                }
-            }
-        });
+        // Ajouter la gestion de la transition lors du reload
+        function reloadWithTransition() {
+            document.body.classList.add('page-transition');
+            setTimeout(() => {
+                window.location.reload();
+            }, 200);
+        }
     </script>
 </head>
 <body class="min-h-screen font-sf">
     <div class="flex min-h-screen p-6">
         <!-- Sidebar -->
-        <aside class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6">
+        <aside class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 sidebar">
             <div class="text-xl font-medium text-white mb-8">Quick Access</div>
             <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -295,33 +266,105 @@
                 </svg>
                 <span>Favorites</span>
             </div>
-            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
-                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 15l-6 6-1.42-1.42L15.17 16H4V4h2v10h9.17l-3.59-3.58L13 9l6 6z"/>
+            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3" style="display: flex; flex-direction: column;">
+                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <span>Quick Links</span>
+                <span style="display: flex; flex-direction: column;">My apps</span><br>
+                <ul>
+                    <li>
+                        <a href="https://dev.kilianbarbier.fr" style="display: flex; flex-direction: column;justify-content: flex-start;">CoolNotes</a>
+                    </li>
+                </ul>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="flex-1 flex flex-col">
             <!-- Search Bar -->
-            <div class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4">
-                <select id="searchEngine" class="bg-white/20 text-white backdrop-blur-xl px-2 py-2 rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300">
-                    <option value="g" selected>Google</option>
-                    <option value="yt">YouTube</option>
-                    <option value="gh">GitHub</option>
-                    <option value="w">Wikipedia</option>
-                    <option value="r">Reddit</option>
-                    <option value="so">Stack Overflow</option>
-                    <option value="a">Amazon</option>
-                    <option value="n">Netflix</option>
-                    <option value="sp">Spotify</option>
-                    <option value="tw">Twitter</option>
-                    <option value="ig">Instagram</option>
-                    <option value="maps">Google Maps</option>rl" 
-                    <option value="i">Google Images</option>
-                </select>
+            <div class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4 search-container relative z-30">
+                <div class="relative">
+                    <button id="currentSearch" class="relative z-[999999] w-12 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center">
+                        <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="w-6 h-6" alt="Google">
+                    </button>
+                    <div id="searchEngineDropdown" class="hidden absolute top-full left-0 mt-2 rounded-xl p-2 grid grid-cols-4 gap-2 w-[320px] z-40">
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="g">
+                            <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="w-6 h-6" alt="Google">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="yt">
+                            <img src="https://www.youtube.com/favicon.ico" class="w-6 h-6" alt="YouTube">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="gh">
+                            <img src="https://github.githubassets.com/favicons/favicon.svg" class="w-6 h-6" alt="GitHub">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="w">
+                            <img src="https://wikipedia.org/static/favicon/wikipedia.ico" class="w-6 h-6" alt="Wikipedia">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="r">
+                            <img src="https://www.redditstatic.com/desktop2x/img/favicon/favicon-32x32.png" class="w-6 h-6" alt="Reddit">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="so">
+                            <img src="https://cdn.sstatic.net/Sites/stackoverflow/Img/favicon.ico" class="w-6 h-6" alt="Stack">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="a">
+                            <img src="https://www.amazon.com/favicon.ico" class="w-6 h-6" alt="Amazon">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="n">
+                            <img src="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2016.ico" class="w-6 h-6" alt="Netflix">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="sp">
+                            <img src="https://open.spotifycdn.com/cdn/images/favicon.0f31d2ea.ico" class="w-6 h-6" alt="Spotify">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="tw">
+                            <img src="https://abs.twimg.com/favicons/twitter.3.ico" class="w-6 h-6" alt="Twitter">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="ig">
+                            <img src="https://static.cdninstagram.com/rsrc.php/v3/yt/r/30PrGfR3xhB.png" class="w-6 h-6" alt="Instagram">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="maps">
+                            <img src="https://www.google.com/images/branding/product/ico/maps_lodp.ico" class="w-6 h-6" alt="Maps">
+                        </button>
+                        <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="i">
+                            <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="w-6 h-6" alt="Images">
+                        </button>
+                    </div>
+                    <select id="searchEngine" class="hidden">
+                        <option value="g">Google</option>
+                        <option value="yt">YouTube</option>
+                        <option value="gh">GitHub</option>
+                        <!-- ... garder les valeurs pour la fonctionnalité de recherche ... -->
+                    </select>
+                </div>
+
+                <script>
+                    document.getElementById('currentSearch').addEventListener('click', () => {
+                        const dropdown = document.getElementById('searchEngineDropdown');
+                        dropdown.classList.toggle('hidden');
+                    });
+
+                    document.querySelectorAll('.search-option').forEach(option => {
+                        option.addEventListener('click', (e) => {
+                            const value = e.currentTarget.dataset.value;
+                            const img = e.currentTarget.querySelector('img');
+                            
+                            // Mettre à jour l'icône visible
+                            document.querySelector('#currentSearch img').src = img.src;
+                            
+                            // Mettre à jour le select caché
+                            document.getElementById('searchEngine').value = value;
+                            
+                            // Fermer le dropdown
+                            document.getElementById('searchEngineDropdown').classList.add('hidden');
+                        });
+                    });
+
+                    // Fermer le dropdown si on clique ailleurs
+                    document.addEventListener('click', (e) => {
+                        if (!e.target.closest('.relative')) {
+                            document.getElementById('searchEngineDropdown').classList.add('hidden');
+                        }
+                    });
+                </script>
                 <div class="relative flex-1">
                     <input type="text" 
                            placeholder="Search..."
@@ -346,37 +389,112 @@
             </div>
 
             <!-- Configuration Modal simplifié -->
-            <div id="configModal" class="hidden fixed inset-0 bg-white/40 backdrop-blur-xl flex items-center justify-center">
-                <div class="bg-white/95 rounded-2xl p-6 w-96 shadow-2xl backdrop-blur-xl">
-                    <h2 class="text-2xl font-bold mb-4 text-white">Add Shortcut</h2>
+            <div id="configModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center">
+                <div class="modal-content bg-white/95 rounded-2xl p-6 w-96 shadow-2xl backdrop-blur-xl">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900">Add Shortcut</h2>
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-white">Title</label>
-                            <input type="text" id="shortcutTitle" class="mt-1 w-full rounded-lg px-3 py-2 text-white-900 dark:text-white bg-gray-50 dark:bg-gray-700">
+                            <label class="block text-sm font-medium text-gray-700">Title</label>
+                            <input type="text" 
+                                   id="shortcutTitle" 
+                                   oninput="validateForm()"
+                                   placeholder="My Shortcut"
+                                   class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">URL</label>
+                            <label class="block text-sm font-medium text-gray-700">URL</label>
                             <input type="url" 
                                    id="shortcutUrl" 
-                                   placeholder="example.com or https://example.com"
-                                   class="mt-1 w-full rounded-lg px-3 py-2 text-white-900 dark:text-white bg-gray-50 dark:bg-gray-700">
+                                   oninput="validateForm()"
+                                   placeholder="example.com"
+                                   class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400">
+                            <p id="urlError" class="mt-1 text-sm text-red-500 hidden">Veuillez entrer une URL valide (ex: google.com)</p>
                         </div>
                         <div class="flex justify-end gap-2 mt-6">
-                            <button onclick="closeConfigModal()" class="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700">Cancel</button>
-                            <button onclick="saveShortcut()" class="px-4 py-2 rounded-lg bg-blue-600 text-white">Save</button>
+                            <button onclick="closeConfigModal()" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">Cancel</button>
+                            <button id="saveButton" 
+                                    onclick="saveShortcut()" 
+                                    disabled
+                                    class="px-4 py-2 rounded-lg bg-blue-400/80 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500/80">
+                                Save
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Add Context Menu -->
-            <div id="contextMenu" class="hidden fixed bg-white/90 rounded-lg shadow-lg py-2 min-w-[150px] z-50 backdrop-blur-xl">
+            <script>
+                // Liste des extensions de domaine courantes
+                const validTLDs = [
+                    'com', 'net', 'org', 'edu', 'gov', 'mil', 'io', 'co', 'ai', 'app',
+                    'dev', 'me', 'tv', 'info', 'biz', 'name', 'mobi', 'pro', 'travel',
+                    // Domaines nationaux courants
+                    'fr', 'uk', 'de', 'it', 'es', 'nl', 'ru', 'cn', 'jp', 'kr', 'br',
+                    'au', 'ca', 'in', 'eu'
+                ];
+
+                function isValidUrl(string) {
+                    try {
+                        const url = string.trim();
+                        if (!url) return false;
+                        
+                        // Ajouter https:// si nécessaire
+                        const urlToTest = url.match(/^https?:\/\//i) ? url : `https://${url}`;
+                        const urlObj = new URL(urlToTest);
+                        
+                        // Vérifier le hostname
+                        const parts = urlObj.hostname.split('.');
+                        if (parts.length < 2) return false;
+                        
+                        // Vérifier que l'extension respecte le format standard
+                        // Une extension est typiquement 2-12 caractères et contient uniquement des lettres
+                        const tld = parts[parts.length - 1].toLowerCase();
+                        return /^[a-z]{2,12}$/.test(tld);
+                    } catch (err) {
+                        return false;
+                    }
+                }
+
+                // Fonction de validation améliorée
+                function validateForm() {
+                    const title = document.getElementById('shortcutTitle').value.trim();
+                    const url = document.getElementById('shortcutUrl').value.trim();
+                    const saveButton = document.getElementById('saveButton');
+                    const urlError = document.getElementById('urlError');
+                    
+                    const isTitleValid = title.length > 0;
+                    const isUrlValid = isValidUrl(url);
+                    
+                    // Afficher/masquer le message d'erreur
+                    if (url && !isUrlValid) {
+                        urlError.classList.remove('hidden');
+                    } else {
+                        urlError.classList.add('hidden');
+                    }
+                    
+                    saveButton.disabled = !isTitleValid || !isUrlValid;
+                }
+
+                // Modification de openConfigModal pour réinitialiser l'état du bouton
+                function openConfigModal(position) {
+                    const modal = document.getElementById('configModal');
+                    modal.setAttribute('data-position', position);
+                    
+                    document.getElementById('shortcutTitle').value = '';
+                    document.getElementById('shortcutUrl').value = '';
+                    document.getElementById('saveButton').disabled = true;
+                    
+                    modal.classList.remove('hidden');
+                    document.getElementById('shortcutTitle').focus();
+                }
+            </script>
+            <div id="contextMenu" class="hidden fixed rounded-lg shadow-2xl py-2 min-w-[150px] z-50 bg-black/40 backdrop-blur-xl border border-white/10">
                 <button onclick="editShortcut(document.getElementById('contextMenu').getAttribute('data-position'))" 
-                        class="w-full px-4 py-2 text-left hover:bg-white/20 text-white">
+                        class="w-full border-t-0 border-r-0 border-l-0 border-b-0 px-4 py-2 text-left hover:bg-white/10 text-gray-200 transition-colors duration-200">
                     Edit Shortcut
                 </button>
                 <button onclick="deleteShortcut()" 
-                        class="w-full px-4 py-2 text-left hover:bg-red-500/20 text-white">
+                        class="w-full border-b-0 border-r-0 border-l-0 px-4 py-2 text-left hover:bg-red-500/20 text-red-300 transition-colors duration-200">
                     Delete Shortcut
                 </button>
             </div>
@@ -387,26 +505,26 @@
                     <h2 class="text-2xl font-bold mb-4 text-white">Search Commands</h2>
                     <div class="grid grid-cols-2 gap-4 text-white">
                         <div>
-                            <p><strong>g</strong> - Google</p>
-                            <p><strong>yt</strong> - YouTube</p>
-                            <p><strong>gh</strong> - GitHub</p>
-                            <p><strong>w</strong> - Wikipedia</p>
-                            <p><strong>r</strong> - Reddit</p>
-                            <p><strong>so</strong> - Stack Overflow</p>
-                            <p><strong>i</strong> - Google Images</p>
+                            <p><strong>&#47;g</strong> - Google</p>
+                            <p><strong>&#47;yt</strong> - YouTube</p>
+                            <p><strong>&#47;gh</strong> - GitHub</p>
+                            <p><strong>&#47;w</strong> - Wikipedia</p>
+                            <p><strong>&#47;r</strong> - Reddit</p>
+                            <p><strong>&#47;so</strong> - Stack Overflow</p>
+                            <p><strong>&#47;i</strong> - Google Images</p>
                         </div>
                         <div>
-                            <p><strong>a</strong> - Amazon</p>
-                            <p><strong>n</strong> - Netflix</p>
-                            <p><strong>sp</strong> - Spotify</p>
-                            <p><strong>tw</strong> - Twitter</p>
-                            <p><strong>ig</strong> - Instagram</p>
-                            <p><strong>maps</strong> - Google Maps</p>
+                            <p><strong>&#47;a</strong> - Amazon</p>
+                            <p><strong>&#47;n</strong> - Netflix</p>
+                            <p><strong>&#47;sp</strong> - Spotify</p>
+                            <p><strong>&#47;tw</strong> - Twitter</p>
+                            <p><strong>&#47;ig</strong> - Instagram</p>
+                            <p><strong>&#47;maps</strong> - Google Maps</p>
                         </div>
                     </div>
                     <div class="mt-6 text-white/80">
-                        <p>Example: <code>yt cats</code> searches YouTube for cats</p>
-                        <p>Tip: Just type normally for Google search</p>
+                        <p>Example: <code>/yt cats</code> searches YouTube for cats</p>
+                        <p>Tip: Use a forward slash (/) to start commands, or just type normally for Google search</p>
                     </div>
                     <button onclick="closeSearchHelp()" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-white">
                         Close

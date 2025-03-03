@@ -59,7 +59,7 @@ body {
   animation: none;
 }
 
-/* Adjust the container backgrounds for better contrast */
+/* Remettre l'ancien style pour .backdrop-blur-xl */
 .backdrop-blur-xl {
   background: rgba(255, 255, 255, 0.25) !important;
   backdrop-filter: blur(25px) !important;
@@ -112,6 +112,16 @@ input::placeholder {
   color: rgba(255, 255, 255, 0.6) !important;
 }
 
+/* Override the white placeholder color for the config modal inputs */
+#configModal input::placeholder {
+    color: rgba(75, 85, 99, 0.7) !important; /* gray-600 with opacity */
+}
+
+/* Reset the global input placeholder styles for config modal */
+#configModal input {
+    color: rgb(17, 24, 39) !important; /* gray-900 */
+}
+
 /* Subtle shadow for better depth */
 .shadow-lg {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2) !important;
@@ -126,11 +136,9 @@ input::placeholder {
   transform: perspective(1000px) rotateX(0deg);
   transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 200px;        /* Fixed height for consistent spacing */
-  padding: 24px;
+  justify-content: center;
+  min-height: 160px;
 }
 
 .group:hover {
@@ -138,6 +146,14 @@ input::placeholder {
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.3),
     inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+.group > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Enhanced icons */
@@ -151,7 +167,6 @@ svg {
   /* Remove this entire keyframe */
 }
 
-/* Enhanced button effects */
 button {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -176,7 +191,8 @@ button:active {
         0 4px 6px -1px rgba(0, 0, 0, 0.1),
         0 2px 4px -1px rgba(0, 0, 0, 0.06);
     animation: fadeIn 0.1s ease-out;
-    background: rgba(255, 255, 255, 0.95) !important;
+    background: none !important;
+    backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     opacity: 0;
     visibility: hidden;
@@ -210,12 +226,12 @@ button:active {
 @keyframes fadeIn {
     from { 
         opacity: 0; 
-        transform: scale(0.95); 
+        transform: scale(1.2); 
         visibility: hidden;
     }
     to { 
         opacity: 1; 
-        transform: scale(1); 
+        transform: scale(1.2); 
         visibility: visible;
     }
 }
@@ -458,40 +474,48 @@ select option[value="i"] {
 /* Update shortcut icon styles */
 .shortcut-icon[data-empty="true"] {
     position: relative;
-    width: 64px;          /* Even larger icon */
-    height: 64px;         /* Even larger icon */
+    width: 72px;          /* Increased to 72px */
+    height: 72px;         /* Increased to 72px */
     display: flex;
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 24px;  /* Adjusted for larger size */
+    border-radius: 18px;  /* Adjusted for larger size */
     transition: all 0.3s ease;
-    margin: auto;         /* Center vertically */
+    margin: 0 auto 16px;  /* Reduced from 20px to 16px */
 }
 
 /* Make the plus icon bigger */
 .shortcut-icon[data-empty="true"]::before {
-    content: '';
-    position: absolute;
-    width: 40px;          /* Larger plus */
-    height: 4px;          /* Thicker line */
-    background: white;
-    border-radius: 2px;
+    content: '+';
+    font-size: 2rem;
+    color: white;
+}
+
+.shortcut-icon[data-empty="true"]::after {
+    width: 3px;           /* Slightly thicker */
+    height: 32px;         /* Increased from 28px */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.shortcut-icon[data-empty="true"]::after {
-    content: '';
-    position: absolute;
-    width: 4px;           /* Thicker line */
-    height: 40px;         /* Larger plus */
-    background: white;
-    border-radius: 2px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* Update favicon image size for configured shortcuts */
+.shortcut-icon img {
+    width: 36px !important;  
+    height: 36px !important;
+    transform: scale(1.3); /* Added scale for saved shortcuts */
+}
+
+/* Hover effect only for saved shortcuts */
+.shortcut-icon:not([data-empty="true"]) img:hover {
+    transform: scale(1.4);
+}
+
+/* Keep empty shortcut styles unchanged */
+.shortcut-icon[data-empty="true"]:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.2);
 }
 
 /* Update favicon image size for configured shortcuts */
@@ -502,12 +526,319 @@ select option[value="i"] {
 
 /* Adjust title spacing */
 .shortcut-title {
-    margin-top: 24px;     /* More space between icon and text */
     font-size: 1.1rem;
     text-align: center;
+    width: 100%;
+}
+
+.shortcut-icon[data-empty="true"] {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    margin: 0 auto 12px;
 }
 
 .shortcut-icon[data-empty="true"]:hover {
     background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
+    transform: scale(1.2);
+}
+
+.shortcut-icon[data-empty="true"]::before,
+.shortcut-icon[data-empty="true"]::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 2px;
+}
+
+.shortcut-icon[data-empty="true"]::before {
+    width: 20px;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.shortcut-icon[data-empty="true"]::after {
+    width: 2px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.shortcut-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+}
+
+/* Animations pour le chargement initial */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation pour le reload */
+@keyframes fadeInOut {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Appliquer les animations aux éléments */
+.sidebar {
+    animation: fadeInScale 0.6s ease-out;
+}
+
+.search-container {
+    animation: fadeInScale 0.6s ease-out 0.2s both;
+}
+
+#shortcutGrid {
+    animation: fadeInScale 0.6s ease-out 0.3s both;
+}
+
+#shortcutGrid > * {
+    animation: slideInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+/* Animation delays for shortcuts */
+#shortcutGrid > *:nth-child(1) { animation-delay: 0s; }
+#shortcutGrid > *:nth-child(2) { animation-delay: 0.1s; }
+#shortcutGrid > *:nth-child(3) { animation-delay: 0.2s; }
+#shortcutGrid > *:nth-child(4) { animation-delay: 0.3s; }
+#shortcutGrid > *:nth-child(5) { animation-delay: 0.4s; }
+#shortcutGrid > *:nth-child(6) { animation-delay: 0.5s; }
+#shortcutGrid > *:nth-child(7) { animation-delay: 0.6s; }
+#shortcutGrid > *:nth-child(8) { animation-delay: 0.7s; }
+
+/* Animation de transition pour le reload */
+.page-transition {
+    animation: fadeInOut 0.4s ease-out;
+}
+
+/* Assurer que les animations sont désactivées si l'utilisateur préfère les réduire */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Style amélioré pour le select */
+#searchEngine {
+    width: 48px !important;
+    padding: 12px !important;
+    background-position: center !important;
+    background-size: 24px !important;
+    text-indent: -9999px; /* Cache le texte */
+    overflow: hidden;
+}
+
+/* Style pour le select et les options */
+#searchEngine {
+    padding: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+#searchEngine option {
+    font-size: 0;
+    line-height: 0;
+    padding: 8px !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+#searchEngine option img {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain;
+}
+
+/* Cacher le texte mais garder accessible */
+#searchEngine option::after {
+    content: attr(alt);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Style pour les options du select */
+#searchEngine option {
+    text-indent: 0; /* Réinitialise l'indentation pour les options */
+    padding-left: 35px !important;
+    background-position: 8px center !important;
+    background-size: 20px !important;
+    line-height: 32px !important;
+    min-height: 32px !important;
+}
+
+/* Style simplifié pour le select et ses options */
+#searchEngine {
+    width: auto !important;
+    min-width: 120px;
+    padding: 8px !important;
+}
+
+#searchEngine option {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#searchEngine option img {
+    margin-right: 8px;
+}
+
+/* On supprime tous les anciens styles compliqués de background-image */
+
+/* Nouveau style pour le select personnalisé */
+.custom-select {
+    position: relative;
+    width: 48px;
+    height: 48px;
+}
+
+.selected-option {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.selected-option:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.engine-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.options-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 8px;
+    width: 200px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    z-index: 50;
+}
+
+.option {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.hidden {
+    display: none;
+}
+#searchEngineDropdown {
+    z-index: 9999 !important;
+}
+
+#searchEngineDropdown .search-option {
+    transition: transform 0.2s;
+    background: rgba(55, 55, 55, 0.05);
+}
+
+#searchEngineDropdown .search-option:hover {
+    background: rgba(0, 0, 0, 0.605);
+    transform: translateZ(10px);
+}
+
+.popup-wrapper {
+    isolation: isolate;
+}
+
+.popup-backdrop {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+#searchEngineDropdown:not(.hidden) + .popup-backdrop {
+    opacity: 1;
+}
+
+/* Styles pour le modal et l'effet de flou */
+#configModal {
+    z-index: 50;
+}
+
+#configModal:not(.hidden) ~ .search-container {
+    filter: blur(8px);
+    pointer-events: none;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.search-container {
+    transition: all 0.3s ease;
+}
+
+/* Assurez-vous que le modal est toujours au-dessus */
+.modal-content {
+    z-index: 51;
+    position: relative;
 }
