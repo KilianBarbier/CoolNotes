@@ -842,3 +842,86 @@ select option[value="i"] {
     z-index: 51;
     position: relative;
 }
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .search-container {
+    padding: 16px;
+  }
+
+  .shortcut-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 8px;
+  }
+
+  .shortcut-title {
+    font-size: 0.9rem;
+  }
+
+  .group {
+    min-height: 120px;
+  }
+
+  .selected-option {
+    width: 36px;
+    height: 36px;
+  }
+
+  .options-container {
+    width: 160px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .search-container {
+    padding: 8px;
+  }
+
+  .shortcut-icon {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 4px;
+  }
+
+  .shortcut-title {
+    font-size: 0.8rem;
+  }
+
+  .group {
+    min-height: 100px;
+  }
+
+  .selected-option {
+    width: 32px;
+    height: 32px;
+  }
+
+  .options-container {
+    width: 120px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Style spécifique pour le bouton CoolNotes */
+.sidebar a.block.w-full {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+}
+
+.sidebar a.block.w-full:hover {
+    text-decoration: underline;
+}
+
+/* Effet hover amélioré pour le bouton avec image */
+.sidebar div.bg-white\/30:hover {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}

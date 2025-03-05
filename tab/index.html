@@ -254,28 +254,35 @@
         <!-- Sidebar -->
         <aside class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 sidebar">
             <div class="text-xl font-medium text-white mb-8">Quick Access</div>
-            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
+            <div class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
                 </svg>
                 <span>Bookmarks</span>
             </div>
-            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
+            <div class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3">
                 <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
                 </svg>
                 <span>Favorites</span>
             </div>
-            <div class="p-4 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3" style="display: flex; flex-direction: column;">
-                <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" stroke-linecap="round" stroke-linejoin="round"/>
+            
+            <!-- My apps section -->
+            <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
                 </svg>
-                <span style="display: flex; flex-direction: column;">My apps</span><br>
-                <ul>
-                    <li>
-                        <a href="https://dev.kilianbarbier.fr" style="display: flex; flex-direction: column;justify-content: flex-start;">CoolNotes</a>
-                    </li>
-                </ul>
+                <h3 class="text-white font-medium text-lg">My apps</h3>
+            </div>
+            
+            <div class="pr-4 pt-4 pb-4 pl-2  hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30">
+                <img src="https://dev.kilianbarbier.fr/media/img/coolnotes_128.png" class="pl-2 w-9"  alt="CoolNotes">
+                <a href="https://dev.kilianbarbier.fr" class="block w-full">CoolNotes</a>
+            </div>
+
+            <div class="pr-4 pt-4 pb-4 pl-2  hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30">
+                <img src="https://dev.kilianbarbier.fr/media/img/coolnotes_128.png" class="pl-2 w-9"  alt="CoolNotes">
+                <a href="https://dev.kilianbarbier.fr/fr" class="block w-full">CoolNotes FR</a>
             </div>
         </aside>
 
