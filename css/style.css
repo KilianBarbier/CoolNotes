@@ -36,8 +36,7 @@ body {
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   box-sizing: border-box;
-  padding-inline: 30px;
-  padding-block: 60px;
+  padding: 60px; /* Remplacé padding-inline et padding-block par un padding uniforme */
   transition: all 0.3s ease;
 }
 
