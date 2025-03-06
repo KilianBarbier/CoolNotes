@@ -270,38 +270,56 @@
   </head>
   <body class="min-h-screen font-sf">
     <div class="flex min-h-screen p-6">
-      <!-- Sidebar -->
       <aside
         class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 sidebar"
       >
         <div class="text-xl font-medium text-white mb-8">Quick Access</div>
-        <div
-          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3"
-        >
-          <svg
-            class="w-6 h-6 text-white"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" />
+        
+        <!--BOOKMARK SECTION-->
+
+        <!-- <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
           </svg>
-          <span>Bookmarks</span>
+          
+          <h3 class="text-white font-medium text-lg">Bookmarks</h3>
+        </div> 
+        
+        <div
+          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
+        >
+          <img
+            src="https://kbarbier.fr/wp-content/uploads/2025/03/cropped-Plan-de-travail-1@0.35x-192x192.png"
+            class="pl-2 w-9"
+            alt="Lien vers kbarbier.fr"
+          />
+          <a href="https://kbarbier.fr" class="block w-full"
+            >kbarbier.fr</a
+          >
         </div>
-        <div
-          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3"
-        >
-          <svg
-            class="w-6 h-6 text-white"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-            />
+        -->
+
+       
+        <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
+          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"/>
           </svg>
-          <span>Favorites</span>
+          
+          <h3 class="text-white font-medium text-lg">Favorites</h3>
         </div>
 
+        <div
+          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
+        >
+          <img
+            src="https://kbarbier.fr/wp-content/uploads/2025/03/cropped-Plan-de-travail-1@0.35x-192x192.png"
+            class="pl-2 w-9"
+            alt="Lien vers kbarbier.fr"
+          />
+          <a href="https://kbarbier.fr" class="block w-full"
+            >kbarbier.fr</a
+          >
+        </div>
         <!-- My apps section -->
         <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
           <svg
@@ -541,6 +559,26 @@
                   .getElementById("searchEngineDropdown")
                   .classList.add("hidden");
               }
+            });
+            
+            // Assurons-nous que le bouton de recherche déclenche la recherche avec le moteur sélectionné
+            document.querySelector(".absolute svg").addEventListener("click", function(event) {
+              handleSearch(event);
+            });
+            
+            // S'assurer que le document est prêt
+            document.addEventListener("DOMContentLoaded", () => {
+              // Réinitialiser les écouteurs pour la recherche afin d'éviter des doublons
+              const searchInput = document.getElementById("searchInput");
+              const searchIcon = document.querySelector(".absolute svg");
+              
+              // Supprimer les écouteurs existants s'il y en a
+              searchInput.removeEventListener("keydown", handleSearch);
+              searchIcon.removeEventListener("click", handleSearch);
+              
+              // Ajouter les nouveaux écouteurs
+              searchInput.addEventListener("keydown", handleSearch);
+              searchIcon.addEventListener("click", handleSearch);
             });
           </script>
           <div class="relative flex-1">
