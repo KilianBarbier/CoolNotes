@@ -196,33 +196,33 @@
 
         const randomGradient =
           gradients[Math.floor(Math.random() * gradients.length)];
-        document.body.style.background = randomGradient; // Changed from backgroundImage to background
+        document.body.style.background = randomGradient;
         document.body.style.backgroundSize = "cover";
         document.body.style.backgroundAttachment = "fixed";
 
-        // Configurer les écouteurs d'événement pour la recherche
         const searchInput = document.getElementById("searchInput");
         const searchButton = document.querySelector(".absolute svg");
 
-        // Écouteur pour la touche Entrée sur le champ de recherche
         searchInput.addEventListener("keydown", handleSearch);
 
-        // Écouteur pour le clic sur l'icône de recherche
         searchButton.addEventListener("click", handleSearch);
+        
+        setTimeout(() => {
+          document.getElementById("searchInput").focus();
+        }, 100);
       });
 
       function handleSearch(event) {
-        // Vérifier si c'est la touche Entrée ou un clic
         if (
           (event.type === "keydown" && event.key === "Enter") ||
           event.type === "click"
         ) {
-          event.preventDefault(); // Empêcher le comportement par défaut
+          event.preventDefault();
 
           let query = document.getElementById("searchInput").value.trim();
           let selectedEngine = document.getElementById("searchEngine").value;
 
-          // Liste des moteurs de recherche
+        
           const searchEngines = {
             g: "https://www.google.com/search?q=",
             yt: "https://www.youtube.com/results?search_query=",
@@ -239,14 +239,13 @@
             i: "https://www.google.com/images?q=",
           };
 
-          // Vérifier si la requête commence par un /commande
-          if (query.startsWith("/")) {
+                    if (query.startsWith("/")) {
             const parts = query.substring(1).split(" ");
             if (parts.length > 1) {
               const possibleCommand = parts[0].toLowerCase();
               if (searchEngines[possibleCommand]) {
                 selectedEngine = possibleCommand;
-                // Supprimer la commande de la requête (y compris le /)
+               
                 query = parts.slice(1).join(" ");
               }
             }
@@ -259,8 +258,7 @@
         }
       }
 
-      // Ajouter la gestion de la transition lors du reload
-      function reloadWithTransition() {
+        function reloadWithTransition() {
         document.body.classList.add("page-transition");
         setTimeout(() => {
           window.location.reload();
@@ -586,6 +584,7 @@
               type="text"
               placeholder="Search..."
               id="searchInput"
+              autofocus
               class="w-full px-6 py-4 rounded-2xl shadow-lg border-0 bg-white/90 backdrop-blur-xl text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-400/30 transition-all duration-300 placeholder-white/50"
             />
             <svg
