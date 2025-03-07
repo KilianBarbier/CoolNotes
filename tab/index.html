@@ -87,6 +87,39 @@
                 </a>`;
       }
 
+      // Nouvelle fonction pour générer le bouton "Add Row"
+      function generateAddRowButton() {
+        return `
+                <button
+                   onclick="addMoreShortcuts()"
+                   class="group p-6 backdrop-blur-xl bg-white/30 rounded-2xl shadow-lg hover:shadow-xl hover:bg-white/40 transition-all duration-300 border-2 border-dashed border-white/30 w-full"
+                   id="addRowButton">
+                    <div class="text-center">
+                        <div class="flex justify-center mb-2">
+                            <svg class="w-8 h-8 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                        </div>
+                        <div class="text-white/70 font-medium">Add More Shortcuts</div>
+                    </div>
+                </button>`;
+      }
+
+      // Fonction pour ajouter plus de raccourcis
+      function addMoreShortcuts() {
+        const grid = document.getElementById("shortcutGrid");
+        const currentCount = document.querySelectorAll("[data-position]").length;
+        const addRowButton = document.getElementById("addRowButton");
+        
+        // Ajouter 4 nouveaux shortcuts (une ligne complète en mode desktop)
+        for (let i = currentCount; i < currentCount + 4; i++) {
+          grid.insertBefore(document.createRange().createContextualFragment(generateShortcut(i)), addRowButton);
+        }
+        
+        // Sauvegarder le nouveau nombre de shortcuts
+        localStorage.setItem("shortcutCount", currentCount + 4);
+      }
+
       function saveShortcut() {
         const modal = document.getElementById("configModal");
         const position = modal.getAttribute("data-position");
@@ -146,11 +179,17 @@
         // Generate grid container first
         const grid = document.getElementById("shortcutGrid");
         const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+        
+        // Récupérer le nombre de shortcuts à afficher (défaut: 8)
+        const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
 
         // First create all shortcut cards
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < shortcutCount; i++) {
           grid.innerHTML += generateShortcut(i);
         }
+        
+        // Ajouter le bouton "Add Row" à la fin
+        grid.innerHTML += generateAddRowButton();
 
         // Then populate saved shortcuts
         Object.entries(shortcuts).forEach(([position, data]) => {
