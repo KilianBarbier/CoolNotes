@@ -210,6 +210,15 @@
         setTimeout(() => {
           document.getElementById("searchInput").focus();
         }, 100);
+
+        // Ajouter la gestion du menu mobile
+        const menuButton = document.getElementById("mobileMenuButton");
+        const sidebar = document.getElementById("sidebar");
+        
+        menuButton.addEventListener("click", () => {
+          sidebar.classList.toggle("mobile-hidden");
+          menuButton.classList.toggle("open");
+        });
       });
 
       function handleSearch(event) {
@@ -267,9 +276,12 @@
     </script>
   </head>
   <body class="min-h-screen font-sf">
+    <!-- Suppression du bouton hamburger pour le remplacer par une barre de navigation mobile en bas -->
+
     <div class="flex min-h-screen p-6">
       <aside
-        class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 sidebar"
+        id="sidebar"
+        class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 fixed lg:relative z-40 h-[calc(100vh-3rem)] overflow-y-auto hidden lg:block"
       >
         <div class="text-xl font-medium text-white mb-8">Quick Access</div>
         
@@ -365,7 +377,7 @@
       </aside>
 
       <!-- Main Content -->
-      <main class="flex-1 flex flex-col">
+      <main class="flex-1 flex flex-col lg:ml-72 pb-20 lg:pb-0">
         <!-- Search Bar -->
         <div
           class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4 search-container relative z-30"
@@ -875,5 +887,85 @@
         </script>
       </main>
     </div>
+
+    <!-- Navigation bar mobile en bas de l'écran -->
+    <nav id="mobileNavBar" class="fixed bottom-0 left-0 right-0 bg-black/60 backdrop-blur-xl p-2 z-50 lg:hidden">
+      <div class="flex justify-center items-center">
+        <div class="flex items-center gap-5">
+          <button id="showSidebar" class="flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+            </svg>
+            <span class="text-xs">Quick Access</span>
+          </button>
+          <button onclick="showSearchHelp()" class="mr-2 flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl">
+            <span class="text-xl font-medium w-6 h-6 flex items-center justify-center">?</span>
+            <span class="text-xs">Help Center</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Ajout d'un modal pour afficher la sidebar sur mobile -->
+    <div id="sidebarModal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-[60] hidden">
+      <div class="fixed bottom-0 inset-x-0 rounded-t-3xl bg-white/90 backdrop-blur-xl p-6 shadow-2xl max-h-[80vh] overflow-y-auto transition-transform duration-300 transform translate-y-0">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-medium text-white">Quick Access</h2>
+          <button id="closeSidebar" class="p-2 text-white rounded-full bg-white/20 hover:bg-white/30">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div id="sidebarContent" class="space-y-4">
+          <!-- Le contenu de la sidebar sera cloné ici via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Ajout des styles pour le menu mobile -->
+    <style>
+      @media (min-width: 1024px) {
+        main {
+          margin-left: 0 !important;
+        }
+      }
+    </style>
+
+    <!-- Script pour cloner le contenu de la sidebar dans le modal mobile -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Cloner le contenu de la sidebar pour le modal mobile
+        const sidebarChildren = document.querySelectorAll('#sidebar > *:not(:first-child)');
+        const sidebarContent = document.getElementById('sidebarContent');
+        
+        sidebarChildren.forEach(child => {
+          sidebarContent.appendChild(child.cloneNode(true));
+        });
+        
+        // Gestion de l'affichage du modal
+        const showSidebarBtn = document.getElementById('showSidebar');
+        const closeSidebarBtn = document.getElementById('closeSidebar');
+        const sidebarModal = document.getElementById('sidebarModal');
+        
+        showSidebarBtn.addEventListener('click', function() {
+          sidebarModal.classList.remove('hidden');
+          document.body.style.overflow = 'hidden'; // Empêcher le défilement du body
+        });
+        
+        closeSidebarBtn.addEventListener('click', function() {
+          sidebarModal.classList.add('hidden');
+          document.body.style.overflow = ''; // Réactiver le défilement
+        });
+        
+        // Fermer le modal si on clique en dehors du contenu
+        sidebarModal.addEventListener('click', function(e) {
+          if (e.target === sidebarModal) {
+            sidebarModal.classList.add('hidden');
+            document.body.style.overflow = '';
+          }
+        });
+      });
+    </script>
   </body>
 </html>
