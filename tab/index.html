@@ -232,7 +232,7 @@
             so: "https://stackoverflow.com/search?q=",
             a: "https://www.amazon.com/s?k=",
             n: "https://www.netflix.com/search?q=",
-            sp: "https://open.spotify.com/search/",
+            sp: "https://open.spotify.com/search/results",
             tw: "https://twitter.com/search?q=",
             ig: "https://www.instagram.com/explore/tags/",
             maps: "https://www.google.com/maps/search/",
@@ -542,11 +542,42 @@
 
                 // Mettre à jour le select caché
                 document.getElementById("searchEngine").value = value;
-
+                
+                // Ajouter la commande au début de la recherche
+                const searchInput = document.getElementById("searchInput");
+                const currentText = searchInput.value.trim();
+                
+                // Si le texte commence déjà par une commande, on la remplace
+                let newText = currentText;
+                if (currentText.startsWith('/')) {
+                  const parts = currentText.substring(1).split(' ');
+                  const possibleCommand = parts[0].toLowerCase();
+                  // Liste des commandes valides (doit correspondre à handleSearch)
+                  const validCommands = ["g", "yt", "gh", "w", "r", "so", "a", "n", "sp", "tw", "ig", "maps", "i"];
+                  if (validCommands.includes(possibleCommand)) {
+                    // Prendre tout sauf la commande
+                    newText = parts.slice(1).join(' ');
+                  }
+                }
+                
+                // Garantir qu'il y a toujours un espace après la commande si newText n'est pas vide
+                if (newText.length > 0) {
+                  searchInput.value = `/${value} ${newText}`;
+                } else {
+                  // Si pas de texte, ajouter juste la commande avec un espace à la fin pour faciliter la saisie
+                  searchInput.value = `/${value} `;
+                }
+                
                 // Fermer le dropdown
                 document
                   .getElementById("searchEngineDropdown")
                   .classList.add("hidden");
+                
+                // Remettre le focus sur le champ de recherche
+                searchInput.focus();
+                // Placer le curseur à la fin du texte
+                searchInput.selectionStart = searchInput.value.length;
+                searchInput.selectionEnd = searchInput.value.length;
               });
             });
 
@@ -811,7 +842,7 @@
                 <p><strong>&#47;n</strong> - Netflix</p>
                 <p><strong>&#47;sp</strong> - Spotify</p>
                 <p><strong>&#47;tw</strong> - Twitter</p>
-                <p><strong>&#47;ig</strong> - Instagram</p>
+                <p><strong>&#47;ig</strong> - Instagram Tags</p>
                 <p><strong>&#47;maps</strong> - Google Maps</p>
               </div>
             </div>
