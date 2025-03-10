@@ -285,6 +285,7 @@
             ig: "https://www.instagram.com/explore/tags/",
             maps: "https://www.google.com/maps/search/",
             i: "https://www.google.com/images?q=",
+            ddg: "https://duckduckgo.com/?q=",
           };
 
                     if (query.startsWith("/")) {
@@ -562,6 +563,16 @@
                   src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
                   class="w-6 h-6"
                   alt="Images"
+                />
+              </button>
+              <button
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="ddg"
+              >
+                <img
+                  src="https://duckduckgo.com/favicon.ico"
+                  class="w-6 h-6"
+                  alt="DuckDuckGo"
                 />
               </button>
             </div>
@@ -887,6 +898,7 @@
                 <p><strong>&#47;r</strong> - Reddit</p>
                 <p><strong>&#47;so</strong> - Stack Overflow</p>
                 <p><strong>&#47;i</strong> - Google Images</p>
+                <p><strong>&#47;ddg</strong> - DuckDuckGo</p>
               </div>
               <div>
                 <p><strong>&#47;a</strong> - Amazon</p>
