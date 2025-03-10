@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Liens - Bento Style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: none;
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+        }
+
+        .background-slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background-slideshow img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .background-slideshow img.active {
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+            
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 1.2rem;    /* Retour à une valeur intermédiaire */
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;         /* Retour à la valeur initiale */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .card i {
+            font-size: 1.2rem;  /* Retour à la taille initiale */
+            opacity: 0.9;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 50%;
+            width: 40px;       /* Valeur intermédiaire */
+            height: 40px;      /* Valeur intermédiaire */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;  /* Retour à la valeur initiale */
+            font-size: 1rem;      /* Retour à une taille standard */
+        }
+
+        .card-description {
+            font-size: 0.9rem;    /* Retour à la taille initiale */
+            opacity: 0.8;
+        }
+
+        /* Suppression des styles complexes précédents */
+        .card::before,
+        .card:nth-child(1),
+        .card:nth-child(2),
+        .card:nth-child(3),
+        .card:nth-child(4),
+        .card:nth-child(5),
+        .card:nth-child(6) {
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-slideshow">
+        <img src="media/img/bg/li-zhang-wtDy3HaivJI-unsplash.jpg" class="active" alt="Background">
+        <img src="media/img/bg/milad-fakurian-c_O4jomEvLU-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-DKxRA-4dY9M-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-DX7pT_guAyE-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-F0LtAt5JTmE-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-PGdW_bHDbpI-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-PSPVCSnFT8k-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-S1t_emhtzI8-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-seA-FPPXL-M-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-SJZ_KGNs4sA-unsplash.jpg" alt="Background">
+        <img src="media/img/bg/milad-fakurian-xUtskxO_-CQ-unsplash.jpg" alt="Background">
+    </div>
+    <div class="container">
+        <div class="profile">
+            <img src="https://kbarbier.fr/wp-content/uploads/2024/12/PHOTO-SAVE-LR-1529-1.webp" alt="Kilian Barbier">
+            <h1>Kilian Barbier</h1>
+            <p>Développeur Web Passionné</p>
+        </div>
+
+        <div class="bento-grid">
+            <a href="https://kbarbier.fr" class="card">
+                <i class="fas fa-globe"></i>
+                <div>
+                    <div class="card-title">Mon Site Web</div>
+                    <div class="card-description">kbarbier.fr</div>
+                </div>
+            </a>
+
+            <a href="https://wa.me/33666384425" class="card">
+                <i class="fab fa-whatsapp"></i>
+                <div>
+                    <div class="card-title">WhatsApp</div>
+                    <div class="card-description">Me contacter</div>
+                </div>
+            </a>
+
+            <a href="https://linkedin.com/in/kibarbier" class="card">
+                <i class="fab fa-linkedin"></i>
+                <div>
+                    <div class="card-title">LinkedIn</div>
+                    <div class="card-description">Mon profil professionnel</div>
+                </div>
+            </a>
+
+            <a href="https://instagram.com/kilianb_pictures" class="card">
+                <i class="fab fa-instagram"></i>
+                <div>
+                    <div class="card-title">Instagram</div>
+                    <div class="card-description">@kilianb_pictures</div>
+                </div>
+            </a>
+
+            <a href="https://github.com/votre-github" class="card">
+                <i class="fab fa-github"></i>
+                <div>
+                    <div class="card-title">GitHub</div>
+                    <div class="card-description">Mes projets open source</div>
+                </div>
+            </a>
+
+            <a href="https://github.com/votre-github?tab=repositories" class="card">
+                <i class="fas fa-code-branch"></i>
+                <div>
+                    <div class="card-title">Projets Récents</div>
+                    <div class="card-description">Voir mes derniers travaux</div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <script>
+        const images = document.querySelectorAll('.background-slideshow img');
+        
+        // Retire la classe active de l'image par défaut
+        images[0].classList.remove('active');
+        
+        // Sélectionne une image aléatoire
+        const randomIndex = Math.floor(Math.random() * images.length);
+        images[randomIndex].classList.add('active');
+    </script>
+</body>
+</html>
