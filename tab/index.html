@@ -178,6 +178,12 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
+        // Focus search input immediately and after a small delay to ensure it works
+        document.getElementById("searchInput").focus();
+        setTimeout(() => {
+          document.getElementById("searchInput").focus();
+        }, 100);
+
         // Generate grid container first
         const grid = document.getElementById("shortcutGrid");
         const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
