@@ -24,10 +24,30 @@
       };
     </script>
     <script>
-      function getFaviconUrl(url) {
+      async function getFaviconUrl(url) {
         try {
           const domain = new URL(url).hostname;
-          return `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+          // Try multiple favicon sources in order of preference
+          return (
+            (
+              await Promise.all(
+                [
+                  `https://${domain}/favicon.ico`, // Direct favicon.ico
+                  `https://${domain}/favicon.png`, // Direct favicon.png
+                  `https://${domain}/apple-touch-icon.png`, // Apple touch icon
+                  `https://${domain}/apple-touch-icon-precomposed.png`, // Apple touch icon (older)
+                ].map(async (faviconUrl) => {
+                  try {
+                    const response = await fetch(faviconUrl);
+                    return response.ok ? faviconUrl : null;
+                  } catch {
+                    return null;
+                  }
+                })
+              )
+            ).find((faviconUrl) => faviconUrl) ||
+            'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>'
+          );
         } catch (e) {
           return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
         }
