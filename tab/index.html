@@ -27,28 +27,10 @@
       async function getFaviconUrl(url) {
         try {
           const domain = new URL(url).hostname;
-          // Try multiple favicon sources in order of preference
-          return (
-            (
-              await Promise.all(
-                [
-                  `https://${domain}/favicon.ico`, // Direct favicon.ico
-                  `https://${domain}/favicon.png`, // Direct favicon.png
-                  `https://${domain}/apple-touch-icon.png`, // Apple touch icon
-                  `https://${domain}/apple-touch-icon-precomposed.png`, // Apple touch icon (older)
-                ].map(async (faviconUrl) => {
-                  try {
-                    const response = await fetch(faviconUrl);
-                    return response.ok ? faviconUrl : null;
-                  } catch {
-                    return null;
-                  }
-                })
-              )
-            ).find((faviconUrl) => faviconUrl) ||
-            'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>'
-          );
+          // Utiliser Favicone API avec une grande taille par défaut
+          return `https://favicone.com/${domain}?s=128`;
         } catch (e) {
+          console.error('Erreur lors de la récupération du favicon:', e);
           return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
         }
       }
@@ -142,7 +124,7 @@
         localStorage.setItem("shortcutCount", currentCount + 4);
       }
 
-      function saveShortcut() {
+      async function saveShortcut() {
         const modal = document.getElementById("configModal");
         const position = modal.getAttribute("data-position");
         const title = document.getElementById("shortcutTitle").value;
@@ -153,13 +135,20 @@
           url = "https://" + url;
         }
 
-        // Save to localStorage
-        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-        shortcuts[position] = { title, url, faviconUrl: getFaviconUrl(url) };
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+        try {
+          // Get favicon URL asynchronously
+          const faviconUrl = await getFaviconUrl(url);
+          
+          // Save to localStorage
+          const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+          shortcuts[position] = { title, url, faviconUrl };
+          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-        closeConfigModal();
-        reloadWithTransition();
+          closeConfigModal();
+          reloadWithTransition();
+        } catch (e) {
+          console.error('Erreur lors de la sauvegarde du raccourci:', e);
+        }
       }
 
       function openConfigModal(position) {
@@ -285,6 +274,64 @@
         menuButton.addEventListener("click", () => {
           sidebar.classList.toggle("mobile-hidden");
           menuButton.classList.toggle("open");
+        });
+
+        // Initialiser les écouteurs d'événements pour la barre de recherche
+        const searchIcon = document.querySelector(".absolute svg");
+        const currentSearch = document.getElementById("currentSearch");
+        
+        if (searchInput && searchIcon && currentSearch) {
+          searchInput.addEventListener("keydown", handleSearch);
+          searchIcon.addEventListener("click", handleSearch);
+          currentSearch.addEventListener("click", () => {
+            const dropdown = document.getElementById("searchEngineDropdown");
+            if (dropdown) {
+              dropdown.classList.toggle("hidden");
+            }
+          });
+        }
+
+        // Initialiser les écouteurs pour les options de recherche
+        document.querySelectorAll(".search-option").forEach((option) => {
+          option.addEventListener("click", (e) => {
+            const value = e.currentTarget.dataset.value;
+            const img = e.currentTarget.querySelector("img");
+            const searchBtn = document.querySelector("#currentSearch img");
+            
+            if (searchBtn && img) {
+              searchBtn.src = img.src;
+            }
+
+            const searchEngine = document.getElementById("searchEngine");
+            if (searchEngine) {
+              searchEngine.value = value;
+            }
+
+            const searchInput = document.getElementById("searchInput");
+            if (searchInput) {
+              const currentText = searchInput.value.trim();
+              let newText = currentText;
+              
+              if (currentText.startsWith('/')) {
+                const parts = currentText.substring(1).split(' ');
+                const possibleCommand = parts[0].toLowerCase();
+                const validCommands = ["g", "yt", "gh", "w", "r", "so", "a", "n", "sp", "tw", "ig", "maps", "i"];
+                if (validCommands.includes(possibleCommand)) {
+                  newText = parts.slice(1).join(' ');
+                }
+              }
+
+              searchInput.value = newText.length > 0 ? `/${value} ${newText}` : `/${value} `;
+              searchInput.focus();
+              searchInput.selectionStart = searchInput.value.length;
+              searchInput.selectionEnd = searchInput.value.length;
+            }
+
+            const dropdown = document.getElementById("searchEngineDropdown");
+            if (dropdown) {
+              dropdown.classList.add("hidden");
+            }
+          });
         });
       });
 
@@ -454,8 +501,8 @@
           <div class="relative">
             <button
               id="currentSearch"
-              class="relative z-[999999] w-12 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center"
-            >
+              class="relative z-[999999] px-5 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center"
+            ><span class="pr-3 shortcut-title font-sf" style="font-weight: 400;">Click to change</span>
               <img
                 src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
                 class="w-6 h-6"
@@ -650,7 +697,7 @@
                 
                 // Si le texte commence déjà par une commande, on la remplace
                 let newText = currentText;
-                if (currentText.startsWith('/')) {
+                if (currentText.startswith('/')) {
                   const parts = currentText.substring(1).split(' ');
                   const possibleCommand = parts[0].toLowerCase();
                   // Liste des commandes valides (doit correspondre à handleSearch)
