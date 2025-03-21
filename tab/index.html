@@ -697,7 +697,7 @@
                 
                 // Si le texte commence déjà par une commande, on la remplace
                 let newText = currentText;
-                if (currentText.startswith('/')) {
+                if (currentText.startsWith('/')) {  // Correction ici : startswith -> startsWith
                   const parts = currentText.substring(1).split(' ');
                   const possibleCommand = parts[0].toLowerCase();
                   // Liste des commandes valides (doit correspondre à handleSearch)
