@@ -27,8 +27,32 @@
       async function getFaviconUrl(url) {
         try {
           const domain = new URL(url).hostname;
-          // Utiliser Favicone API avec une grande taille par défaut
-          return `https://favicone.com/${domain}?s=128`;
+          
+          // Première tentative avec Favicone
+          try {
+            const faviconeUrl = `https://favicone.com/${domain}?s=128`;
+            const response = await fetch(faviconeUrl);
+            if (response.ok) {
+              return faviconeUrl;
+            }
+          } catch (e) {
+            console.warn('Favicone failed, trying faviconextractor:', e);
+          }
+          
+          // Deuxième tentative avec Favicon Extractor
+          try {
+            const extractorUrl = `https://www.faviconextractor.com/favicon/${domain}?larger=true`;
+            const response = await fetch(extractorUrl);
+            if (response.ok) {
+              return extractorUrl;
+            }
+          } catch (e) {
+            console.warn('Favicon extractor failed:', e);
+          }
+
+          // Fallback vers l'icône par défaut de Google
+          return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+          
         } catch (e) {
           console.error('Erreur lors de la récupération du favicon:', e);
           return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
@@ -75,7 +99,11 @@
 
       function generateShortcut(i) {
         return `
-                <div class="shortcut-container">
+                <div class="shortcut-container" 
+                     ondragover="handleDragOver(event)" 
+                     ondrop="handleDrop(event, '${i}')"
+                     ondragenter="handleDragEnter(event)"
+                     ondragleave="handleDragLeave(event)">
                   <a href="#" 
                      onclick="handleShortcutClick(event, '${i}')" 
                      oncontextmenu="handleShortcutClick(event, '${i}')"
@@ -85,10 +113,62 @@
                           <div class="shortcut-icon" data-empty="true">
                               <!-- No SVG needed, the CSS will create the plus sign -->
                           </div>
-                          <div class="text-white font-medium shortcut-title">Add Shortcut</div>
+                          <div class="text-white font-medium shortcut-title">Drop Link Here</div>
                       </div>
                   </a>
                 </div>`;
+      }
+
+      // Nouvelles fonctions pour le drag & drop
+      function handleDragOver(event) {
+        event.preventDefault();
+      }
+
+      function handleDragEnter(event) {
+        event.preventDefault();
+        const container = event.currentTarget;
+        container.querySelector('a').classList.add('bg-white/40');
+      }
+
+      function handleDragLeave(event) {
+        event.preventDefault();
+        const container = event.currentTarget;
+        container.querySelector('a').classList.remove('bg-white/40');
+      }
+
+      async function handleDrop(event, position) {
+        event.preventDefault();
+        const container = event.currentTarget;
+        container.querySelector('a').classList.remove('bg-white/40');
+
+        const data = event.dataTransfer.getData('text');
+        if (!data) return;
+
+        try {
+          // Valider l'URL
+          const url = new URL(data);
+          
+          // Essayer d'obtenir le titre de la page
+          let title = '';
+          try {
+            const response = await fetch(url.href);
+            const html = await response.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            title = doc.title || url.hostname;
+          } catch (e) {
+            title = url.hostname;
+          }
+
+          // Sauvegarder le raccourci
+          const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+          const faviconUrl = await getFaviconUrl(url.href);
+          shortcuts[position] = { title, url: url.href, faviconUrl };
+          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+
+          reloadWithTransition();
+        } catch (e) {
+          console.error('Invalid URL dropped:', e);
+        }
       }
 
       // Nouvelle fonction pour générer le bouton "Add Row"
