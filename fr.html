@@ -158,7 +158,7 @@
     </header>
 
     <main role="main" style="display: flex;flex-direction: column;gap: 15px;justify-content: center;align-items: center;">
-      <div class="button" data-tooltip="Taille max : 2Mo" onclick="handleDownload()" style="border: none;display: flex; padding-inline: 12px ;">
+      <div class="button" id="downloadBtn" data-tooltip="Taille max : 2Mo" style="border: none;display: flex; padding-inline: 12px ;">
         <div class="button-wrapper">
           <div class="text">Télécharger</div>
           <span class="icon">
@@ -674,5 +674,16 @@
         </script>
       </div>
     </div>
+    <script>
+      document.getElementById('downloadBtn').addEventListener('click', function() {
+        const container = document.querySelector('.container');
+        html2canvas(container).then(canvas => {
+          const link = document.createElement('a');
+          link.download = 'coolnotes-image.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      });
+    </script>
   </body>
 </html>
