@@ -203,8 +203,10 @@
 
       try {
         const faviconUrl = await getFaviconUrl(url);
-        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+        const activeTab = localStorage.getItem('activeTab') || 'personal';
+        const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
         shortcuts[position] = { title, url, faviconUrl };
+        localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
         localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
         closeConfigModal();
@@ -236,12 +238,12 @@
       }
 
       function deleteShortcut() {
-      const position = document
-        .getElementById("contextMenu")
-        .getAttribute("data-position");
-
-      const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+      const position = document.getElementById("contextMenu").getAttribute("data-position");
+      const activeTab = localStorage.getItem('activeTab') || 'personal';
+      
+      const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
       delete shortcuts[position];
+      localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
       localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
       closeContextMenu();
@@ -371,6 +373,10 @@
         }
         });
       });
+
+      // Initialiser l'onglet actif
+      const activeTab = localStorage.getItem('activeTab') || 'personal';
+      switchTab(activeTab);
       });
 
       function handleSearch(event) {
@@ -425,6 +431,22 @@
         window.location.reload();
       }, 200);
       }
+
+      function switchTab(tab) {
+        // Mettre à jour l'interface visuelle
+        document.getElementById('personalTab').classList.toggle('bg-white/60', tab === 'personal');
+        document.getElementById('professionalTab').classList.toggle('bg-white/60', tab === 'professional');
+      
+        // Sauvegarder l'onglet actif
+        localStorage.setItem('activeTab', tab);
+      
+        // Charger les raccourcis correspondants
+        const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${tab}`) || "{}");
+        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      
+        // Recharger la page avec transition
+        reloadWithTransition();
+      }
     </script>
   </head>
   <body class="min-h-screen font-sf">
@@ -472,24 +494,24 @@
 
         <div
           class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
+          onclick="switchTab('personal')"
+          id="personalTab"
         >
-          <img
-            src="https://kbarbier.fr/wp-content/uploads/2025/03/cropped-Plan-de-travail-1@0.35x-192x192.png"
-            class="pl-2 w-9"
-            alt="Lien vers kbarbier.fr"
-          />
+          <svg class="pl-2 w-9 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"></svg>
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
           <a id="perso" class="block w-full"
             >Personnel</a
           >
         </div>
         <div
           class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
+          onclick="switchTab('professional')"
+          id="professionalTab"
         >
-          <img
-            src="https://kbarbier.fr/wp-content/uploads/2025/03/cropped-Plan-de-travail-1@0.35x-192x192.png"
-            class="pl-2 w-9"
-            alt="Lien vers kbarbier.fr"
-          />
+          <svg class="pl-2 w-9 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+          </svg>
           <a id="pro" class="block w-full"
             >Professionnel</a
           >
