@@ -207,14 +207,19 @@
 
       function openConfigModal(position) {
         const modal = document.getElementById("configModal");
+        const titleInput = document.getElementById("shortcutTitle");
+        
         modal.setAttribute("data-position", position);
-
-        document.getElementById("shortcutTitle").value = "";
+        titleInput.value = "";
         document.getElementById("shortcutUrl").value = "";
         document.getElementById("saveButton").disabled = true;
 
         modal.classList.remove("hidden");
-        document.getElementById("shortcutTitle").focus();
+        
+        // Force focus sur l'input du titre avec un petit délai pour être sûr que la modal est bien affichée
+        setTimeout(() => {
+          titleInput.focus();
+        }, 50);
       }
 
       function closeConfigModal() {
@@ -921,7 +926,6 @@
               type="text"
               placeholder="Search..."
               id="searchInput"
-              autofocus
               class="w-full px-6 py-4 rounded-2xl shadow-lg border-0 bg-white/90 backdrop-blur-xl text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-400/30 transition-all duration-300 placeholder-white/50"
             />
             <svg
