@@ -26,33 +26,11 @@
       async function getFaviconUrl(url) {
         try {
           const domain = new URL(url).hostname;
-
-          // Première tentative avec Favicone
-          try {
-            const faviconeUrl = `https://favicone.com/${domain}?s=128`;
-            const response = await fetch(faviconeUrl);
-            if (response.ok) {
-              return faviconeUrl;
-            }
-          } catch (e) {
-            console.warn("Favicone failed, trying faviconextractor:", e);
-          }
-
-          // Deuxième tentative avec Favicon Extractor
-          try {
-            const extractorUrl = `https://www.faviconextractor.com/favicon/${domain}?larger=true`;
-            const response = await fetch(extractorUrl);
-            if (response.ok) {
-              return extractorUrl;
-            }
-          } catch (e) {
-            console.warn("Favicon extractor failed:", e);
-          }
-
-          // Fallback vers l'icône par défaut de Google
+          // Utiliser directement l'API Google Favicons qui est plus fiable
           return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
         } catch (e) {
           console.error("Erreur lors de la récupération du favicon:", e);
+          // Retourner une icône par défaut en cas d'erreur
           return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
         }
       }
