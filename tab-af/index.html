@@ -25,77 +25,76 @@
     </script>
     <script>
       async function getFaviconUrl(url) {
-      try {
-        const domain = new URL(url).hostname;
-        
-        // Première tentative avec Favicone
         try {
-        const faviconeUrl = `https://favicone.com/${domain}?s=128`;
-        const response = await fetch(faviconeUrl);
-        if (response.ok) {
-          return faviconeUrl;
-        }
-        } catch (e) {
-        console.warn('Favicone failed, trying faviconextractor:', e);
-        }
-        
-        // Deuxième tentative avec Favicon Extractor
-        try {
-        const extractorUrl = `https://www.faviconextractor.com/favicon/${domain}?larger=true`;
-        const response = await fetch(extractorUrl);
-        if (response.ok) {
-          return extractorUrl;
-        }
-        } catch (e) {
-        console.warn('Favicon extractor failed:', e);
-        }
+          const domain = new URL(url).hostname;
 
-        // Fallback vers l'icône par défaut de Google
-        return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-        
-      } catch (e) {
-        console.error('Erreur lors de la récupération du favicon:', e);
-        return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
-      }
+          // Première tentative avec Favicone
+          try {
+            const faviconeUrl = `https://favicone.com/${domain}?s=128`;
+            const response = await fetch(faviconeUrl);
+            if (response.ok) {
+              return faviconeUrl;
+            }
+          } catch (e) {
+            console.warn("Favicone failed, trying faviconextractor:", e);
+          }
+
+          // Deuxième tentative avec Favicon Extractor
+          try {
+            const extractorUrl = `https://www.faviconextractor.com/favicon/${domain}?larger=true`;
+            const response = await fetch(extractorUrl);
+            if (response.ok) {
+              return extractorUrl;
+            }
+          } catch (e) {
+            console.warn("Favicon extractor failed:", e);
+          }
+
+          // Fallback vers l'icône par défaut de Google
+          return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+        } catch (e) {
+          console.error("Erreur lors de la récupération du favicon:", e);
+          return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
+        }
       }
 
       function handleShortcutClick(event, position) {
-      event.preventDefault();
-      const shortcut = document.querySelector(
-        `[data-position="${position}"]`
-      );
-      const iconContainer = shortcut.querySelector(".shortcut-icon");
-      const isEmpty = iconContainer.getAttribute("data-empty") === "true";
+        event.preventDefault();
+        const shortcut = document.querySelector(
+          `[data-position="${position}"]`
+        );
+        const iconContainer = shortcut.querySelector(".shortcut-icon");
+        const isEmpty = iconContainer.getAttribute("data-empty") === "true";
 
-      if (event.type === "contextmenu") {
-        showContextMenu(event, position);
-      } else if (isEmpty) {
-        openConfigModal(position);
-      } else {
-        window.location.href = shortcut.href;
-      }
+        if (event.type === "contextmenu") {
+          showContextMenu(event, position);
+        } else if (isEmpty) {
+          openConfigModal(position);
+        } else {
+          window.location.href = shortcut.href;
+        }
       }
 
       function showContextMenu(event, position) {
-      event.preventDefault();
-      const contextMenu = document.getElementById("contextMenu");
-      contextMenu.style.left = `${event.pageX}px`;
-      contextMenu.style.top = `${event.pageY}px`;
-      contextMenu.setAttribute("data-position", position);
-      contextMenu.classList.remove("hidden");
-      contextMenu.style.background = "none";
-      contextMenu.style.backgroundColor = "transparent";
+        event.preventDefault();
+        const contextMenu = document.getElementById("contextMenu");
+        contextMenu.style.left = `${event.pageX}px`;
+        contextMenu.style.top = `${event.pageY}px`;
+        contextMenu.setAttribute("data-position", position);
+        contextMenu.classList.remove("hidden");
+        contextMenu.style.background = "none";
+        contextMenu.style.backgroundColor = "transparent";
 
-      document.addEventListener("click", closeContextMenu);
+        document.addEventListener("click", closeContextMenu);
       }
 
       function closeContextMenu() {
-      document.getElementById("contextMenu").classList.add("hidden");
-      document.removeEventListener("click", closeContextMenu);
+        document.getElementById("contextMenu").classList.add("hidden");
+        document.removeEventListener("click", closeContextMenu);
       }
 
       function generateShortcut(i) {
-      return `
+        return `
           <div class="shortcut-container" 
              ondragover="handleDragOver(event)" 
              ondrop="handleDrop(event, '${i}')"
@@ -116,54 +115,56 @@
       }
 
       function handleDragOver(event) {
-      event.preventDefault();
+        event.preventDefault();
       }
 
       function handleDragEnter(event) {
-      event.preventDefault();
-      const container = event.currentTarget;
-      container.querySelector('a').classList.add('bg-white/40');
+        event.preventDefault();
+        const container = event.currentTarget;
+        container.querySelector("a").classList.add("bg-white/40");
       }
 
       function handleDragLeave(event) {
-      event.preventDefault();
-      const container = event.currentTarget;
-      container.querySelector('a').classList.remove('bg-white/40');
+        event.preventDefault();
+        const container = event.currentTarget;
+        container.querySelector("a").classList.remove("bg-white/40");
       }
 
       async function handleDrop(event, position) {
-      event.preventDefault();
-      const container = event.currentTarget;
-      container.querySelector('a').classList.remove('bg-white/40');
+        event.preventDefault();
+        const container = event.currentTarget;
+        container.querySelector("a").classList.remove("bg-white/40");
 
-      const data = event.dataTransfer.getData('text');
-      if (!data) return;
+        const data = event.dataTransfer.getData("text");
+        if (!data) return;
 
-      try {
-        const url = new URL(data);
-        let title = '';
         try {
-        const response = await fetch(url.href);
-        const html = await response.text();
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        title = doc.title || url.hostname;
+          const url = new URL(data);
+          let title = "";
+          try {
+            const response = await fetch(url.href);
+            const html = await response.text();
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            title = doc.title || url.hostname;
+          } catch (e) {
+            title = url.hostname;
+          }
+
+          const shortcuts = JSON.parse(
+            localStorage.getItem("shortcuts") || "{}"
+          );
+          const faviconUrl = await getFaviconUrl(url.href);
+          shortcuts[position] = { title, url: url.href, faviconUrl };
+          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+
+          reloadWithTransition();
         } catch (e) {
-        title = url.hostname;
+          console.error("Invalid URL dropped:", e);
         }
-
-        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-        const faviconUrl = await getFaviconUrl(url.href);
-        shortcuts[position] = { title, url: url.href, faviconUrl };
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-
-        reloadWithTransition();
-      } catch (e) {
-        console.error('Invalid URL dropped:', e);
-      }
       }
 
       function generateAddRowButton() {
-      return `
+        return `
           <button
              onclick="addMoreShortcuts()"
              class="group p-6 backdrop-blur-xl bg-white/30 rounded-2xl shadow-lg hover:shadow-xl hover:bg-white/40 transition-all duration-300 border-2 border-dashed border-white/30 w-full"
@@ -180,270 +181,311 @@
       }
 
       function addMoreShortcuts() {
-      const grid = document.getElementById("shortcutGrid");
-      const currentCount = document.querySelectorAll("[data-position]").length;
-      const addRowButton = document.getElementById("addRowButton");
-      
-      for (let i = currentCount; i < currentCount + 4; i++) {
-        grid.insertBefore(document.createRange().createContextualFragment(generateShortcut(i)), addRowButton);
-      }
-      
-      localStorage.setItem("shortcutCount", currentCount + 4);
+        const grid = document.getElementById("shortcutGrid");
+        const currentCount =
+          document.querySelectorAll("[data-position]").length;
+        const addRowButton = document.getElementById("addRowButton");
+
+        for (let i = currentCount; i < currentCount + 4; i++) {
+          grid.insertBefore(
+            document
+              .createRange()
+              .createContextualFragment(generateShortcut(i)),
+            addRowButton
+          );
+        }
+
+        localStorage.setItem("shortcutCount", currentCount + 4);
       }
 
       async function saveShortcut() {
-      const modal = document.getElementById("configModal");
-      const position = modal.getAttribute("data-position");
-      const title = document.getElementById("shortcutTitle").value;
-      let url = document.getElementById("shortcutUrl").value.trim();
+        const modal = document.getElementById("configModal");
+        const position = modal.getAttribute("data-position");
+        const title = document.getElementById("shortcutTitle").value;
+        let url = document.getElementById("shortcutUrl").value.trim();
 
-      if (!url.match(/^https?:\/\//i)) {
-        url = "https://" + url;
-      }
+        if (!url.match(/^https?:\/\//i)) {
+          url = "https://" + url;
+        }
 
-      try {
-        const faviconUrl = await getFaviconUrl(url);
-        const activeTab = localStorage.getItem('activeTab') || 'personal';
-        const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
-        shortcuts[position] = { title, url, faviconUrl };
-        localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+        try {
+          const faviconUrl = await getFaviconUrl(url);
+          const activeTab = localStorage.getItem("activeTab") || "personal";
+          const shortcuts = JSON.parse(
+            localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
+          );
+          shortcuts[position] = { title, url, faviconUrl };
+          localStorage.setItem(
+            `shortcuts_${activeTab}`,
+            JSON.stringify(shortcuts)
+          );
+          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-        closeConfigModal();
-        reloadWithTransition();
-      } catch (e) {
-        console.error('Erreur lors de la sauvegarde du raccourci:', e);
-      }
+          closeConfigModal();
+          reloadWithTransition();
+        } catch (e) {
+          console.error("Erreur lors de la sauvegarde du raccourci:", e);
+        }
       }
 
       function openConfigModal(position) {
-      const modal = document.getElementById("configModal");
-      modal.setAttribute("data-position", position);
+        const modal = document.getElementById("configModal");
+        modal.setAttribute("data-position", position);
 
-      document.getElementById("shortcutTitle").value = "";
-      document.getElementById("shortcutUrl").value = "";
-      document.getElementById("saveButton").disabled = true;
+        document.getElementById("shortcutTitle").value = "";
+        document.getElementById("shortcutUrl").value = "";
+        document.getElementById("saveButton").disabled = true;
 
-      modal.classList.remove("hidden");
-      document.getElementById("shortcutTitle").focus();
+        modal.classList.remove("hidden");
+        document.getElementById("shortcutTitle").focus();
       }
 
       function closeConfigModal() {
-      document.getElementById("configModal").classList.add("hidden");
+        document.getElementById("configModal").classList.add("hidden");
       }
 
       function editShortcut(position) {
-      openConfigModal(position, true);
-      closeContextMenu();
+        openConfigModal(position, true);
+        closeContextMenu();
       }
 
       function deleteShortcut() {
-      const position = document.getElementById("contextMenu").getAttribute("data-position");
-      const activeTab = localStorage.getItem('activeTab') || 'personal';
-      
-      const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
-      delete shortcuts[position];
-      localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
-      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+        const position = document
+          .getElementById("contextMenu")
+          .getAttribute("data-position");
+        const activeTab = localStorage.getItem("activeTab") || "personal";
 
-      closeContextMenu();
-      reloadWithTransition();
+        const shortcuts = JSON.parse(
+          localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
+        );
+        delete shortcuts[position];
+        localStorage.setItem(
+          `shortcuts_${activeTab}`,
+          JSON.stringify(shortcuts)
+        );
+        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+
+        closeContextMenu();
+        reloadWithTransition();
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-      function focusSearch() {
-        const searchInput = document.getElementById("searchInput");
-        if (searchInput) {
-        searchInput.focus();
+        function focusSearch() {
+          const searchInput = document.getElementById("searchInput");
+          if (searchInput) {
+            searchInput.focus();
+          }
         }
-      }
 
-      focusSearch();
-      setTimeout(focusSearch, 100);
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
         focusSearch();
-        }
-      });
+        setTimeout(focusSearch, 100);
 
-      window.addEventListener('focus', focusSearch);
-      document.addEventListener('mouseenter', focusSearch);
-      document.addEventListener('keydown', focusSearch, { once: true });
-      
-      const grid = document.getElementById("shortcutGrid");
-      const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-      const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") {
+            focusSearch();
+          }
+        });
 
-      for (let i = 0; i < shortcutCount; i++) {
-        grid.innerHTML += generateShortcut(i);
-      }
-      
-      grid.innerHTML += generateAddRowButton();
+        window.addEventListener("focus", focusSearch);
+        document.addEventListener("mouseenter", focusSearch);
+        document.addEventListener("keydown", focusSearch, { once: true });
 
-      Object.entries(shortcuts).forEach(([position, data]) => {
-        const shortcut = document.querySelector(
-        `[data-position="${position}"]`
+        const grid = document.getElementById("shortcutGrid");
+        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+        const shortcutCount = parseInt(
+          localStorage.getItem("shortcutCount") || "8"
         );
-        if (shortcut) {
-        shortcut.href = data.url;
-        shortcut.onclick = (e) => {
-          e.preventDefault();
-          window.location.href = data.url;
-        };
-        shortcut.querySelector(".shortcut-title").textContent = data.title;
-        const iconContainer = shortcut.querySelector(".shortcut-icon");
-        iconContainer.removeAttribute("data-empty");
-        iconContainer.innerHTML = `
+
+        for (let i = 0; i < shortcutCount; i++) {
+          grid.innerHTML += generateShortcut(i);
+        }
+
+        grid.innerHTML += generateAddRowButton();
+
+        Object.entries(shortcuts).forEach(([position, data]) => {
+          const shortcut = document.querySelector(
+            `[data-position="${position}"]`
+          );
+          if (shortcut) {
+            shortcut.href = data.url;
+            shortcut.onclick = (e) => {
+              e.preventDefault();
+              window.location.href = data.url;
+            };
+            shortcut.querySelector(".shortcut-title").textContent = data.title;
+            const iconContainer = shortcut.querySelector(".shortcut-icon");
+            iconContainer.removeAttribute("data-empty");
+            iconContainer.innerHTML = `
               <img src="${data.faviconUrl}" 
                  class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
                  alt="${data.title}" 
                  onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`;
-        }
-      });
-
-      const searchInput = document.getElementById("searchInput");
-      const searchButton = document.querySelector(".absolute svg");
-
-      searchInput.addEventListener("keydown", handleSearch);
-      searchButton.addEventListener("click", handleSearch);
-
-      const menuButton = document.getElementById("mobileMenuButton");
-      const sidebar = document.getElementById("sidebar");
-      
-      if (menuButton) {
-        menuButton.addEventListener("click", () => {
-        sidebar.classList.toggle("mobile-hidden");
-        menuButton.classList.toggle("open");
+          }
         });
-      }
-
-      const searchIcon = document.querySelector(".absolute svg");
-      const currentSearch = document.getElementById("currentSearch");
-      
-      if (searchInput && searchIcon && currentSearch) {
-        searchInput.addEventListener("keydown", handleSearch);
-        searchIcon.addEventListener("click", handleSearch);
-        currentSearch.addEventListener("click", () => {
-        const dropdown = document.getElementById("searchEngineDropdown");
-        if (dropdown) {
-          dropdown.classList.toggle("hidden");
-        }
-        });
-      }
-
-      document.querySelectorAll(".search-option").forEach((option) => {
-        option.addEventListener("click", (e) => {
-        const value = e.currentTarget.dataset.value;
-        const img = e.currentTarget.querySelector("img");
-        const searchBtn = document.querySelector("#currentSearch img");
-        
-        if (searchBtn && img) {
-          searchBtn.src = img.src;
-        }
-
-        const searchEngine = document.getElementById("searchEngine");
-        if (searchEngine) {
-          searchEngine.value = value;
-        }
 
         const searchInput = document.getElementById("searchInput");
-        if (searchInput) {
-          const currentText = searchInput.value.trim();
-          let newText = currentText;
-          
-          if (currentText.startsWith('/')) {
-          const parts = currentText.substring(1).split(' ');
-          const possibleCommand = parts[0].toLowerCase();
-          const validCommands = ["g", "yt", "gh", "w", "r", "so", "a", "n", "sp", "tw", "ig", "maps", "i"];
-          if (validCommands.includes(possibleCommand)) {
-            newText = parts.slice(1).join(' ');
-          }
-          }
+        const searchButton = document.querySelector(".absolute svg");
 
-          searchInput.value = newText.length > 0 ? `/${value} ${newText}` : `/${value} `;
-          searchInput.focus();
-          searchInput.selectionStart = searchInput.value.length;
-          searchInput.selectionEnd = searchInput.value.length;
+        searchInput.addEventListener("keydown", handleSearch);
+        searchButton.addEventListener("click", handleSearch);
+
+        const menuButton = document.getElementById("mobileMenuButton");
+        const sidebar = document.getElementById("sidebar");
+
+        if (menuButton) {
+          menuButton.addEventListener("click", () => {
+            sidebar.classList.toggle("mobile-hidden");
+            menuButton.classList.toggle("open");
+          });
         }
 
-        const dropdown = document.getElementById("searchEngineDropdown");
-        if (dropdown) {
-          dropdown.classList.add("hidden");
+        const searchIcon = document.querySelector(".absolute svg");
+        const currentSearch = document.getElementById("currentSearch");
+
+        if (searchInput && searchIcon && currentSearch) {
+          searchInput.addEventListener("keydown", handleSearch);
+          searchIcon.addEventListener("click", handleSearch);
+          currentSearch.addEventListener("click", () => {
+            const dropdown = document.getElementById("searchEngineDropdown");
+            if (dropdown) {
+              dropdown.classList.toggle("hidden");
+            }
+          });
         }
+
+        document.querySelectorAll(".search-option").forEach((option) => {
+          option.addEventListener("click", (e) => {
+            const value = e.currentTarget.dataset.value;
+            const img = e.currentTarget.querySelector("img");
+            const searchBtn = document.querySelector("#currentSearch img");
+
+            if (searchBtn && img) {
+              searchBtn.src = img.src;
+            }
+
+            const searchEngine = document.getElementById("searchEngine");
+            if (searchEngine) {
+              searchEngine.value = value;
+            }
+
+            const searchInput = document.getElementById("searchInput");
+            if (searchInput) {
+              const currentText = searchInput.value.trim();
+              let newText = currentText;
+
+              if (currentText.startsWith("/")) {
+                const parts = currentText.substring(1).split(" ");
+                const possibleCommand = parts[0].toLowerCase();
+                const validCommands = [
+                  "g",
+                  "yt",
+                  "gh",
+                  "w",
+                  "r",
+                  "so",
+                  "a",
+                  "n",
+                  "sp",
+                  "tw",
+                  "ig",
+                  "maps",
+                  "i",
+                ];
+                if (validCommands.includes(possibleCommand)) {
+                  newText = parts.slice(1).join(" ");
+                }
+              }
+
+              searchInput.value =
+                newText.length > 0 ? `/${value} ${newText}` : `/${value} `;
+              searchInput.focus();
+              searchInput.selectionStart = searchInput.value.length;
+              searchInput.selectionEnd = searchInput.value.length;
+            }
+
+            const dropdown = document.getElementById("searchEngineDropdown");
+            if (dropdown) {
+              dropdown.classList.add("hidden");
+            }
+          });
         });
-      });
 
-      // Initialiser l'onglet actif
-      const activeTab = localStorage.getItem('activeTab') || 'personal';
-      switchTab(activeTab);
+        // Initialiser l'onglet actif
+        const activeTab = localStorage.getItem("activeTab") || "personal";
+        switchTab(activeTab);
       });
 
       function handleSearch(event) {
-      if (
-        (event.type === "keydown" && event.key === "Enter") ||
-        event.type === "click"
-      ) {
-        event.preventDefault();
+        if (
+          (event.type === "keydown" && event.key === "Enter") ||
+          event.type === "click"
+        ) {
+          event.preventDefault();
 
-        let query = document.getElementById("searchInput").value.trim();
-        let selectedEngine = document.getElementById("searchEngine").value;
+          let query = document.getElementById("searchInput").value.trim();
+          let selectedEngine = document.getElementById("searchEngine").value;
 
-        const searchEngines = {
-        g: "https://www.google.com/search?q=",
-        yt: "https://www.youtube.com/results?search_query=",
-        gh: "https://github.com/search?q=",
-        w: "https://en.wikipedia.org/wiki/Special:Search?search=",
-        r: "https://www.reddit.com/search/?q=",
-        so: "https://stackoverflow.com/search?q=",
-        a: "https://www.amazon.com/s?k=",
-        n: "https://www.netflix.com/search?q=",
-        sp: "https://open.spotify.com/search/results",
-        tw: "https://twitter.com/search?q=",
-        ig: "https://www.instagram.com/explore/tags/",
-        maps: "https://www.google.com/maps/search/",
-        i: "https://www.google.com/images?q=",
-        ddg: "https://duckduckgo.com/?q=",
-        px: "https://www.perplexity.ai/search?q="
-        };
+          const searchEngines = {
+            g: "https://www.google.com/search?q=",
+            yt: "https://www.youtube.com/results?search_query=",
+            gh: "https://github.com/search?q=",
+            w: "https://en.wikipedia.org/wiki/Special:Search?search=",
+            r: "https://www.reddit.com/search/?q=",
+            so: "https://stackoverflow.com/search?q=",
+            a: "https://www.amazon.com/s?k=",
+            n: "https://www.netflix.com/search?q=",
+            sp: "https://open.spotify.com/search/results",
+            tw: "https://twitter.com/search?q=",
+            ig: "https://www.instagram.com/explore/tags/",
+            maps: "https://www.google.com/maps/search/",
+            i: "https://www.google.com/images?q=",
+            ddg: "https://duckduckgo.com/?q=",
+            px: "https://www.perplexity.ai/search?q=",
+          };
 
-        if (query.startsWith("/")) {
-        const parts = query.substring(1).split(" ");
-        if (parts.length > 1) {
-          const possibleCommand = parts[0].toLowerCase();
-          if (searchEngines[possibleCommand]) {
-          selectedEngine = possibleCommand;
-          query = parts.slice(1).join(" ");
+          if (query.startsWith("/")) {
+            const parts = query.substring(1).split(" ");
+            if (parts.length > 1) {
+              const possibleCommand = parts[0].toLowerCase();
+              if (searchEngines[possibleCommand]) {
+                selectedEngine = possibleCommand;
+                query = parts.slice(1).join(" ");
+              }
+            }
+          }
+
+          const searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
+          if (query) {
+            window.location.href = searchUrl + encodeURIComponent(query);
           }
         }
-        }
-
-        const searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
-        if (query) {
-        window.location.href = searchUrl + encodeURIComponent(query);
-        }
-      }
       }
 
       function reloadWithTransition() {
-      document.body.classList.add("page-transition");
-      setTimeout(() => {
-        window.location.reload();
-      }, 200);
+        document.body.classList.add("page-transition");
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
       }
 
       function switchTab(tab) {
         // Mettre à jour l'interface visuelle
-        document.getElementById('personalTab').classList.toggle('bg-white/60', tab === 'personal');
-        document.getElementById('professionalTab').classList.toggle('bg-white/60', tab === 'professional');
-      
+        document
+          .getElementById("personalTab")
+          .classList.toggle("bg-white/60", tab === "personal");
+        document
+          .getElementById("professionalTab")
+          .classList.toggle("bg-white/60", tab === "professional");
+
         // Sauvegarder l'onglet actif
-        localStorage.setItem('activeTab', tab);
-      
+        localStorage.setItem("activeTab", tab);
+
         // Charger les raccourcis correspondants
-        const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${tab}`) || "{}");
+        const shortcuts = JSON.parse(
+          localStorage.getItem(`shortcuts_${tab}`) || "{}"
+        );
         localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-      
+
         // Recharger la page avec transition
         reloadWithTransition();
       }
@@ -458,7 +500,7 @@
         class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 fixed lg:relative z-40 h-[calc(100vh-3rem)] overflow-y-auto hidden lg:block"
       >
         <div class="text-xl font-medium text-white mb-8">Quick Access</div>
-        
+
         <!--BOOKMARK SECTION-->
 
         <!-- <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
@@ -483,12 +525,21 @@
         </div>
         -->
 
-       
         <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
-          <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"/>
+          <svg
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"
+            />
           </svg>
-          
+
           <h3 class="text-white font-medium text-lg">Onglets</h3>
         </div>
 
@@ -497,24 +548,60 @@
           onclick="switchTab('personal')"
           id="personalTab"
         >
-            <svg class="pl-2 w-9 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"></svg>
-            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-            </svg>
-          <a id="perso" class="block w-full"
-            >Personnel</a
+          <svg
+            height="200px"
+            width="200px"
+            version="1.1"
+            id="_x32_"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 512 512"
+            xml:space="preserve"
+            fill="#ffffff"
+            stroke="#ffffff"
           >
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <style type="text/css">
+                .st0 {
+                  fill: #ffffff;
+                }
+              </style>
+              <g>
+                <path
+                  class="st0"
+                  d="M458.159,404.216c-18.93-33.65-49.934-71.764-100.409-93.431c-28.868,20.196-63.938,32.087-101.745,32.087 c-37.828,0-72.898-11.89-101.767-32.087c-50.474,21.667-81.479,59.782-100.398,93.431C28.731,448.848,48.417,512,91.842,512 c43.426,0,164.164,0,164.164,0s120.726,0,164.153,0C463.583,512,483.269,448.848,458.159,404.216z"
+                ></path>
+                <path
+                  class="st0"
+                  d="M256.005,300.641c74.144,0,134.231-60.108,134.231-134.242v-32.158C390.236,60.108,330.149,0,256.005,0 c-74.155,0-134.252,60.108-134.252,134.242V166.4C121.753,240.533,181.851,300.641,256.005,300.641z"
+                ></path>
+              </g>
+            </g>
+          </svg>
+          <a id="perso" class="block w-full">Personnel</a>
         </div>
         <div
           class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
           onclick="switchTab('professional')"
           id="professionalTab"
         >
-          <svg class="pl-2 w-9 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
-          </svg>
-          <a id="pro" class="block w-full"
-            >Professionnel</a
+          <svg
+            class="pl-2 w-9 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
           >
+            <path
+              d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"
+            />
+          </svg>
+          <a id="pro" class="block w-full">Professionnel</a>
         </div>
         <!-- My apps section -->
         <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
@@ -572,7 +659,10 @@
             <button
               id="currentSearch"
               class="relative z-[999999] px-5 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center"
-            ><span class="pr-3 shortcut-title font-sf" style="font-weight: 400;">Click to change</span>
+            >
+              <span class="pr-3 shortcut-title font-sf" style="font-weight: 400"
+                >Click to change</span
+              >
               <img
                 src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
                 class="w-6 h-6"
@@ -582,154 +672,154 @@
             <div
               id="searchEngineDropdown"
               style="
-              background: #5c5c5c;
-              border: 1px solid rgba(255, 255, 255, 0.3);
-              margin-top: 17px;
-              width: 325px;
+                background: #5c5c5c;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                margin-top: 17px;
+                width: 325px;
               "
               class="hidden absolute top-full left-0 mt-2 rounded-xl p-3 grid grid-cols-4 gap-3"
             >
               <button class="search-option rounded-lg" data-value="g">
-              <img
-                src="https://favicone.com/www.google.com?s=128"
-                alt="Google"
-              />
+                <img
+                  src="https://favicone.com/www.google.com?s=128"
+                  alt="Google"
+                />
               </button>
               <button class="search-option rounded-lg" data-value="yt">
-              <img
-                src="https://www.youtube.com/s/desktop/cbe05ee6/img/favicon.ico"
-                alt="YouTube"
-              />
+                <img
+                  src="https://www.youtube.com/s/desktop/cbe05ee6/img/favicon.ico"
+                  alt="YouTube"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg flex items-center justify-center"
-              data-value="gh"
+                class="search-option p-2 rounded-lg flex items-center justify-center"
+                data-value="gh"
               >
-              <img
-                src="https://favicone.com/github.com?s=128"
-                class="w-6 h-6"
-                alt="GitHub"
-              />
+                <img
+                  src="https://favicone.com/github.com?s=128"
+                  class="w-6 h-6"
+                  alt="GitHub"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="w"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="w"
               >
-              <img
-                src="https://favicone.com/wikipedia.org?s=128"
-                class="w-6 h-6"
-                alt="Wikipedia"
-              />
+                <img
+                  src="https://favicone.com/wikipedia.org?s=128"
+                  class="w-6 h-6"
+                  alt="Wikipedia"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="r"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="r"
               >
-              <img
-                src="https://favicone.com/www.reddit.com?s=128"
-                class="w-6 h-6"
-                alt="Reddit"
-              />
+                <img
+                  src="https://favicone.com/www.reddit.com?s=128"
+                  class="w-6 h-6"
+                  alt="Reddit"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="so"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="so"
               >
-              <img
-                src="https://favicone.com/stackoverflow.com?s=128"
-                class="w-6 h-6"
-                alt="Stack"
-              />
+                <img
+                  src="https://favicone.com/stackoverflow.com?s=128"
+                  class="w-6 h-6"
+                  alt="Stack"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="a"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="a"
               >
-              <img
-                src="https://favicone.com/www.amazon.com?s=128"
-                class="w-6 h-6"
-                alt="Amazon"
-              />
+                <img
+                  src="https://favicone.com/www.amazon.com?s=128"
+                  class="w-6 h-6"
+                  alt="Amazon"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="n"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="n"
               >
-              <img
-                src="https://favicone.com/www.netflix.com?s=128"
-                class="w-6 h-6"
-                alt="Netflix"
-              />
+                <img
+                  src="https://favicone.com/www.netflix.com?s=128"
+                  class="w-6 h-6"
+                  alt="Netflix"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="sp"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="sp"
               >
-              <img
-                src="https://favicone.com/open.spotify.com?s=128"
-                class="w-6 h-6"
-                alt="Spotify"
-              />
+                <img
+                  src="https://favicone.com/open.spotify.com?s=128"
+                  class="w-6 h-6"
+                  alt="Spotify"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="tw"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="tw"
               >
-              <img
-                src="https://favicone.com/twitter.com?s=128"
-                class="w-6 h-6"
-                alt="Twitter"
-              />
+                <img
+                  src="https://favicone.com/twitter.com?s=128"
+                  class="w-6 h-6"
+                  alt="Twitter"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="ig"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="ig"
               >
-              <img
-                src="https://favicone.com/www.instagram.com?s=128"
-                class="w-6 h-6"
-                alt="Instagram"
-              />
+                <img
+                  src="https://favicone.com/www.instagram.com?s=128"
+                  class="w-6 h-6"
+                  alt="Instagram"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="maps"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="maps"
               >
-              <img
-                src="https://favicone.com/maps.google.com?s=128"
-                class="w-6 h-6"
-                alt="Maps"
-              />
+                <img
+                  src="https://favicone.com/maps.google.com?s=128"
+                  class="w-6 h-6"
+                  alt="Maps"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="i"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="i"
               >
-              <img
-                src="https://favicone.com/image.google.com/?s=128"
-                class="w-6 h-6"
-                alt="Images"
-              />
+                <img
+                  src="https://favicone.com/image.google.com/?s=128"
+                  class="w-6 h-6"
+                  alt="Images"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="ddg"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="ddg"
               >
-              <img
-                src="https://favicone.com/duckduckgo.com?s=128"
-                class="w-6 h-6"
-                alt="DuckDuckGo"
-              />
+                <img
+                  src="https://favicone.com/duckduckgo.com?s=128"
+                  class="w-6 h-6"
+                  alt="DuckDuckGo"
+                />
               </button>
               <button
-              class="search-option p-2 rounded-lg backdrop-blur-3xl"
-              data-value="px"
+                class="search-option p-2 rounded-lg backdrop-blur-3xl"
+                data-value="px"
               >
-              <img
-                src="https://favicone.com/www.perplexity.ai?s=128"
-                class="w-6 h-6"
-                alt="Perplexity"
-              />
+                <img
+                  src="https://favicone.com/www.perplexity.ai?s=128"
+                  class="w-6 h-6"
+                  alt="Perplexity"
+                />
               </button>
             </div>
             <select id="searchEngine" class="hidden">
@@ -760,24 +850,39 @@
 
                 // Mettre à jour le select caché
                 document.getElementById("searchEngine").value = value;
-                
+
                 // Ajouter la commande au début de la recherche
                 const searchInput = document.getElementById("searchInput");
                 const currentText = searchInput.value.trim();
-                
+
                 // Si le texte commence déjà par une commande, on la remplace
                 let newText = currentText;
-                if (currentText.startsWith('/')) {  // Correction ici : startswith -> startsWith
-                  const parts = currentText.substring(1).split(' ');
+                if (currentText.startsWith("/")) {
+                  // Correction ici : startswith -> startsWith
+                  const parts = currentText.substring(1).split(" ");
                   const possibleCommand = parts[0].toLowerCase();
                   // Liste des commandes valides (doit correspondre à handleSearch)
-                  const validCommands = ["g", "yt", "gh", "w", "r", "so", "a", "n", "sp", "tw", "ig", "maps", "i"];
+                  const validCommands = [
+                    "g",
+                    "yt",
+                    "gh",
+                    "w",
+                    "r",
+                    "so",
+                    "a",
+                    "n",
+                    "sp",
+                    "tw",
+                    "ig",
+                    "maps",
+                    "i",
+                  ];
                   if (validCommands.includes(possibleCommand)) {
                     // Prendre tout sauf la commande
-                    newText = parts.slice(1).join(' ');
+                    newText = parts.slice(1).join(" ");
                   }
                 }
-                
+
                 // Garantir qu'il y a toujours un espace après la commande si newText n'est pas vide
                 if (newText.length > 0) {
                   searchInput.value = `/${value} ${newText}`;
@@ -785,12 +890,12 @@
                   // Si pas de texte, ajouter juste la commande avec un espace à la fin pour faciliter la saisie
                   searchInput.value = `/${value} `;
                 }
-                
+
                 // Fermer le dropdown
                 document
                   .getElementById("searchEngineDropdown")
                   .classList.add("hidden");
-                
+
                 // Remettre le focus sur le champ de recherche
                 searchInput.focus();
                 // Placer le curseur à la fin du texte
@@ -807,22 +912,24 @@
                   .classList.add("hidden");
               }
             });
-            
+
             // Assurons-nous que le bouton de recherche déclenche la recherche avec le moteur sélectionné
-            document.querySelector(".absolute svg").addEventListener("click", function(event) {
-              handleSearch(event);
-            });
-            
+            document
+              .querySelector(".absolute svg")
+              .addEventListener("click", function (event) {
+                handleSearch(event);
+              });
+
             // S'assurer que le document est prêt
             document.addEventListener("DOMContentLoaded", () => {
               // Réinitialiser les écouteurs pour la recherche afin d'éviter des doublons
               const searchInput = document.getElementById("searchInput");
               const searchIcon = document.querySelector(".absolute svg");
-              
+
               // Supprimer les écouteurs existants s'il y en a
               searchInput.removeEventListener("keydown", handleSearch);
               searchIcon.removeEventListener("click", handleSearch);
-              
+
               // Ajouter les nouveaux écouteurs
               searchInput.addEventListener("keydown", handleSearch);
               searchIcon.addEventListener("click", handleSearch);
@@ -1097,17 +1204,40 @@
     </div>
 
     <!-- Navigation bar mobile en bas de l'écran -->
-    <nav id="mobileNavBar" class="fixed bottom-0 left-0 right-0 bg-black/60 backdrop-blur-xl p-2 z-50 lg:hidden">
+    <nav
+      id="mobileNavBar"
+      class="fixed bottom-0 left-0 right-0 bg-black/60 backdrop-blur-xl p-2 z-50 lg:hidden"
+    >
       <div class="flex justify-center items-center">
         <div class="flex items-center gap-5">
-          <button id="showSidebar" class="flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+          <button
+            id="showSidebar"
+            class="flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+              ></path>
             </svg>
             <span class="text-xs">Quick Access</span>
           </button>
-          <button onclick="showSearchHelp()" class="mr-2 flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl">
-            <span class="text-xl font-medium w-6 h-6 flex items-center justify-center">?</span>
+          <button
+            onclick="showSearchHelp()"
+            class="mr-2 flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl"
+          >
+            <span
+              class="text-xl font-medium w-6 h-6 flex items-center justify-center"
+              >?</span
+            >
             <span class="text-xs">Help Center</span>
           </button>
         </div>
@@ -1115,13 +1245,31 @@
     </nav>
 
     <!-- Ajout d'un modal pour afficher la sidebar sur mobile -->
-    <div id="sidebarModal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-[60] hidden">
-      <div class="fixed bottom-0 inset-x-0 rounded-t-3xl bg-white/90 backdrop-blur-xl p-6 shadow-2xl max-h-[80vh] overflow-y-auto transition-transform duration-300 transform translate-y-0">
+    <div
+      id="sidebarModal"
+      class="fixed inset-0 bg-black/40 backdrop-blur-md z-[60] hidden"
+    >
+      <div
+        class="fixed bottom-0 inset-x-0 rounded-t-3xl bg-white/90 backdrop-blur-xl p-6 shadow-2xl max-h-[80vh] overflow-y-auto transition-transform duration-300 transform translate-y-0"
+      >
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-xl font-medium text-white">Quick Access</h2>
-          <button id="closeSidebar" class="p-2 text-white rounded-full bg-white/20 hover:bg-white/30">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          <button
+            id="closeSidebar"
+            class="p-2 text-white rounded-full bg-white/20 hover:bg-white/30"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
             </svg>
           </button>
         </div>
@@ -1145,7 +1293,7 @@
       }
 
       .shortcut-container::before {
-        content: 'Right click to edit/delete';
+        content: "Right click to edit/delete";
         position: absolute;
         top: -30px;
         left: 50%;
@@ -1169,35 +1317,37 @@
 
     <!-- Script pour cloner le contenu de la sidebar dans le modal mobile -->
     <script>
-      document.addEventListener("DOMContentLoaded", function() {
+      document.addEventListener("DOMContentLoaded", function () {
         // Cloner le contenu de la sidebar pour le modal mobile
-        const sidebarChildren = document.querySelectorAll('#sidebar > *:not(:first-child)');
-        const sidebarContent = document.getElementById('sidebarContent');
-        
-        sidebarChildren.forEach(child => {
+        const sidebarChildren = document.querySelectorAll(
+          "#sidebar > *:not(:first-child)"
+        );
+        const sidebarContent = document.getElementById("sidebarContent");
+
+        sidebarChildren.forEach((child) => {
           sidebarContent.appendChild(child.cloneNode(true));
         });
-        
+
         // Gestion de l'affichage du modal
-        const showSidebarBtn = document.getElementById('showSidebar');
-        const closeSidebarBtn = document.getElementById('closeSidebar');
-        const sidebarModal = document.getElementById('sidebarModal');
-        
-        showSidebarBtn.addEventListener('click', function() {
-          sidebarModal.classList.remove('hidden');
-          document.body.style.overflow = 'hidden'; // Empêcher le défilement du body
+        const showSidebarBtn = document.getElementById("showSidebar");
+        const closeSidebarBtn = document.getElementById("closeSidebar");
+        const sidebarModal = document.getElementById("sidebarModal");
+
+        showSidebarBtn.addEventListener("click", function () {
+          sidebarModal.classList.remove("hidden");
+          document.body.style.overflow = "hidden"; // Empêcher le défilement du body
         });
-        
-        closeSidebarBtn.addEventListener('click', function() {
-          sidebarModal.classList.add('hidden');
-          document.body.style.overflow = ''; // Réactiver le défilement
+
+        closeSidebarBtn.addEventListener("click", function () {
+          sidebarModal.classList.add("hidden");
+          document.body.style.overflow = ""; // Réactiver le défilement
         });
-        
+
         // Fermer le modal si on clique en dehors du contenu
-        sidebarModal.addEventListener('click', function(e) {
+        sidebarModal.addEventListener("click", function (e) {
           if (e.target === sidebarModal) {
-            sidebarModal.classList.add('hidden');
-            document.body.style.overflow = '';
+            sidebarModal.classList.add("hidden");
+            document.body.style.overflow = "";
           }
         });
       });
