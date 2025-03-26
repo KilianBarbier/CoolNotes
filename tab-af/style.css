@@ -790,7 +790,7 @@ select option[value="i"] {
 
 #searchEngineDropdown .search-option {
     transition: transform 0.2s;
-    background: rgba(55, 55, 55, 0.3);
+    background: #41a0e4;;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -934,7 +934,7 @@ select option[value="i"] {
 
 #searchEngineDropdown .search-option {
     transition: transform 0.2s;
-    background: rgba(55, 55, 55, 0.3);
+    background: #41a0e4;;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -950,6 +950,6 @@ select option[value="i"] {
 }
 
 #searchEngineDropdown .search-option:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: #009EE3;
     transform: translateZ(10px) scale(1.05);
 }
