@@ -156,7 +156,7 @@
           shortcuts[position] = { title, url: url.href, faviconUrl };
           localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-          reloadWithTransition();
+          reloadShortcuts(); // Au lieu de reloadWithTransition()
         } catch (e) {
           console.error("Invalid URL dropped:", e);
         }
@@ -180,7 +180,6 @@
       }
 
       function addMoreShortcuts() {
-        const grid = document.getElementById("shortcutGrid");
         const currentCount =
           document.querySelectorAll("[data-position]").length;
         const addRowButton = document.getElementById("addRowButton");
@@ -195,6 +194,7 @@
         }
 
         localStorage.setItem("shortcutCount", currentCount + 4);
+        reloadShortcuts(); // Au lieu de reloadWithTransition()
       }
 
       async function saveShortcut() {
@@ -221,7 +221,7 @@
           localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
           closeConfigModal();
-          reloadWithTransition();
+          reloadShortcuts(); // Au lieu de reloadWithTransition()
         } catch (e) {
           console.error("Erreur lors de la sauvegarde du raccourci:", e);
         }
@@ -265,7 +265,7 @@
         localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
         closeContextMenu();
-        reloadWithTransition();
+        reloadShortcuts(); // Au lieu de reloadWithTransition()
       }
 
       document.addEventListener("DOMContentLoaded", () => {
@@ -460,11 +460,42 @@
         }
       }
 
-      function reloadWithTransition() {
-        document.body.classList.add("page-transition");
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
+      function reloadShortcuts() {
+        const grid = document.getElementById("shortcutGrid");
+        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+        
+        // Supprimer tous les raccourcis existants mais garder le bouton d'ajout
+        const addRowButton = document.getElementById("addRowButton");
+        grid.innerHTML = '';
+        
+        // Recréer les raccourcis
+        const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
+        for (let i = 0; i < shortcutCount; i++) {
+          grid.innerHTML += generateShortcut(i);
+        }
+        
+        // Remettre le bouton d'ajout
+        grid.appendChild(addRowButton);
+      
+        // Mettre à jour les raccourcis avec leurs données
+        Object.entries(shortcuts).forEach(([position, data]) => {
+          const shortcut = document.querySelector(`[data-position="${position}"]`);
+          if (shortcut) {
+            shortcut.href = data.url;
+            shortcut.onclick = (e) => {
+              e.preventDefault();
+              window.location.href = data.url;
+            };
+            shortcut.querySelector(".shortcut-title").textContent = data.title;
+            const iconContainer = shortcut.querySelector(".shortcut-icon");
+            iconContainer.removeAttribute("data-empty");
+            iconContainer.innerHTML = `
+              <img src="${data.faviconUrl}" 
+                 class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
+                 alt="${data.title}" 
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`; 
+          }
+        });
       }
 
       function switchTab(tab) {
@@ -484,8 +515,8 @@
         const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${tab}`) || "{}");
         localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-        // Reload page with transition
-        reloadWithTransition();
+        // Reload shortcuts
+        reloadShortcuts(); // Au lieu de reloadWithTransition()
       }
     </script>
   </head>
