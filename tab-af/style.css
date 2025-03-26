@@ -780,11 +780,11 @@ select option[value="i"] {
 
 #searchEngineDropdown .search-option {
     transition: transform 0.2s;
-    background: rgba(55, 55, 55, 0.05);
+    background: #41a0e4;
 }
 
 #searchEngineDropdown .search-option:hover {
-    background: rgba(0, 0, 0, 0.605);
+    background: #009EE3;
     transform: translateZ(10px);
 }
 
