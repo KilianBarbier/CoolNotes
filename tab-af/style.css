@@ -1,0 +1,960 @@
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Enhanced focus styles */
+input:focus {
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 0 0 3px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Remove the custom-gradient class since we're using random gradients now */
+body {
+  background: linear-gradient(90deg, #0800B9 0%, #009EE3 100%);
+  background-size: cover !important;
+  background-attachment: fixed;
+  color: white;
+  transition: none;
+  animation: none;
+}
+
+/* Remettre l'ancien style pour .backdrop-blur-xl */
+.backdrop-blur-xl {
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(25px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(255, 255, 255, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Darker backdrop for dark mode */
+.dark .backdrop-blur-xl {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Adjust text colors for better visibility */
+.text-gray-600 {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dark .text-gray-300 {
+    color: white;
+}
+
+.dark .text-gray-400 {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Adjust the search input for better contrast */
+input {
+  background: rgba(255, 255, 255, 0.3) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.15),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+.dark input {
+  color: white !important;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.dark input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Override the white placeholder color for the config modal inputs */
+#configModal input::placeholder {
+    color: rgba(75, 85, 99, 0.7) !important; /* gray-600 with opacity */
+}
+
+/* Reset the global input placeholder styles for config modal */
+#configModal input {
+    color: rgb(17, 24, 39) !important; /* gray-900 */
+}
+
+/* Subtle shadow for better depth */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2) !important;
+}
+
+.hover\:shadow-xl:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Boosted card effects */
+.group {
+  transform: perspective(1000px) rotateX(0deg);
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+}
+
+.group:hover {
+  transform: perspective(1000px) rotateX(10deg) translateY(-5px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+.group > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Enhanced icons */
+svg {
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Remove gradient animations */
+@keyframes gradient-shift {
+  /* Supprimé */
+}
+
+button {
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Context Menu Styles */
+#contextMenu {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    animation: fadeIn 0.1s ease-out;
+    background: none !important;
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.1s ease-out, visibility 0.1s ease-out;
+}
+
+.dark #contextMenu {
+    background: rgba(255, 255, 255, 0.15) !important;
+}
+
+#contextMenu.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#contextMenu:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+}
+
+#contextMenu button {
+    font-size: 14px;
+    transition: all 0.2s ease;
+    color: white !important;
+}
+
+#contextMenu button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: scale(1.2); 
+        visibility: hidden;
+    }
+    to { 
+        opacity: 1; 
+        transform: scale(1.2); 
+        visibility: visible;
+    }
+}
+
+/* Add icon colors */
+.shortcut-icon svg {
+    stroke: white;
+}
+
+.dark .shortcut-icon svg {
+    stroke: rgba(255, 255, 255, 0.7);
+}
+
+.text-gray-600, .text-gray-800, .dark .text-gray-400, .shortcut-title {
+    color: white !important;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hover\:bg-white\/60:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Add styles for select dropdown */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 12px;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 36px;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    background-image: url('https://img.icons8.com/color/48/000000/google-logo.png');
+}
+
+select svg {
+    width: 24px;
+    height: 24px;
+}
+
+option svg {
+    pointer-events: none;
+}
+
+select:focus {
+    outline: none;
+    outline: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+select option {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 1rem;
+    padding: 8px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+select option svg {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    color: white;
+}
+
+select option:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Remove arrow from select */
+select::-ms-expand {
+    display: none;
+}
+
+/* Ensure emojis render properly */
+select, select option {
+    font-family: "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
+/* Make search icon clickable */
+.absolute svg {
+    cursor: pointer;
+}
+
+/* Search Engine Icons */
+select option[value="google"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234285F4' d='M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z'/%3E%3Cpath fill='%2334A853' d='M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z'/%3E%3Cpath fill='%23FBBC05' d='M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z'/%3E%3Cpath fill='%23EA4335' d='M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="bing"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2300897B' d='M4.721 4.001l4.827 1.704v12.785l5.175-2.99-2.993-1.421-2.182-4.44 8.37 2.993v4.994L9.548 21 4.721 18.719V4.001z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="duckduckgo"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23DE5833' d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.83 8.7l-5.16 5.17c-.39.39-1.02.39-1.41 0l-2.92-2.92c-.39-.39-.39-1.02 0-1.41.39-.39 1.02-.39 1.41 0l2.21 2.21 4.46-4.46c.39-.39 1.02-.39 1.41 0 .39.39.39 1.03 0 1.41z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="brave"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23FB542B' d='M15.68 0l2.096 2.38s1.84-.512 2.709.358c.868.87 1.584 1.638 1.584 1.638l-.562 2.355.562 1.511-.153 1.102s-1.279 7.205-1.279 7.155c0-.05-1.125 3.844-3.527 5.405 0 0-2.099 1.792-5.306 1.792l-.205-.052c-3.206 0-5.305-1.792-5.305-1.792-2.402-1.56-3.527-5.405-3.527-5.405L2.21 9.344l-.153-1.102.562-1.511L2.056 4.376s.716-.768 1.584-1.638c.868-.87 2.71-.358 2.71-.358L8.444 0l2.147.41L12.737.051 15.68 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+/* Search Engine Icons using Icons8 */
+select option[value="g"] {
+    background-image: url('https://img.icons8.com/color/48/000000/google-logo.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="yt"] {
+    background-image: url('https://img.icons8.com/color/48/000000/youtube-play.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="gh"] {
+    background-image: url('https://img.icons8.com/material-outlined/48/000000/github.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="w"] {
+    background-image: url('https://img.icons8.com/color/48/000000/wikipedia.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="r"] {
+    background-image: url('https://img.icons8.com/color/48/000000/reddit.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="so"] {
+    background-image: url('https://img.icons8.com/color/48/000000/stackoverflow.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="a"] {
+    background-image: url('https://img.icons8.com/color/48/000000/amazon.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="n"] {
+    background-image: url('https://img.icons8.com/color/48/000000/netflix.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="sp"] {
+    background-image: url('https://img.icons8.com/color/48/000000/spotify.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="tw"] {
+    background-image: url('https://img.icons8.com/color/48/000000/twitter.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="ig"] {
+    background-image: url('https://img.icons8.com/color/48/000000/instagram-new.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="maps"] {
+    background-image: url('https://img.icons8.com/color/48/000000/google-maps.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+select option[value="i"] {
+    background-image: url('https://img.icons8.com/color/48/000000/google-images.png');
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 20px 20px;
+    padding-left: 36px;
+}
+
+/* Add shortcut plus icon */
+.shortcut-icon[data-empty="true"] svg {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* Update shortcut icon styles */
+.shortcut-icon[data-empty="true"] {
+    position: relative;
+    width: 72px;          /* Increased to 72px */
+    height: 72px;         /* Increased to 72px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 18px;  /* Adjusted for larger size */
+    transition: all 0.3s ease;
+    margin: 0 auto 16px;  /* Reduced from 20px to 16px */
+}
+
+/* Make the plus icon bigger */
+.shortcut-icon[data-empty="true"]::before {
+    content: '+';
+    font-size: 2rem;
+    color: white;
+}
+
+.shortcut-icon[data-empty="true"]::after {
+    width: 3px;           /* Slightly thicker */
+    height: 32px;         /* Increased from 28px */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Update favicon image size for configured shortcuts */
+.shortcut-icon img {
+    width: 36px !important;  
+    height: 36px !important;
+    transform: scale(1.3); /* Added scale for saved shortcuts */
+}
+
+/* Hover effect only for saved shortcuts */
+.shortcut-icon:not([data-empty="true"]) img:hover {
+    transform: scale(1.4);
+}
+
+/* Keep empty shortcut styles unchanged */
+.shortcut-icon[data-empty="true"]:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.2);
+}
+
+/* Update favicon image size for configured shortcuts */
+.shortcut-icon img {
+    width: 36px !important;  /* Increased from 32px */
+    height: 36px !important; /* Increased from 32px */
+}
+
+/* Adjust title spacing */
+.shortcut-title {
+    font-size: 1.1rem;
+    text-align: center;
+    width: 100%;
+}
+
+.shortcut-icon[data-empty="true"] {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    margin: 0 auto 12px;
+}
+
+.shortcut-icon[data-empty="true"]:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.2);
+}
+
+.shortcut-icon[data-empty="true"]::before,
+.shortcut-icon[data-empty="true"]::after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-radius: 2px;
+}
+
+.shortcut-icon[data-empty="true"]::before {
+    width: 20px;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.shortcut-icon[data-empty="true"]::after {
+    width: 2px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.shortcut-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+}
+
+/* Animations pour le chargement initial */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation pour le reload */
+@keyframes fadeInOut {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Appliquer les animations aux éléments */
+.sidebar {
+    animation: fadeInScale 0.6s ease-out;
+}
+
+.search-container {
+    animation: fadeInScale 0.6s ease-out 0.2s both;
+}
+
+#shortcutGrid {
+    animation: fadeInScale 0.6s ease-out 0.3s both;
+}
+
+#shortcutGrid > * {
+    animation: slideInUp 0.5s ease-out;
+    animation-fill-mode: both;
+}
+
+/* Animation delays for shortcuts */
+#shortcutGrid > *:nth-child(1) { animation-delay: 0s; }
+#shortcutGrid > *:nth-child(2) { animation-delay: 0.1s; }
+#shortcutGrid > *:nth-child(3) { animation-delay: 0.2s; }
+#shortcutGrid > *:nth-child(4) { animation-delay: 0.3s; }
+#shortcutGrid > *:nth-child(5) { animation-delay: 0.4s; }
+#shortcutGrid > *:nth-child(6) { animation-delay: 0.5s; }
+#shortcutGrid > *:nth-child(7) { animation-delay: 0.6s; }
+#shortcutGrid > *:nth-child(8) { animation-delay: 0.7s; }
+
+/* Animation de transition pour le reload */
+.page-transition {
+    animation: fadeInOut 0.4s ease-out;
+}
+
+/* Assurer que les animations sont désactivées si l'utilisateur préfère les réduire */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Style amélioré pour le select */
+#searchEngine {
+    width: 48px !important;
+    padding: 12px !important;
+    background-position: center !important;
+    background-size: 24px !important;
+    text-indent: -9999px; /* Cache le texte */
+    overflow: hidden;
+}
+
+/* Style pour le select et les options */
+#searchEngine {
+    padding: 0 !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+}
+
+#searchEngine option {
+    font-size: 0;
+    line-height: 0;
+    padding: 8px !important;
+    background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+#searchEngine option img {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain;
+}
+
+/* Cacher le texte mais garder accessible */
+#searchEngine option::after {
+    content: attr(alt);
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Style pour les options du select */
+#searchEngine option {
+    text-indent: 0; /* Réinitialise l'indentation pour les options */
+    padding-left: 35px !important;
+    background-position: 8px center !important;
+    background-size: 20px !important;
+    line-height: 32px !important;
+    min-height: 32px !important;
+}
+
+/* Style simplifié pour le select et ses options */
+#searchEngine {
+    width: auto !important;
+    min-width: 120px;
+    padding: 8px !important;
+}
+
+#searchEngine option {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#searchEngine option img {
+    margin-right: 8px;
+}
+
+/* On supprime tous les anciens styles compliqués de background-image */
+
+/* Nouveau style pour le select personnalisé */
+.custom-select {
+    position: relative;
+    width: 48px;
+    height: 48px;
+}
+
+.selected-option {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.selected-option:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.engine-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.options-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 8px;
+    width: 200px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    z-index: 50;
+}
+
+.option {
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.option:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.hidden {
+    display: none;
+}
+#searchEngineDropdown {
+    z-index: 9999 !important;
+}
+
+#searchEngineDropdown .search-option {
+    transition: transform 0.2s;
+    background: rgba(55, 55, 55, 0.05);
+}
+
+#searchEngineDropdown .search-option:hover {
+    background: rgba(0, 0, 0, 0.605);
+    transform: translateZ(10px);
+}
+
+#searchEngineDropdown .search-option {
+    transition: transform 0.2s;
+    background: rgba(55, 55, 55, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+}
+
+#searchEngineDropdown .search-option img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.popup-wrapper {
+    isolation: isolate;
+}
+
+.popup-backdrop {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+#searchEngineDropdown:not(.hidden) + .popup-backdrop {
+    opacity: 1;
+}
+
+/* Styles pour le modal et l'effet de flou */
+#configModal {
+    z-index: 50;
+}
+
+#configModal:not(.hidden) ~ .search-container {
+    filter: blur(8px);
+    pointer-events: none;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+
+.search-container {
+    transition: all 0.3s ease;
+}
+
+/* Assurez-vous que le modal est toujours au-dessus */
+.modal-content {
+    z-index: 51;
+    position: relative;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
+
+  .search-container {
+    padding: 16px;
+  }
+
+  .shortcut-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 8px;
+  }
+
+  .shortcut-title {
+    font-size: 0.9rem;
+  }
+
+  .group {
+    min-height: 120px;
+  }
+
+  .selected-option {
+    width: 36px;
+    height: 36px;
+  }
+
+  .options-container {
+    width: 160px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .search-container {
+    padding: 8px;
+  }
+
+  .shortcut-icon {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 4px;
+  }
+
+  .shortcut-title {
+    font-size: 0.8rem;
+  }
+
+  .group {
+    min-height: 100px;
+  }
+
+  .selected-option {
+    width: 32px;
+    height: 32px;
+  }
+
+  .options-container {
+    width: 120px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Style spécifique pour le bouton CoolNotes */
+.sidebar a.block.w-full {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+}
+
+.sidebar a.block.w-full:hover {
+    text-decoration: underline;
+}
+
+/* Effet hover amélioré pour le bouton avec image */
+.sidebar div.bg-white\/30:hover {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Correction des styles pour le dropdown des moteurs de recherche */
+#searchEngineDropdown {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    z-index: 9999 !important;
+}
+
+#searchEngineDropdown .search-option {
+    transition: transform 0.2s;
+    background: rgba(55, 55, 55, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+}
+
+#searchEngineDropdown .search-option img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+#searchEngineDropdown .search-option:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateZ(10px) scale(1.05);
+}
