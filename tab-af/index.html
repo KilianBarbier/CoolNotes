@@ -25,471 +25,405 @@
     </script>
     <script>
       async function getFaviconUrl(url) {
+      try {
+        const domain = new URL(url).hostname;
+        
+        // Première tentative avec Favicone
         try {
-          const domain = new URL(url).hostname;
-          
-          // Première tentative avec Favicone
-          try {
-            const faviconeUrl = `https://favicone.com/${domain}?s=128`;
-            const response = await fetch(faviconeUrl);
-            if (response.ok) {
-              return faviconeUrl;
-            }
-          } catch (e) {
-            console.warn('Favicone failed, trying faviconextractor:', e);
-          }
-          
-          // Deuxième tentative avec Favicon Extractor
-          try {
-            const extractorUrl = `https://www.faviconextractor.com/favicon/${domain}?larger=true`;
-            const response = await fetch(extractorUrl);
-            if (response.ok) {
-              return extractorUrl;
-            }
-          } catch (e) {
-            console.warn('Favicon extractor failed:', e);
-          }
-
-          // Fallback vers l'icône par défaut de Google
-          return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-          
-        } catch (e) {
-          console.error('Erreur lors de la récupération du favicon:', e);
-          return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
+        const faviconeUrl = `https://favicone.com/${domain}?s=128`;
+        const response = await fetch(faviconeUrl);
+        if (response.ok) {
+          return faviconeUrl;
         }
+        } catch (e) {
+        console.warn('Favicone failed, trying faviconextractor:', e);
+        }
+        
+        // Deuxième tentative avec Favicon Extractor
+        try {
+        const extractorUrl = `https://www.faviconextractor.com/favicon/${domain}?larger=true`;
+        const response = await fetch(extractorUrl);
+        if (response.ok) {
+          return extractorUrl;
+        }
+        } catch (e) {
+        console.warn('Favicon extractor failed:', e);
+        }
+
+        // Fallback vers l'icône par défaut de Google
+        return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+        
+      } catch (e) {
+        console.error('Erreur lors de la récupération du favicon:', e);
+        return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
+      }
       }
 
       function handleShortcutClick(event, position) {
-        event.preventDefault();
-        const shortcut = document.querySelector(
-          `[data-position="${position}"]`
-        );
-        const iconContainer = shortcut.querySelector(".shortcut-icon");
-        const isEmpty = iconContainer.getAttribute("data-empty") === "true";
+      event.preventDefault();
+      const shortcut = document.querySelector(
+        `[data-position="${position}"]`
+      );
+      const iconContainer = shortcut.querySelector(".shortcut-icon");
+      const isEmpty = iconContainer.getAttribute("data-empty") === "true";
 
-        if (event.type === "contextmenu") {
-          showContextMenu(event, position);
-        } else if (isEmpty) {
-          openConfigModal(position);
-        } else {
-          window.location.href = shortcut.href;
-        }
+      if (event.type === "contextmenu") {
+        showContextMenu(event, position);
+      } else if (isEmpty) {
+        openConfigModal(position);
+      } else {
+        window.location.href = shortcut.href;
+      }
       }
 
       function showContextMenu(event, position) {
-        event.preventDefault();
-        const contextMenu = document.getElementById("contextMenu");
-        // Ne garder que le positionnement, pas de style de fond
-        contextMenu.style.left = `${event.pageX}px`;
-        contextMenu.style.top = `${event.pageY}px`;
-        contextMenu.setAttribute("data-position", position);
-        contextMenu.classList.remove("hidden");
+      event.preventDefault();
+      const contextMenu = document.getElementById("contextMenu");
+      contextMenu.style.left = `${event.pageX}px`;
+      contextMenu.style.top = `${event.pageY}px`;
+      contextMenu.setAttribute("data-position", position);
+      contextMenu.classList.remove("hidden");
+      contextMenu.style.background = "none";
+      contextMenu.style.backgroundColor = "transparent";
 
-        // S'assurer qu'aucun style de fond n'est présent
-        contextMenu.style.background = "none";
-        contextMenu.style.backgroundColor = "transparent";
-
-        document.addEventListener("click", closeContextMenu);
+      document.addEventListener("click", closeContextMenu);
       }
 
       function closeContextMenu() {
-        document.getElementById("contextMenu").classList.add("hidden");
-        document.removeEventListener("click", closeContextMenu);
+      document.getElementById("contextMenu").classList.add("hidden");
+      document.removeEventListener("click", closeContextMenu);
       }
 
       function generateShortcut(i) {
-        return `
-                <div class="shortcut-container" 
-                     ondragover="handleDragOver(event)" 
-                     ondrop="handleDrop(event, '${i}')"
-                     ondragenter="handleDragEnter(event)"
-                     ondragleave="handleDragLeave(event)">
-                  <a href="#" 
-                     onclick="handleShortcutClick(event, '${i}')" 
-                     oncontextmenu="handleShortcutClick(event, '${i}')"
-                     data-position="${i}"
-                     class="group p-6 backdrop-blur-xl bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 block">
-                      <div class="text-center">
-                          <div class="shortcut-icon" data-empty="true">
-                              <!-- No SVG needed, the CSS will create the plus sign -->
-                          </div>
-                          <div class="text-white font-medium shortcut-title">Drop Link Here</div>
-                      </div>
-                  </a>
-                </div>`;
+      return `
+          <div class="shortcut-container" 
+             ondragover="handleDragOver(event)" 
+             ondrop="handleDrop(event, '${i}')"
+             ondragenter="handleDragEnter(event)"
+             ondragleave="handleDragLeave(event)">
+            <a href="#" 
+             onclick="handleShortcutClick(event, '${i}')" 
+             oncontextmenu="handleShortcutClick(event, '${i}')"
+             data-position="${i}"
+             class="group p-6 backdrop-blur-xl bg-white/90 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 block">
+              <div class="text-center">
+                <div class="shortcut-icon" data-empty="true">
+                </div>
+                <div class="text-white font-medium shortcut-title">Drop Link Here</div>
+              </div>
+            </a>
+          </div>`;
       }
 
-      // Nouvelles fonctions pour le drag & drop
       function handleDragOver(event) {
-        event.preventDefault();
+      event.preventDefault();
       }
 
       function handleDragEnter(event) {
-        event.preventDefault();
-        const container = event.currentTarget;
-        container.querySelector('a').classList.add('bg-white/40');
+      event.preventDefault();
+      const container = event.currentTarget;
+      container.querySelector('a').classList.add('bg-white/40');
       }
 
       function handleDragLeave(event) {
-        event.preventDefault();
-        const container = event.currentTarget;
-        container.querySelector('a').classList.remove('bg-white/40');
+      event.preventDefault();
+      const container = event.currentTarget;
+      container.querySelector('a').classList.remove('bg-white/40');
       }
 
       async function handleDrop(event, position) {
-        event.preventDefault();
-        const container = event.currentTarget;
-        container.querySelector('a').classList.remove('bg-white/40');
+      event.preventDefault();
+      const container = event.currentTarget;
+      container.querySelector('a').classList.remove('bg-white/40');
 
-        const data = event.dataTransfer.getData('text');
-        if (!data) return;
+      const data = event.dataTransfer.getData('text');
+      if (!data) return;
 
+      try {
+        const url = new URL(data);
+        let title = '';
         try {
-          // Valider l'URL
-          const url = new URL(data);
-          
-          // Essayer d'obtenir le titre de la page
-          let title = '';
-          try {
-            const response = await fetch(url.href);
-            const html = await response.text();
-            const doc = new DOMParser().parseFromString(html, 'text/html');
-            title = doc.title || url.hostname;
-          } catch (e) {
-            title = url.hostname;
-          }
-
-          // Sauvegarder le raccourci
-          const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-          const faviconUrl = await getFaviconUrl(url.href);
-          shortcuts[position] = { title, url: url.href, faviconUrl };
-          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-
-          reloadWithTransition();
+        const response = await fetch(url.href);
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        title = doc.title || url.hostname;
         } catch (e) {
-          console.error('Invalid URL dropped:', e);
+        title = url.hostname;
         }
+
+        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+        const faviconUrl = await getFaviconUrl(url.href);
+        shortcuts[position] = { title, url: url.href, faviconUrl };
+        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+
+        reloadWithTransition();
+      } catch (e) {
+        console.error('Invalid URL dropped:', e);
+      }
       }
 
-      // Nouvelle fonction pour générer le bouton "Add Row"
       function generateAddRowButton() {
-        return `
-                <button
-                   onclick="addMoreShortcuts()"
-                   class="group p-6 backdrop-blur-xl bg-white/30 rounded-2xl shadow-lg hover:shadow-xl hover:bg-white/40 transition-all duration-300 border-2 border-dashed border-white/30 w-full"
-                   id="addRowButton">
-                    <div class="text-center">
-                        <div class="flex justify-center mb-2">
-                            <svg class="w-8 h-8 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                        </div>
-                        <div class="text-white/70 font-medium">Add More Shortcuts</div>
-                    </div>
-                </button>`;
+      return `
+          <button
+             onclick="addMoreShortcuts()"
+             class="group p-6 backdrop-blur-xl bg-white/30 rounded-2xl shadow-lg hover:shadow-xl hover:bg-white/40 transition-all duration-300 border-2 border-dashed border-white/30 w-full"
+             id="addRowButton">
+            <div class="text-center">
+              <div class="flex justify-center mb-2">
+                <svg class="w-8 h-8 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+              </div>
+              <div class="text-white/70 font-medium">Add More Shortcuts</div>
+            </div>
+          </button>`;
       }
 
-      // Fonction pour ajouter plus de raccourcis
       function addMoreShortcuts() {
-        const grid = document.getElementById("shortcutGrid");
-        const currentCount = document.querySelectorAll("[data-position]").length;
-        const addRowButton = document.getElementById("addRowButton");
-        
-        // Ajouter 4 nouveaux shortcuts (une ligne complète en mode desktop)
-        for (let i = currentCount; i < currentCount + 4; i++) {
-          grid.insertBefore(document.createRange().createContextualFragment(generateShortcut(i)), addRowButton);
-        }
-        
-        // Sauvegarder le nouveau nombre de shortcuts
-        localStorage.setItem("shortcutCount", currentCount + 4);
+      const grid = document.getElementById("shortcutGrid");
+      const currentCount = document.querySelectorAll("[data-position]").length;
+      const addRowButton = document.getElementById("addRowButton");
+      
+      for (let i = currentCount; i < currentCount + 4; i++) {
+        grid.insertBefore(document.createRange().createContextualFragment(generateShortcut(i)), addRowButton);
+      }
+      
+      localStorage.setItem("shortcutCount", currentCount + 4);
       }
 
       async function saveShortcut() {
-        const modal = document.getElementById("configModal");
-        const position = modal.getAttribute("data-position");
-        const title = document.getElementById("shortcutTitle").value;
-        let url = document.getElementById("shortcutUrl").value.trim();
+      const modal = document.getElementById("configModal");
+      const position = modal.getAttribute("data-position");
+      const title = document.getElementById("shortcutTitle").value;
+      let url = document.getElementById("shortcutUrl").value.trim();
 
-        // Add https:// if no protocol is specified
-        if (!url.match(/^https?:\/\//i)) {
-          url = "https://" + url;
-        }
+      if (!url.match(/^https?:\/\//i)) {
+        url = "https://" + url;
+      }
 
-        try {
-          // Get favicon URL asynchronously
-          const faviconUrl = await getFaviconUrl(url);
-          
-          // Save to localStorage
-          const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-          shortcuts[position] = { title, url, faviconUrl };
-          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      try {
+        const faviconUrl = await getFaviconUrl(url);
+        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+        shortcuts[position] = { title, url, faviconUrl };
+        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-          closeConfigModal();
-          reloadWithTransition();
-        } catch (e) {
-          console.error('Erreur lors de la sauvegarde du raccourci:', e);
-        }
+        closeConfigModal();
+        reloadWithTransition();
+      } catch (e) {
+        console.error('Erreur lors de la sauvegarde du raccourci:', e);
+      }
       }
 
       function openConfigModal(position) {
-        const modal = document.getElementById("configModal");
-        modal.setAttribute("data-position", position);
+      const modal = document.getElementById("configModal");
+      modal.setAttribute("data-position", position);
 
-        document.getElementById("shortcutTitle").value = "";
-        document.getElementById("shortcutUrl").value = "";
-        document.getElementById("saveButton").disabled = true;
+      document.getElementById("shortcutTitle").value = "";
+      document.getElementById("shortcutUrl").value = "";
+      document.getElementById("saveButton").disabled = true;
 
-        modal.classList.remove("hidden");
-        document.getElementById("shortcutTitle").focus();
+      modal.classList.remove("hidden");
+      document.getElementById("shortcutTitle").focus();
       }
 
       function closeConfigModal() {
-        document.getElementById("configModal").classList.add("hidden");
+      document.getElementById("configModal").classList.add("hidden");
       }
 
       function editShortcut(position) {
-        openConfigModal(position, true);
-        closeContextMenu();
+      openConfigModal(position, true);
+      closeContextMenu();
       }
 
       function deleteShortcut() {
-        const position = document
-          .getElementById("contextMenu")
-          .getAttribute("data-position");
+      const position = document
+        .getElementById("contextMenu")
+        .getAttribute("data-position");
 
-        // Remove from localStorage
-        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-        delete shortcuts[position];
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+      delete shortcuts[position];
+      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-        closeContextMenu();
-        reloadWithTransition();
+      closeContextMenu();
+      reloadWithTransition();
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        function focusSearch() {
-          const searchInput = document.getElementById("searchInput");
-          if (searchInput) {
-            searchInput.focus();
-          }
-        }
-
-        // Focus initial
-        focusSearch();
-        
-        // Focus après un court délai (pour les navigateurs plus lents)
-        setTimeout(focusSearch, 100);
-
-        // Focus quand l'utilisateur revient sur l'onglet
-        document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'visible') {
-            focusSearch();
-          }
-        });
-
-        // Focus quand la fenêtre reçoit le focus
-        window.addEventListener('focus', focusSearch);
-
-        // Focus quand l'utilisateur interagit avec la page
-        document.addEventListener('mouseenter', focusSearch);
-        document.addEventListener('keydown', focusSearch, { once: true });
-        
-        // Le reste du code DOMContentLoaded...
-        // Generate grid container first
-        const grid = document.getElementById("shortcutGrid");
-        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-        
-        // Récupérer le nombre de shortcuts à afficher (défaut: 8)
-        const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
-
-        // First create all shortcut cards
-        for (let i = 0; i < shortcutCount; i++) {
-          grid.innerHTML += generateShortcut(i);
-        }
-        
-        // Ajouter le bouton "Add Row" à la fin
-        grid.innerHTML += generateAddRowButton();
-
-        // Then populate saved shortcuts
-        Object.entries(shortcuts).forEach(([position, data]) => {
-          const shortcut = document.querySelector(
-            `[data-position="${position}"]`
-          );
-          if (shortcut) {
-            shortcut.href = data.url;
-            shortcut.onclick = (e) => {
-              e.preventDefault();
-              window.location.href = data.url;
-            };
-            shortcut.querySelector(".shortcut-title").textContent = data.title;
-            const iconContainer = shortcut.querySelector(".shortcut-icon");
-            iconContainer.removeAttribute("data-empty");
-            iconContainer.innerHTML = `
-                        <img src="${data.faviconUrl}" 
-                             class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
-                             alt="${data.title}" 
-                             onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`;
-          }
-        });
-
-        // Rest of the initialization code (gradients, etc.)
-        const gradients = [
-          "radial-gradient(circle at 50% 400%, rgb(7, 227, 244) 10%, rgb(24, 170, 181) 50%, rgb(8, 108, 118) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(255, 0, 255) 10%, rgb(204, 0, 204) 50%, rgb(153, 0, 153) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(255, 255, 0) 10%, rgb(204, 204, 0) 50%, rgb(153, 153, 0) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(255, 0, 0) 10%, rgb(204, 0, 0) 50%, rgb(153, 0, 0) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(50, 255, 50) 10%, rgb(40, 204, 40) 50%, rgb(30, 153, 30) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(65, 105, 225) 10%, rgb(50, 90, 180) 50%, rgb(30, 60, 130) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(255, 165, 0) 10%, rgb(204, 133, 0) 50%, rgb(153, 102, 0) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(64, 224, 208) 10%, rgb(48, 192, 192) 50%, rgb(32, 160, 160) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(128, 0, 128) 10%, rgb(102, 0, 102) 50%, rgb(76, 0, 76) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(255, 192, 203) 10%, rgb(204, 153, 179) 50%, rgb(153, 115, 135) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(211, 211, 211) 10%, rgb(169, 169, 169) 50%, rgb(128, 128, 128) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(135, 206, 235) 10%, rgb(102, 178, 255) 50%, rgb(70, 130, 180) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(178, 34, 34) 10%, rgb(139, 0, 0) 50%, rgb(105, 0, 0) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(152, 251, 152) 10%, rgb(102, 205,170) 50%, rgb(77, 139, 77) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(255, 127, 80) 10%, rgb(204, 102, 68) 50%, rgb(153, 76, 51) 67%, black 100%)",
-          "radial-gradient(circle at 50% 400%, rgb(250, 128, 114) 10%, rgb(233, 99, 87) 50%, rgb(207, 77, 64) 67%, black 100%)",
-        ];
-
-        const randomGradient =
-          gradients[Math.floor(Math.random() * gradients.length)];
-        document.body.style.background = randomGradient;
-        document.body.style.backgroundSize = "cover";
-        document.body.style.backgroundAttachment = "fixed";
-
+      function focusSearch() {
         const searchInput = document.getElementById("searchInput");
-        const searchButton = document.querySelector(".absolute svg");
-
-        searchInput.addEventListener("keydown", handleSearch);
-
-        searchButton.addEventListener("click", handleSearch);
-        
-        setTimeout(() => {
-          document.getElementById("searchInput").focus();
-        }, 100);
-
-        // Ajouter la gestion du menu mobile
-        const menuButton = document.getElementById("mobileMenuButton");
-        const sidebar = document.getElementById("sidebar");
-        
-        menuButton.addEventListener("click", () => {
-          sidebar.classList.toggle("mobile-hidden");
-          menuButton.classList.toggle("open");
-        });
-
-        // Initialiser les écouteurs d'événements pour la barre de recherche
-        const searchIcon = document.querySelector(".absolute svg");
-        const currentSearch = document.getElementById("currentSearch");
-        
-        if (searchInput && searchIcon && currentSearch) {
-          searchInput.addEventListener("keydown", handleSearch);
-          searchIcon.addEventListener("click", handleSearch);
-          currentSearch.addEventListener("click", () => {
-            const dropdown = document.getElementById("searchEngineDropdown");
-            if (dropdown) {
-              dropdown.classList.toggle("hidden");
-            }
-          });
-        }
-
-        // Initialiser les écouteurs pour les options de recherche
-        document.querySelectorAll(".search-option").forEach((option) => {
-          option.addEventListener("click", (e) => {
-            const value = e.currentTarget.dataset.value;
-            const img = e.currentTarget.querySelector("img");
-            const searchBtn = document.querySelector("#currentSearch img");
-            
-            if (searchBtn && img) {
-              searchBtn.src = img.src;
-            }
-
-            const searchEngine = document.getElementById("searchEngine");
-            if (searchEngine) {
-              searchEngine.value = value;
-            }
-
-            const searchInput = document.getElementById("searchInput");
-            if (searchInput) {
-              const currentText = searchInput.value.trim();
-              let newText = currentText;
-              
-              if (currentText.startsWith('/')) {
-                const parts = currentText.substring(1).split(' ');
-                const possibleCommand = parts[0].toLowerCase();
-                const validCommands = ["g", "yt", "gh", "w", "r", "so", "a", "n", "sp", "tw", "ig", "maps", "i"];
-                if (validCommands.includes(possibleCommand)) {
-                  newText = parts.slice(1).join(' ');
-                }
-              }
-
-              searchInput.value = newText.length > 0 ? `/${value} ${newText}` : `/${value} `;
-              searchInput.focus();
-              searchInput.selectionStart = searchInput.value.length;
-              searchInput.selectionEnd = searchInput.value.length;
-            }
-
-            const dropdown = document.getElementById("searchEngineDropdown");
-            if (dropdown) {
-              dropdown.classList.add("hidden");
-            }
-          });
-        });
-      });
-
-      function handleSearch(event) {
-        if (
-          (event.type === "keydown" && event.key === "Enter") ||
-          event.type === "click"
-        ) {
-          event.preventDefault();
-
-          let query = document.getElementById("searchInput").value.trim();
-          let selectedEngine = document.getElementById("searchEngine").value;
-
-        
-          const searchEngines = {
-            g: "https://www.google.com/search?q=",
-            yt: "https://www.youtube.com/results?search_query=",
-            gh: "https://github.com/search?q=",
-            w: "https://en.wikipedia.org/wiki/Special:Search?search=",
-            r: "https://www.reddit.com/search/?q=",
-            so: "https://stackoverflow.com/search?q=",
-            a: "https://www.amazon.com/s?k=",
-            n: "https://www.netflix.com/search?q=",
-            sp: "https://open.spotify.com/search/results",
-            tw: "https://twitter.com/search?q=",
-            ig: "https://www.instagram.com/explore/tags/",
-            maps: "https://www.google.com/maps/search/",
-            i: "https://www.google.com/images?q=",
-            ddg: "https://duckduckgo.com/?q=",
-            px: "https://www.perplexity.ai/search?q="
-          };
-
-                    if (query.startsWith("/")) {
-            const parts = query.substring(1).split(" ");
-            if (parts.length > 1) {
-              const possibleCommand = parts[0].toLowerCase();
-              if (searchEngines[possibleCommand]) {
-                selectedEngine = possibleCommand;
-               
-                query = parts.slice(1).join(" ");
-              }
-            }
-          }
-
-          const searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
-          if (query) {
-            window.location.href = searchUrl + encodeURIComponent(query);
-          }
+        if (searchInput) {
+        searchInput.focus();
         }
       }
 
-        function reloadWithTransition() {
-        document.body.classList.add("page-transition");
-        setTimeout(() => {
-          window.location.reload();
-        }, 200);
+      focusSearch();
+      setTimeout(focusSearch, 100);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+        focusSearch();
+        }
+      });
+
+      window.addEventListener('focus', focusSearch);
+      document.addEventListener('mouseenter', focusSearch);
+      document.addEventListener('keydown', focusSearch, { once: true });
+      
+      const grid = document.getElementById("shortcutGrid");
+      const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+      const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
+
+      for (let i = 0; i < shortcutCount; i++) {
+        grid.innerHTML += generateShortcut(i);
+      }
+      
+      grid.innerHTML += generateAddRowButton();
+
+      Object.entries(shortcuts).forEach(([position, data]) => {
+        const shortcut = document.querySelector(
+        `[data-position="${position}"]`
+        );
+        if (shortcut) {
+        shortcut.href = data.url;
+        shortcut.onclick = (e) => {
+          e.preventDefault();
+          window.location.href = data.url;
+        };
+        shortcut.querySelector(".shortcut-title").textContent = data.title;
+        const iconContainer = shortcut.querySelector(".shortcut-icon");
+        iconContainer.removeAttribute("data-empty");
+        iconContainer.innerHTML = `
+              <img src="${data.faviconUrl}" 
+                 class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
+                 alt="${data.title}" 
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`;
+        }
+      });
+
+      const searchInput = document.getElementById("searchInput");
+      const searchButton = document.querySelector(".absolute svg");
+
+      searchInput.addEventListener("keydown", handleSearch);
+      searchButton.addEventListener("click", handleSearch);
+
+      const menuButton = document.getElementById("mobileMenuButton");
+      const sidebar = document.getElementById("sidebar");
+      
+      if (menuButton) {
+        menuButton.addEventListener("click", () => {
+        sidebar.classList.toggle("mobile-hidden");
+        menuButton.classList.toggle("open");
+        });
+      }
+
+      const searchIcon = document.querySelector(".absolute svg");
+      const currentSearch = document.getElementById("currentSearch");
+      
+      if (searchInput && searchIcon && currentSearch) {
+        searchInput.addEventListener("keydown", handleSearch);
+        searchIcon.addEventListener("click", handleSearch);
+        currentSearch.addEventListener("click", () => {
+        const dropdown = document.getElementById("searchEngineDropdown");
+        if (dropdown) {
+          dropdown.classList.toggle("hidden");
+        }
+        });
+      }
+
+      document.querySelectorAll(".search-option").forEach((option) => {
+        option.addEventListener("click", (e) => {
+        const value = e.currentTarget.dataset.value;
+        const img = e.currentTarget.querySelector("img");
+        const searchBtn = document.querySelector("#currentSearch img");
+        
+        if (searchBtn && img) {
+          searchBtn.src = img.src;
+        }
+
+        const searchEngine = document.getElementById("searchEngine");
+        if (searchEngine) {
+          searchEngine.value = value;
+        }
+
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+          const currentText = searchInput.value.trim();
+          let newText = currentText;
+          
+          if (currentText.startsWith('/')) {
+          const parts = currentText.substring(1).split(' ');
+          const possibleCommand = parts[0].toLowerCase();
+          const validCommands = ["g", "yt", "gh", "w", "r", "so", "a", "n", "sp", "tw", "ig", "maps", "i"];
+          if (validCommands.includes(possibleCommand)) {
+            newText = parts.slice(1).join(' ');
+          }
+          }
+
+          searchInput.value = newText.length > 0 ? `/${value} ${newText}` : `/${value} `;
+          searchInput.focus();
+          searchInput.selectionStart = searchInput.value.length;
+          searchInput.selectionEnd = searchInput.value.length;
+        }
+
+        const dropdown = document.getElementById("searchEngineDropdown");
+        if (dropdown) {
+          dropdown.classList.add("hidden");
+        }
+        });
+      });
+      });
+
+      function handleSearch(event) {
+      if (
+        (event.type === "keydown" && event.key === "Enter") ||
+        event.type === "click"
+      ) {
+        event.preventDefault();
+
+        let query = document.getElementById("searchInput").value.trim();
+        let selectedEngine = document.getElementById("searchEngine").value;
+
+        const searchEngines = {
+        g: "https://www.google.com/search?q=",
+        yt: "https://www.youtube.com/results?search_query=",
+        gh: "https://github.com/search?q=",
+        w: "https://en.wikipedia.org/wiki/Special:Search?search=",
+        r: "https://www.reddit.com/search/?q=",
+        so: "https://stackoverflow.com/search?q=",
+        a: "https://www.amazon.com/s?k=",
+        n: "https://www.netflix.com/search?q=",
+        sp: "https://open.spotify.com/search/results",
+        tw: "https://twitter.com/search?q=",
+        ig: "https://www.instagram.com/explore/tags/",
+        maps: "https://www.google.com/maps/search/",
+        i: "https://www.google.com/images?q=",
+        ddg: "https://duckduckgo.com/?q=",
+        px: "https://www.perplexity.ai/search?q="
+        };
+
+        if (query.startsWith("/")) {
+        const parts = query.substring(1).split(" ");
+        if (parts.length > 1) {
+          const possibleCommand = parts[0].toLowerCase();
+          if (searchEngines[possibleCommand]) {
+          selectedEngine = possibleCommand;
+          query = parts.slice(1).join(" ");
+          }
+        }
+        }
+
+        const searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
+        if (query) {
+        window.location.href = searchUrl + encodeURIComponent(query);
+        }
+      }
+      }
+
+      function reloadWithTransition() {
+      document.body.classList.add("page-transition");
+      setTimeout(() => {
+        window.location.reload();
+      }, 200);
       }
     </script>
   </head>
