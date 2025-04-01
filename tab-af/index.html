@@ -78,6 +78,8 @@
              ondragenter="handleDragEnter(event)"
              ondragleave="handleDragLeave(event)">
             <a href="#" 
+             draggable="true"
+             ondragstart="handleDragStart(event, '${i}')"
              onclick="handleShortcutClick(event, '${i}')" 
              oncontextmenu="handleShortcutClick(event, '${i}')"
              data-position="${i}"
@@ -107,37 +109,69 @@
         container.querySelector("a").classList.remove("bg-white/40");
       }
 
-      async function handleDrop(event, position) {
+      async function handleDrop(event, newPosition) {
         event.preventDefault();
         const container = event.currentTarget;
         container.querySelector("a").classList.remove("bg-white/40");
 
-        const data = event.dataTransfer.getData("text");
-        if (!data) return;
-
-        try {
-          const url = new URL(data);
-          let title = "";
+        const oldPosition = event.dataTransfer.getData('text/plain');
+        
+        // Si c'est un drag externe (URL)
+        if (oldPosition === '') {
+          // Garder la logique existante pour le drop d'URL
+          const data = event.dataTransfer.getData("text");
+          if (!data) return;
           try {
-            const response = await fetch(url.href);
-            const html = await response.text();
-            const doc = new DOMParser().parseFromString(html, "text/html");
-            title = doc.title || url.hostname;
+            const url = new URL(data);
+            let title = "";
+            try {
+              const response = await fetch(url.href);
+              const html = await response.text();
+              const doc = new DOMParser().parseFromString(html, "text/html");
+              title = doc.title || url.hostname;
+            } catch (e) {
+              title = url.hostname;
+            }
+  
+            const shortcuts = JSON.parse(
+              localStorage.getItem("shortcuts") || "{}"
+            );
+            const faviconUrl = await getFaviconUrl(url.href);
+            shortcuts[newPosition] = { title, url: url.href, faviconUrl };
+            localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+  
+            reloadShortcuts(); // Au lieu de reloadWithTransition()
           } catch (e) {
-            title = url.hostname;
+            console.error("Invalid URL dropped:", e);
           }
-
-          const shortcuts = JSON.parse(
-            localStorage.getItem("shortcuts") || "{}"
-          );
-          const faviconUrl = await getFaviconUrl(url.href);
-          shortcuts[position] = { title, url: url.href, faviconUrl };
-          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-
-          reloadShortcuts(); // Au lieu de reloadWithTransition()
-        } catch (e) {
-          console.error("Invalid URL dropped:", e);
+          return;
         }
+  
+        // Si c'est un drag interne (réarrangement)
+        const activeTab = localStorage.getItem("activeTab") || "personal";
+        const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
+        
+        // Échanger les raccourcis
+        const temp = shortcuts[oldPosition];
+        shortcuts[oldPosition] = shortcuts[newPosition];
+        shortcuts[newPosition] = temp;
+  
+        // Sauvegarder les changements
+        localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
+        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+  
+        // Recharger les raccourcis
+        reloadShortcuts();
+  
+        // Supprimer les classes de style temporaires
+        document.querySelectorAll('.shortcut-container a').forEach(el => {
+          el.classList.remove('opacity-50');
+        });
+      }
+
+      function handleDragStart(event, position) {
+        event.dataTransfer.setData('text/plain', position);
+        event.currentTarget.classList.add('opacity-50');
       }
 
       function generateAddRowButton() {
@@ -609,6 +643,18 @@
         </div>
 
         <div
+        class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
+      >
+        <img
+          src="https://kbarbier.fr/wp-content/uploads/2025/03/cropped-Plan-de-travail-1@0.35x.png"
+          class="pl-2 w-9"
+          alt="KBARBIER.FR logo"
+        />
+        <a href="https://kbarbier.fr" class="block w-full"
+          >KBARBIER.FR</a
+        >
+      </div>
+        <div
           class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
         >
           <img
@@ -620,7 +666,6 @@
             >CoolNotes</a
           >
         </div>
-
         <div
           class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
         >
