@@ -676,13 +676,75 @@
     </div>
     <script>
       document.getElementById('downloadBtn').addEventListener('click', function() {
-        const container = document.querySelector('.container');
-        html2canvas(container).then(canvas => {
-          const link = document.createElement('a');
-          link.download = 'coolnotes-image.png';
-          link.href = canvas.toDataURL('image/png');
-          link.click();
+        // Récupérer la textarea et son contenu
+        const textarea = document.querySelector('.textarea');
+        const originalText = textarea.value;
+        const containerDiv = document.querySelector('.center-div');
+        
+        // Créer un élément div pour afficher le texte formaté
+        const tempDiv = document.createElement('div');
+        
+        // Échapper le HTML et remplacer les retours à la ligne par des <br>
+        const formattedText = originalText
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/\n/g, '<br>');
+        
+        tempDiv.innerHTML = formattedText;
+        tempDiv.className = "textarea"; // Utiliser la même classe pour hériter des styles
+        
+        // Appliquer tous les styles nécessaires
+        Object.assign(tempDiv.style, {
+          width: '100%',
+          height: '100%',
+          margin: '0',
+          fontFamily: window.getComputedStyle(textarea).fontFamily,
+          fontSize: window.getComputedStyle(textarea).fontSize,
+          fontWeight: window.getComputedStyle(textarea).fontWeight,
+          color: window.getComputedStyle(textarea).color,
+          textAlign: window.getComputedStyle(textarea).textAlign,
+          padding: window.getComputedStyle(textarea).padding,
+          background: window.getComputedStyle(textarea).background,
+          border: 'none',
+          outline: 'none',
+          overflowWrap: 'break-word',
+          whiteSpace: 'pre-line',
+          lineHeight: window.getComputedStyle(textarea).lineHeight
         });
+        
+        // Cacher la textarea et ajouter le div
+        textarea.style.display = 'none';
+        containerDiv.appendChild(tempDiv);
+        
+        // Attendre un court instant pour s'assurer que le rendu est terminé
+        setTimeout(() => {
+          // Générer l'image avec html2canvas
+          const container = document.querySelector('.container');
+          html2canvas(container, {
+            useCORS: true,
+            allowTaint: true,
+            scrollY: -window.scrollY,
+            scale: 2,
+            backgroundColor: null, // Fond transparent
+            logging: true // Activer les logs pour le débogage
+          }).then(canvas => {
+            // Créer et télécharger l'image
+            const link = document.createElement('a');
+            link.download = 'coolnotes-image.png';
+            link.href = canvas.toDataURL('image/png'); // PNG avec transparence
+            link.click();
+            
+            // Restaurer l'état original
+            containerDiv.removeChild(tempDiv);
+            textarea.style.display = '';
+          }).catch(error => {
+            console.error("Erreur lors de la capture d'écran:", error);
+            // Restaurer l'état original en cas d'erreur
+            containerDiv.removeChild(tempDiv);
+            textarea.style.display = '';
+          });
+        }, 100); // Délai de 100ms pour s'assurer que le DOM est mis à jour
       });
     </script>
   </body>
