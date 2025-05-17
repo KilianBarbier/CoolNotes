@@ -475,7 +475,12 @@
           let searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
           // Ajout du traitement spécial pour asialand
           if (selectedEngine === "as") {
-            query = query.split(" ").join("+");
+            // Forcer tous les séparateurs à être des + non encodés
+            query = query.replace(/%2B/gi, " "); // retire tout %2B éventuel
+            query = query.replace(/\+/g, " "); // retire tout + éventuel
+            query = query.trim().replace(/\s+/g, "+");
+            window.location.href = searchUrl + query;
+            return;
           }
           if (query) {
             window.location.href = searchUrl + encodeURIComponent(query);
