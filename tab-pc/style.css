@@ -933,7 +933,6 @@ select option[value="i"] {
 
 #searchEngineDropdown .search-option {
     transition: transform 0.2s;
-    background: #41a0e4;;
     display: flex;
     align-items: center;
     justify-content: center;
