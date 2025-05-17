@@ -406,6 +406,7 @@
                   "ig",
                   "maps",
                   "i",
+                  "as", // Ajout du raccourci asialand
                 ];
                 if (validCommands.includes(possibleCommand)) {
                   newText = parts.slice(1).join(" ");
@@ -457,6 +458,7 @@
             i: "https://www.google.com/images?q=",
             ddg: "https://duckduckgo.com/?q=",
             px: "https://www.perplexity.ai/search?q=",
+            as: "https://www.asialand.fr/jolisearch?s=", // Ajout asialand
           };
 
           if (query.startsWith("/")) {
@@ -470,7 +472,11 @@
             }
           }
 
-          const searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
+          let searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
+          // Ajout du traitement spécial pour asialand
+          if (selectedEngine === "as") {
+            query = query.split(" ").join("+");
+          }
           if (query) {
             window.location.href = searchUrl + encodeURIComponent(query);
           }
@@ -806,12 +812,20 @@
                   alt="Perplexity"
                 />
               </button>
+              <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="as">
+                <img
+                  src="https://www.asialand.fr/img/logo.png"
+                  class="w-6 h-6"
+                  alt="Asialand"
+                />
+              </button>
             </div>
             <select id="searchEngine" class="hidden">
               <option value="g">Google</option>
               <option value="yt">YouTube</option>
               <option value="gh">GitHub</option>
               <!-- ... garder les valeurs pour la fonctionnalité de recherche ... -->
+              <option value="as">Asialand</option>
             </select>
           </div>
 
@@ -861,6 +875,7 @@
                     "ig",
                     "maps",
                     "i",
+                    "as", // Ajout du raccourci asialand
                   ];
                   if (validCommands.includes(possibleCommand)) {
                     // Prendre tout sauf la commande
@@ -1161,6 +1176,7 @@
                 <p><strong>&#47;tw</strong> - Twitter</p>
                 <p><strong>&#47;ig</strong> - Instagram Tags</p>
                 <p><strong>&#47;maps</strong> - Google Maps</p>
+                <p><strong>&#47;as</strong> - Asialand</p>
               </div>
             </div>
             <div class="mt-6 text-white/80">
