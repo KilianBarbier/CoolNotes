@@ -407,6 +407,7 @@
                   "maps",
                   "i",
                   "as", // Ajout du raccourci asialand
+                  "ac", // Ajout du raccourci acadia
                 ];
                 if (validCommands.includes(possibleCommand)) {
                   newText = parts.slice(1).join(" ");
@@ -459,6 +460,7 @@
             ddg: "https://duckduckgo.com/?q=",
             px: "https://www.perplexity.ai/search?q=",
             as: "https://www.asialand.fr/jolisearch?s=", // Ajout asialand
+            ac: "https://www.acadia-info.com/jolisearch?s=", // Ajout acadia
           };
 
           if (query.startsWith("/")) {
@@ -473,8 +475,8 @@
           }
 
           let searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
-          // Ajout du traitement spécial pour asialand
-          if (selectedEngine === "as") {
+          // Ajout du traitement spécial pour asialand et acadia
+          if (selectedEngine === "as" || selectedEngine === "ac") {
             // Forcer tous les séparateurs à être des + non encodés
             query = query.replace(/%2B/gi, " "); // retire tout %2B éventuel
             query = query.replace(/\+/g, " "); // retire tout + éventuel
@@ -824,6 +826,13 @@
                   alt="Asialand"
                 />
               </button>
+              <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="ac">
+                <img
+                  src="https://www.acadia-info.com/img/logo.png"
+                  class="w-6 h-6"
+                  alt="Acadia"
+                />
+              </button>
             </div>
             <select id="searchEngine" class="hidden">
               <option value="g">Google</option>
@@ -831,6 +840,7 @@
               <option value="gh">GitHub</option>
               <!-- ... garder les valeurs pour la fonctionnalité de recherche ... -->
               <option value="as">Asialand</option>
+              <option value="ac">Acadia</option>
             </select>
           </div>
 
@@ -881,6 +891,7 @@
                     "maps",
                     "i",
                     "as", // Ajout du raccourci asialand
+                    "ac", // Ajout du raccourci acadia
                   ];
                   if (validCommands.includes(possibleCommand)) {
                     // Prendre tout sauf la commande
@@ -1182,6 +1193,7 @@
                 <p><strong>&#47;ig</strong> - Instagram Tags</p>
                 <p><strong>&#47;maps</strong> - Google Maps</p>
                 <p><strong>&#47;as</strong> - Asialand</p>
+                <p><strong>&#47;ac</strong> - Acadia</p>
               </div>
             </div>
             <div class="mt-6 text-white/80">
