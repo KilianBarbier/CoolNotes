@@ -1,0 +1,199 @@
+/* Classes pour le système de grille responsive */
+.grid-item {
+    transition: all 0.3s ease;
+}
+
+/* Avec la grille de 8 colonnes, les spans doivent être ajustés */
+.grid-col-1 {
+    grid-column: span 2; /* 1 case = 2 colonnes dans la grille de 8 */
+}
+
+/* Classe pour occuper 1.5 case */
+.grid-col-1-5 {
+    grid-column: span 3; /* 1.5 case = 3 colonnes dans la grille de 8 */
+}
+
+.grid-col-2 {
+    grid-column: span 4; /* 2 cases = 4 colonnes dans la grille de 8 */
+}
+
+.grid-col-3 {
+    grid-column: span 6; /* 3 cases = 6 colonnes dans la grille de 8 */
+}
+
+.grid-col-4 {
+    grid-column: span 8; /* 4 cases = 8 colonnes dans la grille de 8 */
+}
+
+.grid-row-1 {
+    grid-row: span 1;
+}
+
+.grid-row-2 {
+    grid-row: span 2;
+}
+
+.grid-row-3 {
+    grid-row: span 3;
+}
+
+/* Classes pour l'auto-placement dans la grille */
+.grid-order-1 {
+    order: 1;
+}
+
+.grid-order-2 {
+    order: 2;
+}
+
+.grid-order-3 {
+    order: 3;
+}
+
+.grid-order-4 {
+    order: 4;
+}
+
+.grid-order-5 {
+    order: 5;
+}
+
+.grid-order-6 {
+    order: 6;
+}
+
+.grid-order-7 {
+    order: 7;
+}
+
+.grid-order-8 {
+    order: 8;
+}
+
+.grid-order-9 {
+    order: 9;
+}
+
+.grid-order-10 {
+    order: 10;
+}
+
+.grid-order-11 {
+    order: 11;
+}
+
+.grid-order-12 {
+    order: 12;
+}
+
+/* Assure que les boîtes s'adaptent */
+.bento-box {
+    height: 100%;
+    z-index: 1;
+}
+
+/* Empêcher les chevauchements avec une solution de débordement intelligent */
+.bento-grid-bento {
+    overflow: visible;
+    position: relative;
+}
+
+.bento-box:hover {
+    transform: scale(1.02);
+    z-index: 10;
+}
+
+/* Ajustements responsive plus précis */
+@media (max-width: 1600px) {
+    .bento-title h1 {
+        font-size: 2.2rem;
+    }
+    .bento-title p {
+        font-size: 1.1rem;
+    }
+    .bento-img {
+        height: 100%;
+        width: 50%;
+        object-fit: cover;
+        border-bottom-left-radius: 18px;
+        border-top-left-radius: 18px;
+    }
+    .grid-col-3, .grid-col-4 {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 1200px) {
+    .bento-grid-bento {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .grid-col-2, .grid-col-3, .grid-col-4 {
+        grid-column: span 4;
+    }
+    /* Ajustement des boîtes 1.5 pour écrans moyens */
+    .grid-col-1-5 {
+        grid-column: span 3;
+    }
+}
+
+@media (max-width: 900px) {
+    .bento-grid-bento {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .grid-col-1 {
+        grid-column: span 2;
+    }
+    .grid-col-1-5 {
+        grid-column: span 3;
+    }
+    .grid-col-2, .grid-col-3, .grid-col-4 {
+        grid-column: span 4;
+    }
+    .grid-row-2, .grid-row-3 {
+        grid-row: span 1;
+    }
+    .bento-box {
+        flex-direction: row;
+        align-items: center;
+    }
+    .bento-img {
+        margin-left: 0;
+        height: 100%;
+        width: 50%;
+        object-fit: cover;
+        border-bottom-left-radius: 18px;
+        border-top-left-radius: 18px;
+    }
+}
+
+/* Ajustements pour très petits écrans */
+@media (max-width: 600px) {
+    .bento-grid-bento {
+        gap: 10px;
+    }
+    
+    /* Redéfinir les largeurs de colonnes pour les très petits écrans */
+    .grid-col-1 {
+        grid-column: span 2;
+    }
+    
+    .grid-col-1-5 {
+        grid-column: span 3;
+    }
+    
+    /* Réduire l'effet de survol sur mobile */
+    .bento-box:hover {
+        transform: scale(1.01);
+    }
+    
+    /* Ajustement pour les boîtes responsives */
+    .bento-box {
+        min-height: 120px;
+    }    
+    
+    /* Ajustement pour les boîtes Windows et Garantie sur petit écran */
+    .bento-box.grid-col-1-5.bento-small {
+        height: auto;
+        min-height: 160px;
+    }
+}

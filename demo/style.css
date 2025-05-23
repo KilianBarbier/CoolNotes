@@ -4,28 +4,30 @@ html, body {
 }
 body {
     min-height: 100vh;
-    min-width: 100vw;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #181818;
+    background: radial-gradient(circle, #202020 0%, #181818 70%, #151515 100%); /* Fond dégradé subtil */
     color: #fff;
+    padding: 50px; /* Augmentation du padding */
+    box-sizing: border-box;
+    margin: 0;
+    overflow-x: hidden;
 }
 
 .bento-container {
     aspect-ratio: 16/9;
-    width: 96vw;
-    height: 96vh;
-    max-width: 1920px;
-    max-height: 1080px;
-    min-width: 1280px;
+    width: 85%; /* Réduction de la largeur pour plus d'espace sur les côtés */
+    max-width: 1600px; /* Réduction de la largeur maximale */
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 20px;
     box-sizing: border-box;
     position: relative;
 }
@@ -35,22 +37,22 @@ body {
 }
 
 .bento-main-img img {
-    max-width: 420px;
+    height: 100%;
     width: 100%;
     border-radius: 18px;
-    box-shadow: 0 4px 32px #f8a63155;
-    margin: 0 auto 24px auto;
     display: block;
+    object-fit: cover;
+    border-bottom-left-radius: 18px;
+    border-top-left-radius: 18px;
 }
 
 .bento-title {
-    margin-bottom: 32px;
-    padding: 32px 48px 18px 48px;
+    margin-bottom: 28px; /* Réduction de la marge */
+    padding: 28px 40px 16px 40px; /* Réduction du padding */
     font-size: 2.2rem;
     background: #181818;
     border: 2px solid #f8a631;
     border-radius: 18px;
-    box-shadow: 0 4px 32px #f8a63190;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -66,7 +68,7 @@ body {
 }
 
 .bento-title h1 {
-    font-size: 3.2rem;
+    font-size: 2.5rem;
     color: #f8a631;
 }
 
@@ -79,9 +81,10 @@ body {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: minmax(240px, auto);
-    gap: 36px;
+    grid-template-columns: repeat(8, minmax(0, 1fr)); /* Passage à 8 colonnes pour permettre un fractionnement plus précis */
+    grid-auto-flow: dense;
+    grid-auto-rows: minmax(180px, auto); /* Réduction de la hauteur minimale */
+    gap: 30px; /* Réduction de l'espace entre les éléments */
     margin-top: 0;
     align-items: stretch;
     justify-items: stretch;
@@ -99,22 +102,30 @@ body {
     font-size: 1.2em;
 }
 h1 {
-margin-top: 0px;}
+    margin: 15px;
+}
+h2 {
+    font-size: 20px;
+}
 .bento-box {
     font-size: 1.5rem;
-    padding: 28px 18px;
+    padding: 0;
     min-width: 0;
     color: #fff;
-    border: 2px solid #694005;
     border-radius: 18px;
-    box-shadow: 0 4px 32px #f8a63190;
+    box-shadow: 0px 0px 15px#f8a5316b;
     word-break: break-word;
     overflow-wrap: break-word;
     white-space: normal;
     max-width: 100%;
     box-sizing: border-box;
     overflow: visible;
-    max-height: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 1;
+    transition: all 0.3s ease;
 }
 
 .bento-box h2, .bento-box p {
@@ -125,46 +136,278 @@ margin-top: 0px;}
     overflow: visible;
 }
 
+.bento-text {
+    flex: 1;
+    padding: 20px;
+    width: 50%;
+}
+
 .bento-img {
-    width: 110px;
-    height: 110px;
-    margin-bottom: 18px;
+    height: 100%;
+    width: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-bottom-left-radius: 18px;
+    border-top-left-radius: 18px;
+}
+
+/* Classe pour que l'image occupe tout l'espace de la boîte */
+.bento-img-full {
+    height: 100%;
+    width: 100%;
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+/* Pour les boîtes qui contiennent une image pleine */
+.bento-box-full-img {
+    display: block;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Style spécial pour les boîtes Windows et Garantie qui occupent 1.5 case */
+.bento-box.grid-col-1-5.bento-small {
+    height: 180px; /* Hauteur fixe pour ces éléments */
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bento-box.grid-col-1-5.bento-small:hover {
+    transform: scale(1.03);
+    box-shadow: 0px 0px 25px rgba(248, 166, 49, 0.4);
+}
+
+/* Ajout d'un effet spécial au survol pour les boîtes Windows et Garantie */
+.bento-box.grid-col-1-5.bento-small .bento-img-full {
+    transition: all 0.5s ease;
+}
+
+.bento-box.grid-col-1-5.bento-small:hover .bento-img-full {
+    transform: scale(1.05);
+}
+
+/* Classe avec effet de vignette pour mettre en valeur le centre des images */
+.bento-img-vignette {
+    position: relative;
+}
+
+.bento-img-vignette::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 50px 20px rgba(0, 0, 0, 0.75);
+    border-radius: inherit;
+    pointer-events: none; /* Permet de cliquer "à travers" l'élément */
+    z-index: 1;
+}
+
+/* Version plus prononcée de l'effet vignette */
+.bento-img-vignette-strong {
+    position: relative;
+}
+
+.bento-img-vignette-strong::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 70px 40px rgba(0, 0, 0, 0.9);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Version avec vignette orange (couleur assortie au thème) */
+.bento-img-vignette-orange {
+    position: relative;
+}
+
+.bento-img-vignette-orange::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 50px 20px rgba(248, 166, 49, 0.6); /* Couleur #f8a631 avec opacité */
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
 }
 
 @media (max-width: 1600px) {
     .bento-container {
-        min-width: 900px;
+        width: 90%;
+        padding: 15px;
     }
     .bento-title h1 {
         font-size: 2.2rem;
-    }
+    }    
     .bento-title p {
-        font-size: 1.1rem;
+        font-size: 1.1rem;    
     }
     .bento-img {
-        width: 80px;
-        height: 80px;
+        height: 100%;
+        width: 50%;
+        border-bottom-left-radius: 18px;
+        border-top-left-radius: 18px;
+        object-fit: cover;
+    }    
+    /* La classe full garde ses paramètres */
+    .bento-img-full {
+        width: 100%;
+        border-radius: 18px;
+    }
+      /* Ajuster légèrement l'intensité de la vignette pour les écrans plus petits */
+    .bento-img-vignette::after {
+        box-shadow: inset 0 0 40px 15px rgba(0, 0, 0, 0.7);
+    }
+      .bento-img-vignette-strong::after {
+        box-shadow: inset 0 0 60px 30px rgba(0, 0, 0, 0.85);
+    }
+    
+    /* Les boîtes de 1.5 colonnes s'adaptent aux écrans moyens */
+    .grid-col-1-5 {
+        grid-column: span 4; /* 2 cases sur 8 colonnes */
     }
 }
 @media (max-width: 1200px) {
     .bento-container {
-        min-width: 600px;
+        width: 92%;
+        padding: 10px;
     }
     .bento-grid-bento {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(4, 1fr); /* Revenir à 4 colonnes sur écrans moyens */
+        gap: 20px;
+    }/* Assurer que les boîtes Windows et Garantie restent plus larges */
+    .bento-box.grid-col-1-5 {
+        grid-column: span 4; /* 2 cases sur 4, équivalent à 1.5 case dans le précédent système */
     }
 }
 @media (max-width: 900px) {
     .bento-container {
-        min-width: 320px;
-        }
+        width: 94%;
+        padding: 5px;
+    }
     .bento-grid-bento {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr); /* 2 colonnes sur petit écran */
+        gap: 15px;
     }
     .bento-wide {
         grid-column: span 1;
     }
     .bento-tall {
         grid-row: span 1;
+    }    
+    .bento-box {
+        flex-direction: row;
+        align-items: center;
+    }    /* Sur mobile, tout prend une colonne complète */
+    .bento-box.grid-col-1-5 {
+        grid-column: span 2; /* Sur petit écran, occupe encore 1.5 case */
     }
+    .bento-img {
+        margin-left: 0;
+        height: 100%;
+        width: 50%;
+        border-bottom-left-radius: 18px;
+        border-top-left-radius: 18px;
+        object-fit: cover;
+    }/* Garde le style full même en mobile */
+    .bento-img-full {
+        width: 100%;
+        border-radius: 18px;
+    }
+    
+    /* Assure que les boîtes à image pleine ne changent pas de disposition */
+    .bento-box-full-img {
+        display: block;
+    }
+    
+    /* Réduire légèrement l'intensité de la vignette sur petit écran */
+    .bento-img-vignette::after {
+        box-shadow: inset 0 0 30px 12px rgba(0, 0, 0, 0.65);
+    }
+    
+    .bento-img-vignette-strong::after {
+        box-shadow: inset 0 0 50px 25px rgba(0, 0, 0, 0.8);
+    }
+      .bento-img-vignette-orange::after {
+        box-shadow: inset 0 0 30px 15px rgba(248, 166, 49, 0.5);
+    }
+}
+
+/* Media query pour les très petits écrans (mobiles) */
+@media (max-width: 600px) {
+    body {
+        padding: 20px; /* Plus de padding sur très petits écrans */
+    }
+    
+    .bento-container {
+        width: 95%;
+        padding: 5px;
+    }
+    
+    .bento-title {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .bento-title h1 {
+        font-size: 1.8rem;
+    }
+    
+    .bento-title p {
+        font-size: 1rem;
+    }
+    
+    .bento-box {
+        font-size: 1.2rem;
+    }
+    
+    h2 {
+        font-size: 20px;
+    }
+    
+    .bento-grid-bento {
+        grid-template-columns: repeat(4, 1fr); /* 4 colonnes fractionnelles sur très petit écran */
+        gap: 10px;
+    }
+    
+    /* Sur très petit écran, les éléments de 1.5 case occupent 2 colonnes sur 4 */
+    .grid-col-1-5 {
+        grid-column: span 2;
+    }
+    
+    /* Les éléments standard occupent également 2 colonnes */
+    .grid-col-1 {
+        grid-column: span 2;
+    }
+}
+
+.white {
+    color: #fff !important;
+}
+.monospace {
+    font-family: 'Courier New', Courier, monospace;
+}
+.sans-serif {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    font-size: 1.2rem;
+}
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 200px rgba(0,0,0,0.9) inset;
 }
