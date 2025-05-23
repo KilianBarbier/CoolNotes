@@ -98,15 +98,31 @@ body {
 .bento-small {
     font-size: 1.2em;
 }
-
+h1 {
+margin-top: 0px;}
 .bento-box {
     font-size: 1.5rem;
-    padding: 40px 28px;
+    padding: 28px 18px;
     min-width: 0;
     color: #fff;
     border: 2px solid #694005;
     border-radius: 18px;
     box-shadow: 0 4px 32px #f8a63190;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+    max-height: none;
+}
+
+.bento-box h2, .bento-box p {
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    overflow: visible;
 }
 
 .bento-img {
