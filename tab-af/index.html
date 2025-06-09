@@ -189,9 +189,8 @@
               <div class="text-white/70 font-medium">Ajouter d'avantages de raccourcis</div>
             </div>
           </button>`;
-      }
-
-      function addMoreShortcuts() {
+      }      function addMoreShortcuts() {
+        const grid = document.getElementById("shortcutGrid");
         const currentCount =
           document.querySelectorAll("[data-position]").length;
         const addRowButton = document.getElementById("addRowButton");
