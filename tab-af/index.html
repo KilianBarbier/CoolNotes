@@ -458,6 +458,13 @@
             px: "https://www.perplexity.ai/search?q=",
           };
 
+          // Vérifier si on devrait suggérer une autocorrection
+          if (shouldSuggestAutocorrection(query)) {
+            // Afficher la popup d'autocorrection
+            showAutocorrectionModal(query);
+            return; // Arrêter l'exécution ici
+          }
+
           if (query.startsWith("/")) {
             const parts = query.substring(1).split(" ");
             if (parts.length > 1) {
@@ -476,6 +483,71 @@
         }
       }
 
+      // Fonction pour vérifier si on devrait suggérer une autocorrection
+      function shouldSuggestAutocorrection(query) {
+        // Vérifier si la requête commence par ":" (potentiellement une tentative de commande)
+        if (query.startsWith(":")) {
+          return true;
+        }
+        
+        // Vérifier si la requête est entièrement ou majoritairement en majuscules
+        if (query.length > 2) {
+          const upperCount = [...query].filter(char => char.match(/[A-Z]/)).length;
+          const letterCount = [...query].filter(char => char.match(/[a-zA-Z]/)).length;
+          
+          // Si plus de 70% des lettres sont en majuscule
+          if (letterCount > 0 && upperCount / letterCount > 0.7) {
+            return true;
+          }
+        }
+        
+        return false;
+      }
+
+      // Fonction pour afficher la modal d'autocorrection
+      function showAutocorrectionModal(originalQuery) {
+        const correctedQuery = convertToAmazonSearch(originalQuery);
+        
+        document.getElementById("originalQuery").textContent = originalQuery;
+        document.getElementById("correctedQuery").textContent = correctedQuery;
+        document.getElementById("autocorrectionModal").classList.remove("hidden");
+        
+        // Stockage des requêtes pour les utiliser plus tard
+        document.getElementById("autocorrectionModal").setAttribute("data-original-query", originalQuery);
+        document.getElementById("autocorrectionModal").setAttribute("data-corrected-query", correctedQuery);
+      }
+      
+      // Fonction pour convertir une requête en recherche Amazon
+      function convertToAmazonSearch(query) {
+        // Supprimer le ":" au début si présent
+        if (query.startsWith(":")) {
+          query = query.substring(1);
+        }
+        
+        // Convertir en minuscules
+        return "/a " + query.toLowerCase();
+      }
+      
+      // Fonction pour exécuter la recherche d'origine
+      function executeOriginalSearch() {
+        const originalQuery = document.getElementById("autocorrectionModal").getAttribute("data-original-query");
+        document.getElementById("searchInput").value = originalQuery;
+        document.getElementById("autocorrectionModal").classList.add("hidden");
+        
+        // Déclencher la recherche
+        handleSearch({type: "click"});
+      }
+      
+      // Fonction pour exécuter la recherche corrigée
+      function executeCorrectedSearch() {
+        const correctedQuery = document.getElementById("autocorrectionModal").getAttribute("data-corrected-query");
+        document.getElementById("searchInput").value = correctedQuery;
+        document.getElementById("autocorrectionModal").classList.add("hidden");
+        
+        // Déclencher la recherche
+        handleSearch({type: "click"});
+      }
+      
       function reloadShortcuts() {
         const grid = document.getElementById("shortcutGrid");
         const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
@@ -1222,6 +1294,37 @@
             >
               Close
             </button>
+          </div>
+        </div>
+
+        <!-- Popup d'autocorrection -->
+        <div
+          id="autocorrectionModal"
+          class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center z-50"
+        >
+          <div
+            class="bg-white/95 rounded-2xl p-6 w-[500px] shadow-2xl backdrop-blur-xl"
+          >
+            <h2 class="text-2xl font-bold mb-4 text-white">Suggestion de correction</h2>
+            <div class="text-white mb-6">
+              <p>Vous avez saisi : <span id="originalQuery" class="font-semibold"></span></p>
+              <p class="mt-3">Vouliez-vous chercher : <span id="correctedQuery" class="font-semibold"></span> ?</p>
+              <p class="mt-2 text-white/70 text-sm">La recherche sera effectuée sur Amazon</p>
+            </div>
+            <div class="flex justify-end gap-3">
+              <button
+                onclick="executeOriginalSearch()"
+                class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white"
+              >
+                Non
+              </button>
+              <button
+                onclick="executeCorrectedSearch()"
+                class="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 rounded-lg text-white"
+              >
+                Oui
+              </button>
+            </div>
           </div>
         </div>
 
