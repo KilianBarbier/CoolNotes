@@ -622,6 +622,47 @@
         window.location.href = searchEngines[selectedEngine] + encodeURIComponent(originalQuery);
       }
       
+      // Fonction pour exécuter la recherche corrigée
+      function executeCorrectedSearch() {
+        const correctedQuery = document.getElementById("autocorrectionModal").getAttribute("data-corrected-query");
+        document.getElementById("searchInput").value = correctedQuery;
+        document.getElementById("autocorrectionModal").classList.add("hidden");
+        
+        // Extraire la commande de recherche et les termes de recherche
+        if (correctedQuery.startsWith('/')) {
+          const parts = correctedQuery.substring(1).split(' ');
+          const command = parts[0].toLowerCase();
+          const searchTerms = parts.slice(1).join(' ');
+          
+          const searchEngines = {
+            g: "https://www.google.com/search?q=",
+            yt: "https://www.youtube.com/results?search_query=",
+            gh: "https://github.com/search?q=",
+            w: "https://en.wikipedia.org/wiki/Special:Search?search=",
+            r: "https://www.reddit.com/search/?q=",
+            so: "https://stackoverflow.com/search?q=",
+            a: "https://www.amazon.fr/s?k=",
+            n: "https://www.netflix.com/search?q=",
+            sp: "https://open.spotify.com/search/results",
+            tw: "https://twitter.com/search?q=",
+            ig: "https://www.instagram.com/explore/tags/",
+            maps: "https://www.google.com/maps/search/",
+            i: "https://www.google.com/images?q=",
+            ddg: "https://duckduckgo.com/?q=",
+            px: "https://www.perplexity.ai/search?q=",
+          };
+          
+          // Si la commande est valide, exécuter directement la recherche
+          if (searchEngines[command]) {
+            window.location.href = searchEngines[command] + encodeURIComponent(searchTerms);
+            return;
+          }
+        }
+        
+        // Fallback: exécuter la recherche via handleSearch
+        handleSearch({type: "click"});
+      }
+      
       function reloadShortcuts() {
         const grid = document.getElementById("shortcutGrid");
         const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
