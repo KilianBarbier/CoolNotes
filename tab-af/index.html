@@ -506,7 +506,7 @@
 
       // Fonction pour afficher la modal d'autocorrection
       function showAutocorrectionModal(originalQuery) {
-        const correctedQuery = convertToAmazonSearch(originalQuery);
+        const correctedQuery = convertToSearchCommand(originalQuery);
         
         document.getElementById("originalQuery").textContent = originalQuery;
         document.getElementById("correctedQuery").textContent = correctedQuery;
@@ -518,7 +518,7 @@
       }
       
       // Fonction pour convertir une requête en recherche appropriée
-      function convertToAmazonSearch(query) {
+      function convertToSearchCommand(query) {
         // Liste complète des commandes de recherche valides
         const validSearchCommands = {
           "g": "Google",
@@ -537,6 +537,10 @@
           "ddg": "DuckDuckGo",
           "px": "Perplexity AI"
         };
+
+        // Récupérer le moteur actuellement sélectionné
+        const currentEngine = document.getElementById("searchEngine").value;
+        const currentEngineName = validSearchCommands[currentEngine] || "Google";
 
         // Supprimer le ":" au début si présent
         if (query.startsWith(":")) {
@@ -582,10 +586,10 @@
           return `/${detectedCommand} ${searchTerms}`.trim();
         }
         
-        // Par défaut, transformer en recherche Amazon
+        // Par défaut, utiliser le moteur de recherche actuellement sélectionné
         document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent = 
-          "La recherche sera effectuée sur Amazon";
-        return `/a ${lowercaseQuery}`;
+          `La recherche sera effectuée sur ${currentEngineName}`;
+        return `/${currentEngine} ${lowercaseQuery}`;
       }
       
       // Fonction pour exécuter la recherche d'origine
