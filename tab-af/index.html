@@ -516,14 +516,23 @@
       // Fonction pour afficher la modal d'autocorrection
       function showAutocorrectionModal(originalQuery) {
         const correctedQuery = convertToSearchCommand(originalQuery);
-        
         document.getElementById("originalQuery").textContent = originalQuery;
         document.getElementById("correctedQuery").textContent = correctedQuery;
         document.getElementById("autocorrectionModal").classList.remove("hidden");
-        
         // Stockage des requêtes pour les utiliser plus tard
         document.getElementById("autocorrectionModal").setAttribute("data-original-query", originalQuery);
         document.getElementById("autocorrectionModal").setAttribute("data-corrected-query", correctedQuery);
+        // Ajout de l'écouteur pour Shift+Y et Shift+N
+        function autocorrectKeyListener(e) {
+          if (e.shiftKey && (e.key === 'Y' || e.key === 'y')) {
+            executeCorrectedSearch();
+            document.removeEventListener('keydown', autocorrectKeyListener);
+          } else if (e.shiftKey && (e.key === 'N' || e.key === 'n')) {
+            executeOriginalSearch();
+            document.removeEventListener('keydown', autocorrectKeyListener);
+          }
+        }
+        document.addEventListener('keydown', autocorrectKeyListener);
       }
       
       // Fonction pour convertir une requête en recherche appropriée
