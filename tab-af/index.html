@@ -485,23 +485,11 @@
 
       // Fonction pour vérifier si on devrait suggérer une autocorrection
       function shouldSuggestAutocorrection(query) {
-        // Vérifier si la requête commence par ":" (potentiellement une tentative de commande)
-        if (query.startsWith(":")) {
-          return true;
-        }
+        // Ne suggérer l'autocorrection QUE si la requête commence par ":" 
+        // (potentiellement une tentative de commande avec la mauvaise syntaxe)
+        return query.startsWith(":");
         
-        // Vérifier si la requête est entièrement ou majoritairement en majuscules
-        if (query.length > 2) {
-          const upperCount = [...query].filter(char => char.match(/[A-Z]/)).length;
-          const letterCount = [...query].filter(char => char.match(/[a-zA-Z]/)).length;
-          
-          // Si plus de 70% des lettres sont en majuscule
-          if (letterCount > 0 && upperCount / letterCount > 0.7) {
-            return true;
-          }
-        }
-        
-        return false;
+        // Suppression de la détection des majuscules qui causait des faux positifs
       }
 
       // Fonction pour afficher la modal d'autocorrection
