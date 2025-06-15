@@ -517,28 +517,75 @@
         document.getElementById("autocorrectionModal").setAttribute("data-corrected-query", correctedQuery);
       }
       
-      // Fonction pour convertir une requête en recherche Amazon
+      // Fonction pour convertir une requête en recherche appropriée
       function convertToAmazonSearch(query) {
+        // Liste complète des commandes de recherche valides
+        const validSearchCommands = {
+          "g": "Google",
+          "yt": "YouTube",
+          "gh": "GitHub", 
+          "w": "Wikipedia",
+          "r": "Reddit",
+          "so": "Stack Overflow",
+          "a": "Amazon",
+          "n": "Netflix",
+          "sp": "Spotify",
+          "tw": "Twitter",
+          "ig": "Instagram",
+          "maps": "Google Maps",
+          "i": "Google Images",
+          "ddg": "DuckDuckGo",
+          "px": "Perplexity AI"
+        };
+
         // Supprimer le ":" au début si présent
         if (query.startsWith(":")) {
           query = query.substring(1);
         }
         
-        // Vérifier si le premier mot pourrait déjà être une commande de recherche
-        const firstChar = query.trim().charAt(0).toLowerCase();
-        const searchEngineCommands = ["g", "y", "a", "n", "s", "r", "w", "i", "t", "m", "d", "p"];
-        
         // Convertir en minuscules
-        const lowercaseQuery = query.toLowerCase();
+        const lowercaseQuery = query.toLowerCase().trim();
         
-        // Si le premier caractère correspond à la commande "a" (Amazon)
-        if (firstChar === "a" && (lowercaseQuery.charAt(1) === " " || lowercaseQuery.indexOf(" ") === 1)) {
-          // Ne pas dupliquer le "a", simplement formater correctement la commande
-          return "/a " + lowercaseQuery.substring(1).trim();
+        // Détecter si le premier mot est une commande de recherche
+        let detectedCommand = null;
+        let searchTerms = lowercaseQuery;
+        
+        // Vérifier le premier mot (ou lettre)
+        const firstSpace = lowercaseQuery.indexOf(" ");
+        if (firstSpace > 0) {
+          const possibleCommand = lowercaseQuery.substring(0, firstSpace).toLowerCase();
+          
+          // Vérifier les commandes exactes (yt, gh, etc.)
+          if (validSearchCommands[possibleCommand]) {
+            detectedCommand = possibleCommand;
+            searchTerms = lowercaseQuery.substring(firstSpace + 1);
+          }
+          // Vérifier les commandes à une lettre (g, a, w, r, etc.)
+          else if (possibleCommand.length === 1 && validSearchCommands[possibleCommand]) {
+            detectedCommand = possibleCommand;
+            searchTerms = lowercaseQuery.substring(firstSpace + 1);
+          }
+        } else if (validSearchCommands[lowercaseQuery]) {
+          // Si toute la requête est juste une commande
+          detectedCommand = lowercaseQuery;
+          searchTerms = "";
+        } else if (lowercaseQuery.length === 1 && validSearchCommands[lowercaseQuery]) {
+          // Si c'est juste une lettre qui correspond à une commande
+          detectedCommand = lowercaseQuery;
+          searchTerms = "";
         }
         
-        // Cas normal: ajouter la commande Amazon
-        return "/a " + lowercaseQuery;
+        // Si une commande a été détectée, l'utiliser
+        if (detectedCommand) {
+          document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent = 
+            `La recherche sera effectuée sur ${validSearchCommands[detectedCommand]}`;
+          return `/${detectedCommand} ${searchTerms}`.trim();
+        }
+        
+        // Par défaut, transformer en recherche Amazon
+        document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent = 
+          "La recherche sera effectuée sur Amazon";
+        return `/a ${lowercaseQuery}`;
       }
       
       // Fonction pour exécuter la recherche d'origine
