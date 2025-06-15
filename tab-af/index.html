@@ -524,8 +524,21 @@
           query = query.substring(1);
         }
         
+        // Vérifier si le premier mot pourrait déjà être une commande de recherche
+        const firstChar = query.trim().charAt(0).toLowerCase();
+        const searchEngineCommands = ["g", "y", "a", "n", "s", "r", "w", "i", "t", "m", "d", "p"];
+        
         // Convertir en minuscules
-        return "/a " + query.toLowerCase();
+        const lowercaseQuery = query.toLowerCase();
+        
+        // Si le premier caractère correspond à la commande "a" (Amazon)
+        if (firstChar === "a" && (lowercaseQuery.charAt(1) === " " || lowercaseQuery.indexOf(" ") === 1)) {
+          // Ne pas dupliquer le "a", simplement formater correctement la commande
+          return "/a " + lowercaseQuery.substring(1).trim();
+        }
+        
+        // Cas normal: ajouter la commande Amazon
+        return "/a " + lowercaseQuery;
       }
       
       // Fonction pour exécuter la recherche d'origine
