@@ -1,77 +1,79 @@
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Tab</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="aurora-svelte.css" />
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sf: [
-                "-apple-system",
-                "BlinkMacSystemFont",
-                "San Francisco",
-                "Helvetica Neue",
-                "sans-serif",
-              ],
-            },
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New Tab</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="aurora-svelte.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sf: [
+              "-apple-system",
+              "BlinkMacSystemFont",
+              "San Francisco",
+              "Helvetica Neue",
+              "sans-serif",
+            ],
           },
         },
-      };
-    </script>
-    <script>
-      async function getFaviconUrl(url) {
-        try {
-          const domain = new URL(url).hostname;
-          // Utiliser directement l'API Google Favicons qui est plus fiable
-          return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-        } catch (e) {
-          console.error("Erreur lors de la récupération du favicon:", e);
-          // Retourner une icône par défaut en cas d'erreur
-          return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
-        }
+      },
+    };
+  </script>
+  <script>
+    async function getFaviconUrl(url) {
+      try {
+        const domain = new URL(url).hostname;
+        // Utiliser directement l'API Google Favicons qui est plus fiable
+        return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+      } catch (e) {
+        console.error("Erreur lors de la récupération du favicon:", e);
+        // Retourner une icône par défaut en cas d'erreur
+        return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌐</text></svg>';
       }
+    }
 
-      function handleShortcutClick(event, position) {
-        event.preventDefault();
-        const shortcut = document.querySelector(
-          `[data-position="${position}"]`
-        );
-        const iconContainer = shortcut.querySelector(".shortcut-icon");
-        const isEmpty = iconContainer.getAttribute("data-empty") === "true";
+    function handleShortcutClick(event, position) {
+      event.preventDefault();
+      const shortcut = document.querySelector(
+        `[data-position="${position}"]`
+      );
+      const iconContainer = shortcut.querySelector(".shortcut-icon");
+      const isEmpty = iconContainer.getAttribute("data-empty") === "true";
 
-        if (event.type === "contextmenu") {
-          showContextMenu(event, position);
-        } else if (isEmpty) {
-          openConfigModal(position);
-        } else {
-          window.location.href = shortcut.href;
-        }
+      if (event.type === "contextmenu") {
+        showContextMenu(event, position);
+      } else if (isEmpty) {
+        openConfigModal(position);
+      } else {
+        window.location.href = shortcut.href;
       }
+    }
 
-      function showContextMenu(event, position) {
-        event.preventDefault();
-        const contextMenu = document.getElementById("contextMenu");
-        contextMenu.style.left = `${event.pageX}px`;
-        contextMenu.style.top = `${event.pageY}px`;
-        contextMenu.setAttribute("data-position", position);
-        contextMenu.classList.remove("hidden");
-        contextMenu.style.background = "none";
-        contextMenu.style.backgroundColor = "transparent";
+    function showContextMenu(event, position) {
+      event.preventDefault();
+      const contextMenu = document.getElementById("contextMenu");
+      contextMenu.style.left = `${event.pageX}px`;
+      contextMenu.style.top = `${event.pageY}px`;
+      contextMenu.setAttribute("data-position", position);
+      contextMenu.classList.remove("hidden");
+      contextMenu.style.background = "none";
+      contextMenu.style.backgroundColor = "transparent";
 
-        document.addEventListener("click", closeContextMenu);
-      }
+      document.addEventListener("click", closeContextMenu);
+    }
 
-      function closeContextMenu() {
-        document.getElementById("contextMenu").classList.add("hidden");
-        document.removeEventListener("click", closeContextMenu);
-      }
+    function closeContextMenu() {
+      document.getElementById("contextMenu").classList.add("hidden");
+      document.removeEventListener("click", closeContextMenu);
+    }
 
-      function generateShortcut(i) {
-        return `
+    function generateShortcut(i) {
+      return `
           <div class="shortcut-container" 
              ondragover="handleDragOver(event)" 
              ondrop="handleDrop(event, '${i}')"
@@ -90,89 +92,89 @@
               </div>
             </a>
           </div>`;
-      }
+    }
 
-      function handleDragOver(event) {
-        event.preventDefault();
-      }
+    function handleDragOver(event) {
+      event.preventDefault();
+    }
 
-      function handleDragEnter(event) {
-        event.preventDefault();
-        const container = event.currentTarget;
-        container.querySelector("a").classList.add("bg-white/40");
-      }
+    function handleDragEnter(event) {
+      event.preventDefault();
+      const container = event.currentTarget;
+      container.querySelector("a").classList.add("bg-white/40");
+    }
 
-      function handleDragLeave(event) {
-        event.preventDefault();
-        const container = event.currentTarget;
-        container.querySelector("a").classList.remove("bg-white/40");
-      }
+    function handleDragLeave(event) {
+      event.preventDefault();
+      const container = event.currentTarget;
+      container.querySelector("a").classList.remove("bg-white/40");
+    }
 
-      async function handleDrop(event, newPosition) {
-        event.preventDefault();
-        const container = event.currentTarget;
-        container.querySelector("a").classList.remove("bg-white/40");
+    async function handleDrop(event, newPosition) {
+      event.preventDefault();
+      const container = event.currentTarget;
+      container.querySelector("a").classList.remove("bg-white/40");
 
-        const oldPosition = event.dataTransfer.getData('text/plain');
-        
-        // Si c'est un drag externe (URL)
-        if (oldPosition === '') {
-          // Garder la logique existante pour le drop d'URL
-          const data = event.dataTransfer.getData("text");
-          if (!data) return;
+      const oldPosition = event.dataTransfer.getData('text/plain');
+
+      // Si c'est un drag externe (URL)
+      if (oldPosition === '') {
+        // Garder la logique existante pour le drop d'URL
+        const data = event.dataTransfer.getData("text");
+        if (!data) return;
+        try {
+          const url = new URL(data);
+          let title = "";
           try {
-            const url = new URL(data);
-            let title = "";
-            try {
-              const response = await fetch(url.href);
-              const html = await response.text();
-              const doc = new DOMParser().parseFromString(html, "text/html");
-              title = doc.title || url.hostname;
-            } catch (e) {
-              title = url.hostname;
-            }
-  
-            const shortcuts = JSON.parse(
-              localStorage.getItem("shortcuts") || "{}"
-            );
-            const faviconUrl = await getFaviconUrl(url.href);
-            shortcuts[newPosition] = { title, url: url.href, faviconUrl };
-            localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-  
-            reloadShortcuts(); // Au lieu de reloadWithTransition()
+            const response = await fetch(url.href);
+            const html = await response.text();
+            const doc = new DOMParser().parseFromString(html, "text/html");
+            title = doc.title || url.hostname;
           } catch (e) {
-            console.error("Invalid URL dropped:", e);
+            title = url.hostname;
           }
-          return;
+
+          const shortcuts = JSON.parse(
+            localStorage.getItem("shortcuts") || "{}"
+          );
+          const faviconUrl = await getFaviconUrl(url.href);
+          shortcuts[newPosition] = { title, url: url.href, faviconUrl };
+          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+
+          reloadShortcuts(); // Au lieu de reloadWithTransition()
+        } catch (e) {
+          console.error("Invalid URL dropped:", e);
         }
-  
-        // Si c'est un drag interne (réarrangement)
-        const activeTab = localStorage.getItem("activeTab") || "personal";
-        const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
-        
-        // Échanger les raccourcis
-        const temp = shortcuts[oldPosition];
-        shortcuts[oldPosition] = shortcuts[newPosition];
-        shortcuts[newPosition] = temp;
-  
-        // Sauvegarder les changements
-        localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-  
-        // Recharger les raccourcis
-        reloadShortcuts();
-  
-        // Supprimer les classes de style temporaires
-        document.querySelectorAll('.shortcut-container a').forEach(el => {
-          el.classList.remove('opacity-50');
-        });
+        return;
       }
 
-      function handleDragStart(event, position) {
-        event.dataTransfer.setData('text/plain', position);
-        event.currentTarget.classList.add('opacity-50');
-      }      function generateAddRowButton() {
-        return `
+      // Si c'est un drag interne (réarrangement)
+      const activeTab = localStorage.getItem("activeTab") || "personal";
+      const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
+
+      // Échanger les raccourcis
+      const temp = shortcuts[oldPosition];
+      shortcuts[oldPosition] = shortcuts[newPosition];
+      shortcuts[newPosition] = temp;
+
+      // Sauvegarder les changements
+      localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
+      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+
+      // Recharger les raccourcis
+      reloadShortcuts();
+
+      // Supprimer les classes de style temporaires
+      document.querySelectorAll('.shortcut-container a').forEach(el => {
+        el.classList.remove('opacity-50');
+      });
+    }
+
+    function handleDragStart(event, position) {
+      event.dataTransfer.setData('text/plain', position);
+      event.currentTarget.classList.add('opacity-50');
+    } function generateAddRowButton() {
+      return `
           <button
              onclick="addMoreShortcuts()"
              class="group p-6 backdrop-blur-xl bg-white/30 rounded-2xl shadow-lg hover:shadow-xl hover:bg-white/40 transition-all duration-300 border-2 border-dashed border-white/30 w-full"
@@ -186,440 +188,269 @@
               <div class="text-white/70 font-medium">Ajouter d'avantages de raccourcis</div>
             </div>
           </button>`;
-      }      function addMoreShortcuts() {
-        const grid = document.getElementById("shortcutGrid");
-        const currentCount =
-          document.querySelectorAll("[data-position]").length;
-        const addRowButton = document.getElementById("addRowButton");
+    } function addMoreShortcuts() {
+      const grid = document.getElementById("shortcutGrid");
+      const currentCount =
+        document.querySelectorAll("[data-position]").length;
+      const addRowButton = document.getElementById("addRowButton");
 
-        for (let i = currentCount; i < currentCount + 4; i++) {
-          grid.insertBefore(
-            document
-              .createRange()
-              .createContextualFragment(generateShortcut(i)),
-            addRowButton
-          );
-        }
-
-        localStorage.setItem("shortcutCount", currentCount + 4);
-        reloadShortcuts(); // Au lieu de reloadWithTransition()
+      for (let i = currentCount; i < currentCount + 4; i++) {
+        grid.insertBefore(
+          document
+            .createRange()
+            .createContextualFragment(generateShortcut(i)),
+          addRowButton
+        );
       }
 
-      async function saveShortcut() {
-        const modal = document.getElementById("configModal");
-        const position = modal.getAttribute("data-position");
-        const title = document.getElementById("shortcutTitle").value;
-        let url = document.getElementById("shortcutUrl").value.trim();
+      localStorage.setItem("shortcutCount", currentCount + 4);
+      reloadShortcuts(); // Au lieu de reloadWithTransition()
+    }
 
-        if (!url.match(/^https?:\/\//i)) {
-          url = "https://" + url;
-        }
+    async function saveShortcut() {
+      const modal = document.getElementById("configModal");
+      const position = modal.getAttribute("data-position");
+      const title = document.getElementById("shortcutTitle").value;
+      let url = document.getElementById("shortcutUrl").value.trim();
 
-        try {
-          const faviconUrl = await getFaviconUrl(url);
-          const activeTab = localStorage.getItem("activeTab") || "personal";
-          const shortcuts = JSON.parse(
-            localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
-          );
-          shortcuts[position] = { title, url, faviconUrl };
-          localStorage.setItem(
-            `shortcuts_${activeTab}`,
-            JSON.stringify(shortcuts)
-          );
-          localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-
-          closeConfigModal();
-          reloadShortcuts(); // Au lieu de reloadWithTransition()
-        } catch (e) {
-          console.error("Erreur lors de la sauvegarde du raccourci:", e);
-        }
-      }      function openConfigModal(position) {
-        const modal = document.getElementById("configModal");
-        const titleInput = document.getElementById("shortcutTitle");
-        
-        modal.setAttribute("data-position", position);
-        titleInput.value = "";
-        document.getElementById("shortcutUrl").value = "";
-        document.getElementById("saveButton").disabled = true;
-
-        modal.classList.remove("hidden");
-        
-        // Amélioration de la méthode de focus avec plusieurs tentatives
-        // Première tentative immédiate
-        titleInput.focus();
-        
-        // Deuxième tentative avec un délai court
-        setTimeout(() => {
-          titleInput.focus();
-        }, 50);
-        
-        // Troisième tentative avec un délai plus long pour s'assurer que la modal est complètement rendue
-        setTimeout(() => {
-          titleInput.focus();
-          // Mettre le curseur à la fin du texte
-          if (titleInput.value) {
-            titleInput.selectionStart = titleInput.value.length;
-            titleInput.selectionEnd = titleInput.value.length;
-          }
-        }, 150);
+      if (!url.match(/^https?:\/\//i)) {
+        url = "https://" + url;
       }
 
-      function closeConfigModal() {
-        document.getElementById("configModal").classList.add("hidden");
-      }
-
-      function editShortcut(position) {
-        openConfigModal(position, true);
-        closeContextMenu();
-      }
-
-      function deleteShortcut() {
-        const position = document
-          .getElementById("contextMenu")
-          .getAttribute("data-position");
+      try {
+        const faviconUrl = await getFaviconUrl(url);
         const activeTab = localStorage.getItem("activeTab") || "personal";
-
         const shortcuts = JSON.parse(
           localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
         );
-        delete shortcuts[position];
+        shortcuts[position] = { title, url, faviconUrl };
         localStorage.setItem(
           `shortcuts_${activeTab}`,
           JSON.stringify(shortcuts)
         );
         localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-        closeContextMenu();
+        closeConfigModal();
         reloadShortcuts(); // Au lieu de reloadWithTransition()
+      } catch (e) {
+        console.error("Erreur lors de la sauvegarde du raccourci:", e);
+      }
+    } function openConfigModal(position) {
+      const modal = document.getElementById("configModal");
+      const titleInput = document.getElementById("shortcutTitle");
+
+      modal.setAttribute("data-position", position);
+      titleInput.value = "";
+      document.getElementById("shortcutUrl").value = "";
+      document.getElementById("saveButton").disabled = true;
+
+      modal.classList.remove("hidden");
+
+      // Amélioration de la méthode de focus avec plusieurs tentatives
+      // Première tentative immédiate
+      titleInput.focus();
+
+      // Deuxième tentative avec un délai court
+      setTimeout(() => {
+        titleInput.focus();
+      }, 50);
+
+      // Troisième tentative avec un délai plus long pour s'assurer que la modal est complètement rendue
+      setTimeout(() => {
+        titleInput.focus();
+        // Mettre le curseur à la fin du texte
+        if (titleInput.value) {
+          titleInput.selectionStart = titleInput.value.length;
+          titleInput.selectionEnd = titleInput.value.length;
+        }
+      }, 150);
+    }
+
+    function closeConfigModal() {
+      document.getElementById("configModal").classList.add("hidden");
+    }
+
+    function editShortcut(position) {
+      openConfigModal(position, true);
+      closeContextMenu();
+    }
+
+    function deleteShortcut() {
+      const position = document
+        .getElementById("contextMenu")
+        .getAttribute("data-position");
+      const activeTab = localStorage.getItem("activeTab") || "personal";
+
+      const shortcuts = JSON.parse(
+        localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
+      );
+      delete shortcuts[position];
+      localStorage.setItem(
+        `shortcuts_${activeTab}`,
+        JSON.stringify(shortcuts)
+      );
+      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+
+      closeContextMenu();
+      reloadShortcuts(); // Au lieu de reloadWithTransition()
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      function focusSearch() {
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+          searchInput.focus();
+        }
       }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        function focusSearch() {
-          const searchInput = document.getElementById("searchInput");
-          if (searchInput) {
-            searchInput.focus();
-          }
+      focusSearch();
+      setTimeout(focusSearch, 100);
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+          focusSearch();
         }
+      });
 
-        focusSearch();
-        setTimeout(focusSearch, 100);
+      window.addEventListener("focus", focusSearch);
+      document.addEventListener("mouseenter", focusSearch);
+      document.addEventListener("keydown", focusSearch, { once: true });
 
-        document.addEventListener("visibilitychange", () => {
-          if (document.visibilityState === "visible") {
-            focusSearch();
-          }
-        });
+      const grid = document.getElementById("shortcutGrid");
+      const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+      const shortcutCount = parseInt(
+        localStorage.getItem("shortcutCount") || "8"
+      );
 
-        window.addEventListener("focus", focusSearch);
-        document.addEventListener("mouseenter", focusSearch);
-        document.addEventListener("keydown", focusSearch, { once: true });
+      for (let i = 0; i < shortcutCount; i++) {
+        grid.innerHTML += generateShortcut(i);
+      }
 
-        const grid = document.getElementById("shortcutGrid");
-        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-        const shortcutCount = parseInt(
-          localStorage.getItem("shortcutCount") || "8"
+      grid.innerHTML += generateAddRowButton();
+
+      Object.entries(shortcuts).forEach(([position, data]) => {
+        const shortcut = document.querySelector(
+          `[data-position="${position}"]`
         );
-
-        for (let i = 0; i < shortcutCount; i++) {
-          grid.innerHTML += generateShortcut(i);
-        }
-
-        grid.innerHTML += generateAddRowButton();
-
-        Object.entries(shortcuts).forEach(([position, data]) => {
-          const shortcut = document.querySelector(
-            `[data-position="${position}"]`
-          );
-          if (shortcut) {
-            shortcut.href = data.url;
-            shortcut.onclick = (e) => {
-              e.preventDefault();
-              window.location.href = data.url;
-            };
-            shortcut.querySelector(".shortcut-title").textContent = data.title;
-            const iconContainer = shortcut.querySelector(".shortcut-icon");
-            iconContainer.removeAttribute("data-empty");
-            iconContainer.innerHTML = `
+        if (shortcut) {
+          shortcut.href = data.url;
+          shortcut.onclick = (e) => {
+            e.preventDefault();
+            window.location.href = data.url;
+          };
+          shortcut.querySelector(".shortcut-title").textContent = data.title;
+          const iconContainer = shortcut.querySelector(".shortcut-icon");
+          iconContainer.removeAttribute("data-empty");
+          iconContainer.innerHTML = `
               <img src="${data.faviconUrl}" 
                  class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
                  alt="${data.title}" 
                  onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`;
-          }
-        });
-
-        const searchInput = document.getElementById("searchInput");
-        const searchButton = document.querySelector(".absolute svg");
-
-        searchInput.addEventListener("keydown", handleSearch);
-        searchButton.addEventListener("click", handleSearch);
-
-        const menuButton = document.getElementById("mobileMenuButton");
-        const sidebar = document.getElementById("sidebar");
-
-        if (menuButton) {
-          menuButton.addEventListener("click", () => {
-            sidebar.classList.toggle("mobile-hidden");
-            menuButton.classList.toggle("open");
-          });
         }
-
-        const searchIcon = document.querySelector(".absolute svg");
-        const currentSearch = document.getElementById("currentSearch");
-
-        if (searchInput && searchIcon && currentSearch) {
-          searchInput.addEventListener("keydown", handleSearch);
-          searchIcon.addEventListener("click", handleSearch);
-          currentSearch.addEventListener("click", () => {
-            const dropdown = document.getElementById("searchEngineDropdown");
-            if (dropdown) {
-              dropdown.classList.toggle("hidden");
-            }
-          });
-        }
-
-        document.querySelectorAll(".search-option").forEach((option) => {
-          option.addEventListener("click", (e) => {
-            const value = e.currentTarget.dataset.value;
-            const img = e.currentTarget.querySelector("img");
-            const searchBtn = document.querySelector("#currentSearch img");
-
-            if (searchBtn && img) {
-              searchBtn.src = img.src;
-            }
-
-            const searchEngine = document.getElementById("searchEngine");
-            if (searchEngine) {
-              searchEngine.value = value;
-            }
-
-            const searchInput = document.getElementById("searchInput");
-            if (searchInput) {
-              const currentText = searchInput.value.trim();
-              let newText = currentText;
-
-              if (currentText.startsWith("/")) {
-                const parts = currentText.substring(1).split(" ");
-                const possibleCommand = parts[0].toLowerCase();
-                const validCommands = [
-                  "g",
-                  "yt",
-                  "gh",
-                  "w",
-                  "r",
-                  "so",
-                  "a",
-                  "n",
-                  "sp",
-                  "tw",
-                  "ig",
-                  "maps",
-                  "i",
-                ];
-                if (validCommands.includes(possibleCommand)) {
-                  newText = parts.slice(1).join(" ");
-                }
-              }
-
-              searchInput.value =
-                newText.length > 0 ? `/${value} ${newText}` : `/${value} `;
-              searchInput.focus();
-              searchInput.selectionStart = searchInput.value.length;
-              searchInput.selectionEnd = searchInput.value.length;
-            }
-
-            const dropdown = document.getElementById("searchEngineDropdown");
-            if (dropdown) {
-              dropdown.classList.add("hidden");
-            }
-          });
-        });
-
-        // Initialiser l'onglet actif
-        const activeTab = localStorage.getItem("activeTab") || "personal";
-        switchTab(activeTab);
       });
 
-      function handleSearch(event) {
-        if (
-          (event.type === "keydown" && event.key === "Enter") ||
-          event.type === "click"
-        ) {
-          event.preventDefault();
+      const searchInput = document.getElementById("searchInput");
+      const searchButton = document.querySelector(".absolute svg");
 
-          let query = document.getElementById("searchInput").value.trim();
-          let selectedEngine = document.getElementById("searchEngine").value;
+      searchInput.addEventListener("keydown", handleSearch);
+      searchButton.addEventListener("click", handleSearch);
 
-          const searchEngines = {
-            g: "https://www.google.com/search?q=",
-            yt: "https://www.youtube.com/results?search_query=",
-            gh: "https://github.com/search?q=",
-            w: "https://en.wikipedia.org/wiki/Special:Search?search=",
-            r: "https://www.reddit.com/search/?q=",
-            so: "https://stackoverflow.com/search?q=",
-            a: "https://www.amazon.fr/s?k=",
-            n: "https://www.netflix.com/search?q=",
-            sp: "https://open.spotify.com/search/results",
-            tw: "https://twitter.com/search?q=",
-            ig: "https://www.instagram.com/explore/tags/",
-            maps: "https://www.google.com/maps/search/",
-            i: "https://www.google.com/images?q=",
-            ddg: "https://duckduckgo.com/?q=",
-            px: "https://www.perplexity.ai/search?q=",
-          };
+      const menuButton = document.getElementById("mobileMenuButton");
+      const sidebar = document.getElementById("sidebar");
 
-          // Vérifier si on devrait suggérer une autocorrection
-          if (shouldSuggestAutocorrection(query)) {
-            // Afficher la popup d'autocorrection
-            showAutocorrectionModal(query);
-            return; // Arrêter l'exécution ici
+      if (menuButton) {
+        menuButton.addEventListener("click", () => {
+          sidebar.classList.toggle("mobile-hidden");
+          menuButton.classList.toggle("open");
+        });
+      }
+
+      const searchIcon = document.querySelector(".absolute svg");
+      const currentSearch = document.getElementById("currentSearch");
+
+      if (searchInput && searchIcon && currentSearch) {
+        searchInput.addEventListener("keydown", handleSearch);
+        searchIcon.addEventListener("click", handleSearch);
+        currentSearch.addEventListener("click", () => {
+          const dropdown = document.getElementById("searchEngineDropdown");
+          if (dropdown) {
+            dropdown.classList.toggle("hidden");
+          }
+        });
+      }
+
+      document.querySelectorAll(".search-option").forEach((option) => {
+        option.addEventListener("click", (e) => {
+          const value = e.currentTarget.dataset.value;
+          const img = e.currentTarget.querySelector("img");
+          const searchBtn = document.querySelector("#currentSearch img");
+
+          if (searchBtn && img) {
+            searchBtn.src = img.src;
           }
 
-          if (query.startsWith("/")) {
-            const parts = query.substring(1).split(" ");
-            if (parts.length > 1) {
+          const searchEngine = document.getElementById("searchEngine");
+          if (searchEngine) {
+            searchEngine.value = value;
+          }
+
+          const searchInput = document.getElementById("searchInput");
+          if (searchInput) {
+            const currentText = searchInput.value.trim();
+            let newText = currentText;
+
+            if (currentText.startsWith("/")) {
+              const parts = currentText.substring(1).split(" ");
               const possibleCommand = parts[0].toLowerCase();
-              if (searchEngines[possibleCommand]) {
-                selectedEngine = possibleCommand;
-                query = parts.slice(1).join(" ");
+              const validCommands = [
+                "g",
+                "yt",
+                "gh",
+                "w",
+                "r",
+                "so",
+                "a",
+                "n",
+                "sp",
+                "tw",
+                "ig",
+                "maps",
+                "i",
+              ];
+              if (validCommands.includes(possibleCommand)) {
+                newText = parts.slice(1).join(" ");
               }
             }
+
+            searchInput.value =
+              newText.length > 0 ? `/${value} ${newText}` : `/${value} `;
+            searchInput.focus();
+            searchInput.selectionStart = searchInput.value.length;
+            searchInput.selectionEnd = searchInput.value.length;
           }
 
-          const searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
-          if (query) {
-            window.location.href = searchUrl + encodeURIComponent(query);
+          const dropdown = document.getElementById("searchEngineDropdown");
+          if (dropdown) {
+            dropdown.classList.add("hidden");
           }
-        }
-      }
+        });
+      });
 
-      // Fonction pour vérifier si on devrait suggérer une autocorrection
-      function shouldSuggestAutocorrection(query) {
-        // Ne suggérer l'autocorrection QUE si la requête commence par ":"
-        if (!query.startsWith(":")) {
-          return false;
-        }
-        // Liste des commandes valides
-        const validSearchCommands = {
-          "g": "Google",
-          "yt": "YouTube",
-          "gh": "GitHub", 
-          "w": "Wikipedia",
-          "r": "Reddit",
-          "so": "Stack Overflow",
-          "a": "Amazon",
-          "n": "Netflix",
-          "sp": "Spotify",
-          "tw": "Twitter",
-          "ig": "Instagram",
-          "maps": "Google Maps",
-          "i": "Google Images",
-          "ddg": "DuckDuckGo",
-          "px": "Perplexity AI"
-        };
-        // Extraire la partie après le ":" (jusqu'au premier espace ou fin de chaîne)
-        const commandPart = query.substring(1).split(" ")[0].toLowerCase();
-        // Vérifier si cette partie correspond à une commande valide
-        return Object.keys(validSearchCommands).includes(commandPart);
-      }
+      // Initialiser l'onglet actif
+      const activeTab = localStorage.getItem("activeTab") || "personal";
+      switchTab(activeTab);
+    });
 
-      // Fonction pour afficher la modal d'autocorrection
-      function showAutocorrectionModal(originalQuery) {
-        const correctedQuery = convertToSearchCommand(originalQuery);
-        document.getElementById("originalQuery").textContent = originalQuery;
-        document.getElementById("correctedQuery").textContent = correctedQuery;
-        document.getElementById("autocorrectionModal").classList.remove("hidden");
-        // Stockage des requêtes pour les utiliser plus tard
-        document.getElementById("autocorrectionModal").setAttribute("data-original-query", originalQuery);
-        document.getElementById("autocorrectionModal").setAttribute("data-corrected-query", correctedQuery);
-        // Ajout de l'écouteur pour Shift+Y et Shift+N
-        function autocorrectKeyListener(e) {
-          if (e.shiftKey && (e.key === 'Y' || e.key === 'y')) {
-            executeCorrectedSearch();
-            document.removeEventListener('keydown', autocorrectKeyListener);
-          } else if (e.shiftKey && (e.key === 'N' || e.key === 'n')) {
-            executeOriginalSearch();
-            document.removeEventListener('keydown', autocorrectKeyListener);
-          }
-        }
-        document.addEventListener('keydown', autocorrectKeyListener);
-      }
-      
-      // Fonction pour convertir une requête en recherche appropriée
-      function convertToSearchCommand(query) {
-        // Liste complète des commandes de recherche valides
-        const validSearchCommands = {
-          "g": "Google",
-          "yt": "YouTube",
-          "gh": "GitHub", 
-          "w": "Wikipedia",
-          "r": "Reddit",
-          "so": "Stack Overflow",
-          "a": "Amazon",
-          "n": "Netflix",
-          "sp": "Spotify",
-          "tw": "Twitter",
-          "ig": "Instagram",
-          "maps": "Google Maps",
-          "i": "Google Images",
-          "ddg": "DuckDuckGo",
-          "px": "Perplexity AI"
-        };
+    function handleSearch(event) {
+      if (
+        (event.type === "keydown" && event.key === "Enter") ||
+        event.type === "click"
+      ) {
+        event.preventDefault();
 
-        // Récupérer le moteur actuellement sélectionné
-        const currentEngine = document.getElementById("searchEngine").value;
-        const currentEngineName = validSearchCommands[currentEngine] || "Google";
-
-        // Supprimer le ":" au début si présent
-        if (query.startsWith(":")) {
-          query = query.substring(1);
-        }
-        
-        // Convertir en minuscules
-        const lowercaseQuery = query.toLowerCase().trim();
-        
-        // Détecter si le premier mot est une commande de recherche
-        let detectedCommand = null;
-        let searchTerms = lowercaseQuery;
-        
-        // Vérifier le premier mot (ou lettre)
-        const firstSpace = lowercaseQuery.indexOf(" ");
-        if (firstSpace > 0) {
-          const possibleCommand = lowercaseQuery.substring(0, firstSpace).toLowerCase();
-          
-          // Vérifier strictement si la commande est dans notre liste de commandes valides
-          if (Object.keys(validSearchCommands).includes(possibleCommand)) {
-            detectedCommand = possibleCommand;
-            searchTerms = lowercaseQuery.substring(firstSpace + 1);
-          }
-          // Ne pas essayer d'interpréter un texte quelconque comme une commande
-        } else if (Object.keys(validSearchCommands).includes(lowercaseQuery)) {
-          // Si toute la requête est exactement une commande valide
-          detectedCommand = lowercaseQuery;
-          searchTerms = "";
-        }
-        
-        // Si une commande valide a été détectée, l'utiliser
-        if (detectedCommand) {
-          document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent = 
-            `La recherche sera effectuée sur ${validSearchCommands[detectedCommand]}`;
-          return `/${detectedCommand} ${searchTerms}`.trim();
-        }
-        
-        // Par défaut, utiliser le moteur de recherche actuellement sélectionné avec toute la requête
-        document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent = 
-          `La recherche sera effectuée sur ${currentEngineName}`;
-        return `/${currentEngine} ${lowercaseQuery}`;
-      }
-      
-      // Fonction pour exécuter la recherche d'origine
-      function executeOriginalSearch() {
-        const originalQuery = document.getElementById("autocorrectionModal").getAttribute("data-original-query");
-        document.getElementById("autocorrectionModal").classList.add("hidden");
-        
-        // Récupérer le moteur de recherche actuellement sélectionné
+        let query = document.getElementById("searchInput").value.trim();
         let selectedEngine = document.getElementById("searchEngine").value;
-        
-        // Extraire directement les URLs de recherche pour éviter de repasser par le processus d'autocorrection
+
         const searchEngines = {
           g: "https://www.google.com/search?q=",
           yt: "https://www.youtube.com/results?search_query=",
@@ -637,135 +468,305 @@
           ddg: "https://duckduckgo.com/?q=",
           px: "https://www.perplexity.ai/search?q=",
         };
-        
-        // Vérifier si la requête commence par une commande spécifique
-        if (originalQuery.startsWith("/")) {
-          const parts = originalQuery.substring(1).split(" ");
-          if (parts.length > 0 && searchEngines[parts[0].toLowerCase()]) {
-            selectedEngine = parts[0].toLowerCase();
-            query = parts.slice(1).join(" ");
-            window.location.href = searchEngines[selectedEngine] + encodeURIComponent(query);
-            return;
+
+        // Vérifier si on devrait suggérer une autocorrection
+        if (shouldSuggestAutocorrection(query)) {
+          // Afficher la popup d'autocorrection
+          showAutocorrectionModal(query);
+          return; // Arrêter l'exécution ici
+        }
+
+        if (query.startsWith("/")) {
+          const parts = query.substring(1).split(" ");
+          if (parts.length > 1) {
+            const possibleCommand = parts[0].toLowerCase();
+            if (searchEngines[possibleCommand]) {
+              selectedEngine = possibleCommand;
+              query = parts.slice(1).join(" ");
+            }
           }
         }
-        
-        // Si pas de commande spécifique, utiliser directement la requête originale
-        window.location.href = searchEngines[selectedEngine] + encodeURIComponent(originalQuery);
+
+        const searchUrl = searchEngines[selectedEngine] || searchEngines["g"];
+        if (query) {
+          window.location.href = searchUrl + encodeURIComponent(query);
+        }
       }
-      
-      // Fonction pour exécuter la recherche corrigée
-      function executeCorrectedSearch() {
-        const correctedQuery = document.getElementById("autocorrectionModal").getAttribute("data-corrected-query");
-        document.getElementById("searchInput").value = correctedQuery;
-        document.getElementById("autocorrectionModal").classList.add("hidden");
-        
-        // Extraire la commande de recherche et les termes de recherche
-        if (correctedQuery.startsWith('/')) {
-          const parts = correctedQuery.substring(1).split(' ');
-          const command = parts[0].toLowerCase();
-          const searchTerms = parts.slice(1).join(' ');
-          
-          const searchEngines = {
-            g: "https://www.google.com/search?q=",
-            yt: "https://www.youtube.com/results?search_query=",
-            gh: "https://github.com/search?q=",
-            w: "https://en.wikipedia.org/wiki/Special:Search?search=",
-            r: "https://www.reddit.com/search/?q=",
-            so: "https://stackoverflow.com/search?q=",
-            a: "https://www.amazon.fr/s?k=",
-            n: "https://www.netflix.com/search?q=",
-            sp: "https://open.spotify.com/search/results",
-            tw: "https://twitter.com/search?q=",
-            ig: "https://www.instagram.com/explore/tags/",
-            maps: "https://www.google.com/maps/search/",
-            i: "https://www.google.com/images?q=",
-            ddg: "https://duckduckgo.com/?q=",
-            px: "https://www.perplexity.ai/search?q=",
+    }
+
+    // Fonction pour vérifier si on devrait suggérer une autocorrection
+    function shouldSuggestAutocorrection(query) {
+      // Ne suggérer l'autocorrection QUE si la requête commence par ":"
+      if (!query.startsWith(":")) {
+        return false;
+      }
+      // Liste des commandes valides
+      const validSearchCommands = {
+        "g": "Google",
+        "yt": "YouTube",
+        "gh": "GitHub",
+        "w": "Wikipedia",
+        "r": "Reddit",
+        "so": "Stack Overflow",
+        "a": "Amazon",
+        "n": "Netflix",
+        "sp": "Spotify",
+        "tw": "Twitter",
+        "ig": "Instagram",
+        "maps": "Google Maps",
+        "i": "Google Images",
+        "ddg": "DuckDuckGo",
+        "px": "Perplexity AI"
+      };
+      // Extraire la partie après le ":" (jusqu'au premier espace ou fin de chaîne)
+      const commandPart = query.substring(1).split(" ")[0].toLowerCase();
+      // Vérifier si cette partie correspond à une commande valide
+      return Object.keys(validSearchCommands).includes(commandPart);
+    }
+
+    // Fonction pour afficher la modal d'autocorrection
+    function showAutocorrectionModal(originalQuery) {
+      const correctedQuery = convertToSearchCommand(originalQuery);
+      document.getElementById("originalQuery").textContent = originalQuery;
+      document.getElementById("correctedQuery").textContent = correctedQuery;
+      document.getElementById("autocorrectionModal").classList.remove("hidden");
+      // Stockage des requêtes pour les utiliser plus tard
+      document.getElementById("autocorrectionModal").setAttribute("data-original-query", originalQuery);
+      document.getElementById("autocorrectionModal").setAttribute("data-corrected-query", correctedQuery);
+      // Ajout de l'écouteur pour Shift+Y et Shift+N
+      function autocorrectKeyListener(e) {
+        if (e.shiftKey && (e.key === 'Y' || e.key === 'y')) {
+          executeCorrectedSearch();
+          document.removeEventListener('keydown', autocorrectKeyListener);
+        } else if (e.shiftKey && (e.key === 'N' || e.key === 'n')) {
+          executeOriginalSearch();
+          document.removeEventListener('keydown', autocorrectKeyListener);
+        }
+      }
+      document.addEventListener('keydown', autocorrectKeyListener);
+    }
+
+    // Fonction pour convertir une requête en recherche appropriée
+    function convertToSearchCommand(query) {
+      // Liste complète des commandes de recherche valides
+      const validSearchCommands = {
+        "g": "Google",
+        "yt": "YouTube",
+        "gh": "GitHub",
+        "w": "Wikipedia",
+        "r": "Reddit",
+        "so": "Stack Overflow",
+        "a": "Amazon",
+        "n": "Netflix",
+        "sp": "Spotify",
+        "tw": "Twitter",
+        "ig": "Instagram",
+        "maps": "Google Maps",
+        "i": "Google Images",
+        "ddg": "DuckDuckGo",
+        "px": "Perplexity AI"
+      };
+
+      // Récupérer le moteur actuellement sélectionné
+      const currentEngine = document.getElementById("searchEngine").value;
+      const currentEngineName = validSearchCommands[currentEngine] || "Google";
+
+      // Supprimer le ":" au début si présent
+      if (query.startsWith(":")) {
+        query = query.substring(1);
+      }
+
+      // Convertir en minuscules
+      const lowercaseQuery = query.toLowerCase().trim();
+
+      // Détecter si le premier mot est une commande de recherche
+      let detectedCommand = null;
+      let searchTerms = lowercaseQuery;
+
+      // Vérifier le premier mot (ou lettre)
+      const firstSpace = lowercaseQuery.indexOf(" ");
+      if (firstSpace > 0) {
+        const possibleCommand = lowercaseQuery.substring(0, firstSpace).toLowerCase();
+
+        // Vérifier strictement si la commande est dans notre liste de commandes valides
+        if (Object.keys(validSearchCommands).includes(possibleCommand)) {
+          detectedCommand = possibleCommand;
+          searchTerms = lowercaseQuery.substring(firstSpace + 1);
+        }
+        // Ne pas essayer d'interpréter un texte quelconque comme une commande
+      } else if (Object.keys(validSearchCommands).includes(lowercaseQuery)) {
+        // Si toute la requête est exactement une commande valide
+        detectedCommand = lowercaseQuery;
+        searchTerms = "";
+      }
+
+      // Si une commande valide a été détectée, l'utiliser
+      if (detectedCommand) {
+        document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent =
+          `La recherche sera effectuée sur ${validSearchCommands[detectedCommand]}`;
+        return `/${detectedCommand} ${searchTerms}`.trim();
+      }
+
+      // Par défaut, utiliser le moteur de recherche actuellement sélectionné avec toute la requête
+      document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent =
+        `La recherche sera effectuée sur ${currentEngineName}`;
+      return `/${currentEngine} ${lowercaseQuery}`;
+    }
+
+    // Fonction pour exécuter la recherche d'origine
+    function executeOriginalSearch() {
+      const originalQuery = document.getElementById("autocorrectionModal").getAttribute("data-original-query");
+      document.getElementById("autocorrectionModal").classList.add("hidden");
+
+      // Récupérer le moteur de recherche actuellement sélectionné
+      let selectedEngine = document.getElementById("searchEngine").value;
+
+      // Extraire directement les URLs de recherche pour éviter de repasser par le processus d'autocorrection
+      const searchEngines = {
+        g: "https://www.google.com/search?q=",
+        yt: "https://www.youtube.com/results?search_query=",
+        gh: "https://github.com/search?q=",
+        w: "https://en.wikipedia.org/wiki/Special:Search?search=",
+        r: "https://www.reddit.com/search/?q=",
+        so: "https://stackoverflow.com/search?q=",
+        a: "https://www.amazon.fr/s?k=",
+        n: "https://www.netflix.com/search?q=",
+        sp: "https://open.spotify.com/search/results",
+        tw: "https://twitter.com/search?q=",
+        ig: "https://www.instagram.com/explore/tags/",
+        maps: "https://www.google.com/maps/search/",
+        i: "https://www.google.com/images?q=",
+        ddg: "https://duckduckgo.com/?q=",
+        px: "https://www.perplexity.ai/search?q=",
+      };
+
+      // Vérifier si la requête commence par une commande spécifique
+      if (originalQuery.startsWith("/")) {
+        const parts = originalQuery.substring(1).split(" ");
+        if (parts.length > 0 && searchEngines[parts[0].toLowerCase()]) {
+          selectedEngine = parts[0].toLowerCase();
+          query = parts.slice(1).join(" ");
+          window.location.href = searchEngines[selectedEngine] + encodeURIComponent(query);
+          return;
+        }
+      }
+
+      // Si pas de commande spécifique, utiliser directement la requête originale
+      window.location.href = searchEngines[selectedEngine] + encodeURIComponent(originalQuery);
+    }
+
+    // Fonction pour exécuter la recherche corrigée
+    function executeCorrectedSearch() {
+      const correctedQuery = document.getElementById("autocorrectionModal").getAttribute("data-corrected-query");
+      document.getElementById("searchInput").value = correctedQuery;
+      document.getElementById("autocorrectionModal").classList.add("hidden");
+
+      // Extraire la commande de recherche et les termes de recherche
+      if (correctedQuery.startsWith('/')) {
+        const parts = correctedQuery.substring(1).split(' ');
+        const command = parts[0].toLowerCase();
+        const searchTerms = parts.slice(1).join(' ');
+
+        const searchEngines = {
+          g: "https://www.google.com/search?q=",
+          yt: "https://www.youtube.com/results?search_query=",
+          gh: "https://github.com/search?q=",
+          w: "https://en.wikipedia.org/wiki/Special:Search?search=",
+          r: "https://www.reddit.com/search/?q=",
+          so: "https://stackoverflow.com/search?q=",
+          a: "https://www.amazon.fr/s?k=",
+          n: "https://www.netflix.com/search?q=",
+          sp: "https://open.spotify.com/search/results",
+          tw: "https://twitter.com/search?q=",
+          ig: "https://www.instagram.com/explore/tags/",
+          maps: "https://www.google.com/maps/search/",
+          i: "https://www.google.com/images?q=",
+          ddg: "https://duckduckgo.com/?q=",
+          px: "https://www.perplexity.ai/search?q=",
+        };
+
+        // Si la commande est valide, exécuter directement la recherche
+        if (searchEngines[command]) {
+          window.location.href = searchEngines[command] + encodeURIComponent(searchTerms);
+          return;
+        }
+      }
+
+      // Fallback: exécuter la recherche via handleSearch
+      handleSearch({ type: "click" });
+    }
+
+    function reloadShortcuts() {
+      const grid = document.getElementById("shortcutGrid");
+      const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+
+      // Supprimer tous les raccourcis existants mais garder le bouton d'ajout
+      const addRowButton = document.getElementById("addRowButton");
+      grid.innerHTML = '';
+
+      // Recréer les raccourcis
+      const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
+      for (let i = 0; i < shortcutCount; i++) {
+        grid.innerHTML += generateShortcut(i);
+      }
+
+      // Remettre le bouton d'ajout
+      grid.appendChild(addRowButton);
+
+      // Mettre à jour les raccourcis avec leurs données
+      Object.entries(shortcuts).forEach(([position, data]) => {
+        const shortcut = document.querySelector(`[data-position="${position}"]`);
+        if (shortcut) {
+          shortcut.href = data.url;
+          shortcut.onclick = (e) => {
+            e.preventDefault();
+            window.location.href = data.url;
           };
-          
-          // Si la commande est valide, exécuter directement la recherche
-          if (searchEngines[command]) {
-            window.location.href = searchEngines[command] + encodeURIComponent(searchTerms);
-            return;
-          }
-        }
-        
-        // Fallback: exécuter la recherche via handleSearch
-        handleSearch({type: "click"});
-      }
-      
-      function reloadShortcuts() {
-        const grid = document.getElementById("shortcutGrid");
-        const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
-        
-        // Supprimer tous les raccourcis existants mais garder le bouton d'ajout
-        const addRowButton = document.getElementById("addRowButton");
-        grid.innerHTML = '';
-        
-        // Recréer les raccourcis
-        const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
-        for (let i = 0; i < shortcutCount; i++) {
-          grid.innerHTML += generateShortcut(i);
-        }
-        
-        // Remettre le bouton d'ajout
-        grid.appendChild(addRowButton);
-      
-        // Mettre à jour les raccourcis avec leurs données
-        Object.entries(shortcuts).forEach(([position, data]) => {
-          const shortcut = document.querySelector(`[data-position="${position}"]`);
-          if (shortcut) {
-            shortcut.href = data.url;
-            shortcut.onclick = (e) => {
-              e.preventDefault();
-              window.location.href = data.url;
-            };
-            shortcut.querySelector(".shortcut-title").textContent = data.title;
-            const iconContainer = shortcut.querySelector(".shortcut-icon");
-            iconContainer.removeAttribute("data-empty");
-            iconContainer.innerHTML = `
+          shortcut.querySelector(".shortcut-title").textContent = data.title;
+          const iconContainer = shortcut.querySelector(".shortcut-icon");
+          iconContainer.removeAttribute("data-empty");
+          iconContainer.innerHTML = `
               <img src="${data.faviconUrl}" 
                  class="w-8 h-8 mt-2 mb-2 group-hover:scale-120 transition-transform duration-300" 
                  alt="${data.title}" 
-                 onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`; 
-          }
-        });
+                 onerror="this.src='data:image/svg+xml,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><text y=\'.9em\' font-size=\'90\'>🌐</text></svg>\'">`;
+        }
+      });
+    }
+
+    function switchTab(tab) {
+      // Don't do anything if we're already on the selected tab
+      if (localStorage.getItem("activeTab") === tab) {
+        return;
       }
 
-      function switchTab(tab) {
-        // Don't do anything if we're already on the selected tab
-        if (localStorage.getItem("activeTab") === tab) {
-          return;
-        }
+      // Update visual interface
+      document.getElementById("personalTab").classList.toggle("bg-white/60", tab === "personal");
+      document.getElementById("professionalTab").classList.toggle("bg-white/60", tab === "professional");
 
-        // Update visual interface
-        document.getElementById("personalTab").classList.toggle("bg-white/60", tab === "personal");
-        document.getElementById("professionalTab").classList.toggle("bg-white/60", tab === "professional");
+      // Save active tab
+      localStorage.setItem("activeTab", tab);
 
-        // Save active tab
-        localStorage.setItem("activeTab", tab);
+      // Load corresponding shortcuts
+      const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${tab}`) || "{}");
+      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-        // Load corresponding shortcuts
-        const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${tab}`) || "{}");
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      // Reload shortcuts        reloadShortcuts(); // Au lieu de reloadWithTransition()
+    }    </script>
+  <script src="aurora-animation.js"></script>
+</head>
 
-        // Reload shortcuts        reloadShortcuts(); // Au lieu de reloadWithTransition()
-      }    </script>
-    <script src="aurora-animation.js"></script>
-  </head>
-  <body class="min-h-screen font-sf">
-    <!-- Suppression du bouton hamburger pour le remplacer par une barre de navigation mobile en bas -->
+<body class="min-h-screen font-sf">
+  <!-- Suppression du bouton hamburger pour le remplacer par une barre de navigation mobile en bas -->
 
-    <div class="flex min-h-screen p-6">
-      <aside
-        id="sidebar"
-        class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 fixed lg:relative z-40 h-[calc(100vh-3rem)] overflow-y-auto hidden lg:block"
-      >
-        <div class="text-xl font-medium text-white mb-8">Quick Access</div>
+  <div class="flex min-h-screen p-6">
+    <aside id="sidebar"
+      class="w-72 backdrop-blur-xl bg-white/90 rounded-3xl p-6 space-y-4 shadow-2xl transition-all duration-300 mr-6 fixed lg:relative z-40 h-[calc(100vh-3rem)] overflow-y-auto hidden lg:block">
+      <div class="text-xl font-medium text-white mb-8">Quick Access</div>
 
-        <!--BOOKMARK SECTION-->
+      <!--BOOKMARK SECTION-->
 
-        <!-- <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
+      <!-- <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
           <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
             <path d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
           </svg>
@@ -787,852 +788,600 @@
         </div>
         -->
 
-        <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
-          <svg
-            class="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z"
-            />
-          </svg>
+      <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
+        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+          width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path
+            d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
+        </svg>
 
-          <h3 class="text-white font-medium text-lg">Onglets</h3>
-        </div>
-
-        <div
-          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
-          onclick="switchTab('personal')"
-          id="personalTab"
-        >
-          <svg
-            class="pl-2 w-9 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-            />
-          </svg>
-          <a id="perso" class="block w-full">Personnel</a>
-        </div>
-        <div
-          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
-          onclick="switchTab('professional')"
-          id="professionalTab"
-        >
-          <svg
-            class="pl-2 w-9 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <path
-              d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"
-            />
-          </svg>
-          <a id="pro" class="block w-full">Professionnel</a>
-        </div>
-        <!-- My apps section -->
-        <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
-          <svg
-            class="w-5 h-5 text-white"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
-            />
-          </svg>
-          <h3 class="text-white font-medium text-lg">Les liens de Kiki</h3>
-        </div>
-
-        <div
-        class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
-      >
-        <img
-          src="https://kbarbier.fr/wp-content/uploads/2025/03/cropped-Plan-de-travail-1@0.35x.png"
-          class="pl-2 w-9"
-          alt="KBARBIER.FR logo"
-        />
-        <a href="https://kbarbier.fr" class="block w-full"
-          >KBARBIER.FR</a
-        >
+        <h3 class="text-white font-medium text-lg">Onglets</h3>
       </div>
-        <div
-          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
-        >
-          <img
-            src="https://dev.kilianbarbier.fr/media/img/coolnotes_128.png"
-            class="pl-2 w-9"
-            alt="CoolNotes"
-          />
-          <a href="https://dev.kilianbarbier.fr" class="block w-full"
-            >CoolNotes</a
-          >
-        </div>
-        <div
-          class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
-        >
-          <img
-            src="https://dev.kilianbarbier.fr/media/img/coolnotes_128.png"
-            class="pl-2 w-9"
-            alt="CoolNotes"
-          />
-          <a href="https://dev.kilianbarbier.fr/fr" class="block w-full"
-            >CoolNotes FR</a
-          >
-        </div>      </aside>
 
-      <!-- Main Content -->      <main class="flex-1 flex flex-col lg:ml-72 pb-20 lg:pb-0">        <!-- Hello Kilian Title -->
-        <h1 class="aurora-svelte-container mx-auto mt-8">Hello Kilian</h1>
-        
-        <!-- Search Bar -->
-        <div
-          class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4 search-container relative z-30"
-        >
-          <div class="relative">            <button              id="currentSearch"
-              class="relative z-[999999] px-5 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center"
-            >
-              <span class="pr-3 shortcut-title font-sf" style="font-weight: 400"
-                >Rechercher sur :</span
-              >
-              <img
-                src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico"
-                class="w-6 h-6"
-                alt="Google"
-              />
-            </button>
-            <div
-              id="searchEngineDropdown"
-              style="
+      <div
+        class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
+        onclick="switchTab('personal')" id="personalTab">
+        <svg class="pl-2 w-9 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+        </svg>
+        <a id="perso" class="block w-full">Personnel</a>
+      </div>
+      <div
+        class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30"
+        onclick="switchTab('professional')" id="professionalTab">
+        <svg class="pl-2 w-9 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z" />
+        </svg>
+        <a id="pro" class="block w-full">Professionnel</a>
+      </div>
+      <!-- My apps section -->
+      <div class="mt-6 mb-2 pr-4 pt-4 pb-4 pl-2 flex items-center gap-2">
+        <svg class="w-5 h-5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+        </svg>
+        <h3 class="text-white font-medium text-lg">Les liens de Kiki</h3>
+      </div>
+
+      <div
+        class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30">
+        <img src="https://kbarbier.fr/wp-content/uploads/2025/03/cropped-Plan-de-travail-1@0.35x.png" class="pl-2 w-9"
+          alt="KBARBIER.FR logo" />
+        <a href="https://kbarbier.fr" class="block w-full">KBARBIER.FR</a>
+      </div>
+      <div
+        class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30">
+        <img src="https://dev.kilianbarbier.fr/media/img/coolnotes_128.png" class="pl-2 w-9" alt="CoolNotes" />
+        <a href="https://dev.kilianbarbier.fr" class="block w-full">CoolNotes</a>
+      </div>
+      <div
+        class="pr-4 pt-4 pb-4 pl-2 hover:bg-white/60 rounded-xl cursor-pointer text-white transition-all duration-300 flex items-center gap-3 bg-white/30">
+        <img src="https://dev.kilianbarbier.fr/media/img/coolnotes_128.png" class="pl-2 w-9" alt="CoolNotes" />
+        <a href="https://dev.kilianbarbier.fr/fr" class="block w-full">CoolNotes FR</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col lg:ml-72 pb-20 lg:pb-0"> <!-- Hello Kilian Title -->
+      <h1 class="aurora-svelte-container mx-auto mt-8">Hello Kilian</h1>
+
+      <!-- Search Bar -->
+      <div class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4 search-container relative z-30">
+        <div class="relative"> <button id="currentSearch"
+            class="relative z-[999999] px-5 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center">
+            <span class="pr-3 shortcut-title font-sf" style="font-weight: 400">Rechercher sur :</span>
+            <img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="w-6 h-6"
+              alt="Google" />
+          </button>
+          <div id="searchEngineDropdown" style="
                 background: #437cd9;
                 border: 1px solid #6897e2;
                 margin-top: 17px;
                 width: 325px;
-              "
-              class="hidden absolute top-full left-0 mt-2 rounded-xl p-3 grid grid-cols-4 gap-3"
-            >
-              <button class="search-option rounded-lg" data-value="g">
-                <img
-                  src="https://favicone.com/www.google.com?s=128"
-                  alt="Google"
-                />
-              </button>
-              <button class="search-option rounded-lg" data-value="yt">
-                <img
-                  src="https://dev.kilianbarbier.fr/media/img/youtube_logo.svg"
-                  alt="YouTube"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg flex items-center justify-center"
-                data-value="gh"
-              >
-                <img
-                  src="https://favicone.com/github.com?s=128"
-                  class="w-6 h-6"
-                  alt="GitHub"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="w"
-              >
-                <img
-                  src="https://favicone.com/wikipedia.org?s=128"
-                  class="w-6 h-6"
-                  alt="Wikipedia"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="r"
-              >
-                <img
-                  src="https://favicone.com/www.reddit.com?s=128"
-                  class="w-6 h-6"
-                  alt="Reddit"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="so"
-              >
-                <img
-                  src="https://favicone.com/stackoverflow.com?s=128"
-                  class="w-6 h-6"
-                  alt="Stack"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="a"
-              >
-                <img
-                  src="https://favicone.com/www.amazon.com?s=128"
-                  class="w-6 h-6"
-                  alt="Amazon"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="n"
-              >
-                <img
-                  src="https://favicone.com/www.netflix.com?s=128"
-                  class="w-6 h-6"
-                  alt="Netflix"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="sp"
-              >
-                <img
-                  src="https://favicone.com/open.spotify.com?s=128"
-                  class="w-6 h-6"
-                  alt="Spotify"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="tw"
-              >
-                <img
-                  src="https://favicone.com/twitter.com?s=128"
-                  class="w-6 h-6"
-                  alt="Twitter"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="ig"
-              >
-                <img
-                  src="https://favicone.com/www.instagram.com?s=128"
-                  class="w-6 h-6"
-                  alt="Instagram"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="maps"
-              >
-                <img
-                  src="https://favicone.com/maps.google.com?s=128"
-                  class="w-6 h-6"
-                  alt="Maps"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="i"
-              >
-                <img
-                src="https://dev.kilianbarbier.fr/media/img/google_img_logo.svg"
-                class="w-6 h-6"
-                  alt="Images"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="ddg"
-              >
-                <img
-                  src="https://favicone.com/duckduckgo.com?s=128"
-                  class="w-6 h-6"
-                  alt="DuckDuckGo"
-                />
-              </button>
-              <button
-                class="search-option p-2 rounded-lg backdrop-blur-3xl"
-                data-value="px"
-              >
-                <img
-                  src="https://favicone.com/www.perplexity.ai?s=128"
-                  class="w-6 h-6"
-                  alt="Perplexity"
-                />
-              </button>
-            </div>
-            <select id="searchEngine" class="hidden">
-              <option value="g">Google</option>
-              <option value="yt">YouTube</option>
-              <option value="gh">GitHub</option>
-              <!-- ... garder les valeurs pour la fonctionnalité de recherche ... -->
-            </select>
+              " class="hidden absolute top-full left-0 mt-2 rounded-xl p-3 grid grid-cols-4 gap-3">
+            <button class="search-option rounded-lg" data-value="g">
+              <img src="https://favicone.com/www.google.com?s=128" alt="Google" />
+            </button>
+            <button class="search-option rounded-lg" data-value="yt">
+              <img src="https://dev.kilianbarbier.fr/media/img/youtube_logo.svg" alt="YouTube" />
+            </button>
+            <button class="search-option p-2 rounded-lg flex items-center justify-center" data-value="gh">
+              <img src="https://favicone.com/github.com?s=128" class="w-6 h-6" alt="GitHub" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="w">
+              <img src="https://favicone.com/wikipedia.org?s=128" class="w-6 h-6" alt="Wikipedia" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="r">
+              <img src="https://favicone.com/www.reddit.com?s=128" class="w-6 h-6" alt="Reddit" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="so">
+              <img src="https://favicone.com/stackoverflow.com?s=128" class="w-6 h-6" alt="Stack" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="a">
+              <img src="https://favicone.com/www.amazon.com?s=128" class="w-6 h-6" alt="Amazon" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="n">
+              <img src="https://favicone.com/www.netflix.com?s=128" class="w-6 h-6" alt="Netflix" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="sp">
+              <img src="https://favicone.com/open.spotify.com?s=128" class="w-6 h-6" alt="Spotify" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="tw">
+              <img src="https://favicone.com/twitter.com?s=128" class="w-6 h-6" alt="Twitter" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="ig">
+              <img src="https://favicone.com/www.instagram.com?s=128" class="w-6 h-6" alt="Instagram" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="maps">
+              <img src="https://favicone.com/maps.google.com?s=128" class="w-6 h-6" alt="Maps" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="i">
+              <img src="https://dev.kilianbarbier.fr/media/img/google_img_logo.svg" class="w-6 h-6" alt="Images" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="ddg">
+              <img src="https://favicone.com/duckduckgo.com?s=128" class="w-6 h-6" alt="DuckDuckGo" />
+            </button>
+            <button class="search-option p-2 rounded-lg backdrop-blur-3xl" data-value="px">
+              <img src="https://favicone.com/www.perplexity.ai?s=128" class="w-6 h-6" alt="Perplexity" />
+            </button>
           </div>
-
-          <script>
-            document
-              .getElementById("currentSearch")
-              .addEventListener("click", () => {
-                const dropdown = document.getElementById(
-                  "searchEngineDropdown"
-                );
-                dropdown.classList.toggle("hidden");
-              });
-
-            document.querySelectorAll(".search-option").forEach((option) => {
-              option.addEventListener("click", (e) => {
-                const value = e.currentTarget.dataset.value;
-                const img = e.currentTarget.querySelector("img");
-
-                // Mettre à jour l'icône visible
-                document.querySelector("#currentSearch img").src = img.src;
-
-                // Mettre à jour le select caché
-                document.getElementById("searchEngine").value = value;
-
-                // Ajouter la commande au début de la recherche
-                const searchInput = document.getElementById("searchInput");
-                const currentText = searchInput.value.trim();
-
-                // Si le texte commence déjà par une commande, on la remplace
-                let newText = currentText;
-                if (currentText.startsWith("/")) {
-                  // Correction ici : startswith -> startsWith
-                  const parts = currentText.substring(1).split(" ");
-                  const possibleCommand = parts[0].toLowerCase();
-                  // Liste des commandes valides (doit correspondre à handleSearch)
-                  const validCommands = [
-                    "g",
-                    "yt",
-                    "gh",
-                    "w",
-                    "r",
-                    "so",
-                    "a",
-                    "n",
-                    "sp",
-                    "tw",
-                    "ig",
-                    "maps",
-                    "i",
-                  ];
-                  if (validCommands.includes(possibleCommand)) {
-                    // Prendre tout sauf la commande
-                    newText = parts.slice(1).join(" ");
-                  }
-                }
-
-                // Garantir qu'il y a toujours un espace après la commande si newText n'est pas vide
-                if (newText.length > 0) {
-                  searchInput.value = `/${value} ${newText}`;
-                } else {
-                  // Si pas de texte, ajouter juste la commande avec un espace à la fin pour faciliter la saisie
-                  searchInput.value = `/${value} `;
-                }
-
-                // Fermer le dropdown
-                document
-                  .getElementById("searchEngineDropdown")
-                  .classList.add("hidden");
-
-                // Remettre le focus sur le champ de recherche
-                searchInput.focus();
-                // Placer le curseur à la fin du texte
-                searchInput.selectionStart = searchInput.value.length;
-                searchInput.selectionEnd = searchInput.value.length;
-              });
-            });
-
-            // Fermer le dropdown si on clique ailleurs
-            document.addEventListener("click", (e) => {
-              if (!e.target.closest(".relative")) {
-                document
-                  .getElementById("searchEngineDropdown")
-                  .classList.add("hidden");
-              }
-            });
-
-            // Assurons-nous que le bouton de recherche déclenche la recherche avec le moteur sélectionné
-            document
-              .querySelector(".absolute svg")
-              .addEventListener("click", function (event) {
-                handleSearch(event);
-              });
-
-            // S'assurer que le document est prêt
-            document.addEventListener("DOMContentLoaded", () => {
-              // Réinitialiser les écouteurs pour la recherche afin d'éviter des doublons
-              const searchInput = document.getElementById("searchInput");
-              const searchIcon = document.querySelector(".absolute svg");
-
-              // Supprimer les écouteurs existants s'il y en a
-              searchInput.removeEventListener("keydown", handleSearch);
-              searchIcon.removeEventListener("click", handleSearch);
-
-              // Ajouter les nouveaux écouteurs
-              searchInput.addEventListener("keydown", handleSearch);
-              searchIcon.addEventListener("click", handleSearch);
-            });
-          </script>
-          <div class="relative flex-1">
-            <input
-              type="text"
-              placeholder="Search..."
-              id="searchInput"
-              class="w-full px-6 py-4 rounded-2xl shadow-lg border-0 bg-white/90 backdrop-blur-xl text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-400/30 transition-all duration-300 placeholder-white/50"
-            />
-            <svg
-              class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-white"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="{2}"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-          <button
-            onclick="showSearchHelp()"
-            class="text-white hover:text-white/80 text-xl font-medium w-10 h-10 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center hover:bg-white/30 transition-all duration-300"
-          >
-            ?
-          </button>
-        </div>
-
-        <!-- Grid Shortcuts -->
-        <div
-          id="shortcutGrid"
-          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-5xl mx-auto w-full"
-        ></div>
-
-        <!-- Configuration Modal simplifié -->
-        <div
-          id="configModal"
-          class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center"
-        >
-          <div
-            class="modal-content bg-white/95 rounded-2xl p-6 w-96 shadow-2xl backdrop-blur-xl"
-          >
-            <h2 class="text-2xl font-bold mb-4 text-gray-900">Ajouter un raccourci</h2>
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700"
-                  >Titre</label
-                >
-                <input
-                  type="text"
-                  id="shortcutTitle"
-                  oninput="validateForm()"
-                  placeholder="Facebook"
-                  class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700"
-                  >URL</label
-                >
-                <input
-                  type="url"
-                  id="shortcutUrl"
-                  oninput="validateForm()"
-                  placeholder="facebook.com"
-                  class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400"
-                />
-                <p id="urlError" class="mt-1 text-sm text-red-500 hidden">
-                  Veuillez entrer une URL valide (ex: google.com)
-                </p>
-              </div>
-              <div class="flex justify-end gap-2 mt-6">
-                <button
-                  onclick="closeConfigModal()"
-                  class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300"
-                >
-                  Annuler
-                </button>
-                <button
-                  id="saveButton"
-                  onclick="saveShortcut()"
-                  disabled
-                  class="px-4 py-2 rounded-lg bg-blue-400/80 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500/80"
-                >
-                    <span class="flex items-center gap-2 font-medium">
-                    <svg class="animate-spin h-4 w-4 text-white hidden" id="saveSpinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span id="saveText">Ajouter</span>
-                    </span></span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <select id="searchEngine" class="hidden">
+            <option value="g">Google</option>
+            <option value="yt">YouTube</option>
+            <option value="gh">GitHub</option>
+            <!-- ... garder les valeurs pour la fonctionnalité de recherche ... -->
+          </select>
         </div>
 
         <script>
-          // Liste des extensions de domaine courantes
-          const validTLDs = [
-            "com",
-            "net",
-            "org",
-            "edu",
-            "gov",
-            "mil",
-            "io",
-            "co",
-            "ai",
-            "app",
-            "dev",
-            "me",
-            "tv",
-            "info",
-            "biz",
-            "name",
-            "mobi",
-            "pro",
-            "travel",
-            // Domaines nationaux courants
-            "fr",
-            "uk",
-            "de",
-            "it",
-            "es",
-            "nl",
-            "ru",
-            "cn",
-            "jp",
-            "kr",
-            "br",
-            "au",
-            "ca",
-            "in",
-            "eu",
-          ];
+          document
+            .getElementById("currentSearch")
+            .addEventListener("click", () => {
+              const dropdown = document.getElementById(
+                "searchEngineDropdown"
+              );
+              dropdown.classList.toggle("hidden");
+            });
 
-          function isValidUrl(string) {
-            try {
-              const url = string.trim();
-              if (!url) return false;
+          document.querySelectorAll(".search-option").forEach((option) => {
+            option.addEventListener("click", (e) => {
+              const value = e.currentTarget.dataset.value;
+              const img = e.currentTarget.querySelector("img");
 
-              // Ajouter https:// si nécessaire
-              const urlToTest = url.match(/^https?:\/\//i)
-                ? url
-                : `https://${url}`;
-              const urlObj = new URL(urlToTest);
+              // Mettre à jour l'icône visible
+              document.querySelector("#currentSearch img").src = img.src;
 
-              // Vérifier le hostname
-              const parts = urlObj.hostname.split(".");
-              if (parts.length < 2) return false;
+              // Mettre à jour le select caché
+              document.getElementById("searchEngine").value = value;
 
-              // Vérifier que l'extension respecte le format standard
-              // Une extension est typiquement 2-12 caractères et contient uniquement des lettres
-              const tld = parts[parts.length - 1].toLowerCase();
-              return /^[a-z]{2,12}$/.test(tld);
-            } catch (err) {
-              return false;
+              // Ajouter la commande au début de la recherche
+              const searchInput = document.getElementById("searchInput");
+              const currentText = searchInput.value.trim();
+
+              // Si le texte commence déjà par une commande, on la remplace
+              let newText = currentText;
+              if (currentText.startsWith("/")) {
+                // Correction ici : startswith -> startsWith
+                const parts = currentText.substring(1).split(" ");
+                const possibleCommand = parts[0].toLowerCase();
+                // Liste des commandes valides (doit correspondre à handleSearch)
+                const validCommands = [
+                  "g",
+                  "yt",
+                  "gh",
+                  "w",
+                  "r",
+                  "so",
+                  "a",
+                  "n",
+                  "sp",
+                  "tw",
+                  "ig",
+                  "maps",
+                  "i",
+                ];
+                if (validCommands.includes(possibleCommand)) {
+                  // Prendre tout sauf la commande
+                  newText = parts.slice(1).join(" ");
+                }
+              }
+
+              // Garantir qu'il y a toujours un espace après la commande si newText n'est pas vide
+              if (newText.length > 0) {
+                searchInput.value = `/${value} ${newText}`;
+              } else {
+                // Si pas de texte, ajouter juste la commande avec un espace à la fin pour faciliter la saisie
+                searchInput.value = `/${value} `;
+              }
+
+              // Fermer le dropdown
+              document
+                .getElementById("searchEngineDropdown")
+                .classList.add("hidden");
+
+              // Remettre le focus sur le champ de recherche
+              searchInput.focus();
+              // Placer le curseur à la fin du texte
+              searchInput.selectionStart = searchInput.value.length;
+              searchInput.selectionEnd = searchInput.value.length;
+            });
+          });
+
+          // Fermer le dropdown si on clique ailleurs
+          document.addEventListener("click", (e) => {
+            if (!e.target.closest(".relative")) {
+              document
+                .getElementById("searchEngineDropdown")
+                .classList.add("hidden");
             }
-          }
+          });
 
-          // Fonction de validation améliorée
-          function validateForm() {
-            const title = document.getElementById("shortcutTitle").value.trim();
-            const url = document.getElementById("shortcutUrl").value.trim();
-            const saveButton = document.getElementById("saveButton");
-            const urlError = document.getElementById("urlError");
+          // Assurons-nous que le bouton de recherche déclenche la recherche avec le moteur sélectionné
+          document
+            .querySelector(".absolute svg")
+            .addEventListener("click", function (event) {
+              handleSearch(event);
+            });
 
-            const isTitleValid = title.length > 0;
-            const isUrlValid = isValidUrl(url);
+          // S'assurer que le document est prêt
+          document.addEventListener("DOMContentLoaded", () => {
+            // Réinitialiser les écouteurs pour la recherche afin d'éviter des doublons
+            const searchInput = document.getElementById("searchInput");
+            const searchIcon = document.querySelector(".absolute svg");
 
-            // Afficher/masquer le message d'erreur
-            if (url && !isUrlValid) {
-              urlError.classList.remove("hidden");
-            } else {
-              urlError.classList.add("hidden");
-            }
+            // Supprimer les écouteurs existants s'il y en a
+            searchInput.removeEventListener("keydown", handleSearch);
+            searchIcon.removeEventListener("click", handleSearch);
 
-            saveButton.disabled = !isTitleValid || !isUrlValid;
-          }
-
-          // Modification de openConfigModal pour réinitialiser l'état du bouton
-          function openConfigModal(position) {
-            const modal = document.getElementById("configModal");
-            modal.setAttribute("data-position", position);
-
-            document.getElementById("shortcutTitle").value = "";
-            document.getElementById("shortcutUrl").value = "";
-            document.getElementById("saveButton").disabled = true;
-
-            modal.classList.remove("hidden");
-            document.getElementById("shortcutTitle").focus();
-          }
+            // Ajouter les nouveaux écouteurs
+            searchInput.addEventListener("keydown", handleSearch);
+            searchIcon.addEventListener("click", handleSearch);
+          });
         </script>
-        <div
-          id="contextMenu"
-          class="hidden fixed rounded-lg shadow-2xl min-w-[150px] z-50 bg-black/40 backdrop-blur-xl border border-white/10"
-        >
-          <button
-            onclick="editShortcut(document.getElementById('contextMenu').getAttribute('data-position'))"
-            class="w-full border-t-0 border-r-0 border-l-0 border-b-0 px-4 py-4 text-left hover:bg-white/10 text-gray-200 transition-colors duration-200 transform hover:translate-y-0"
-            style="border-top-left-radius: 8px; border-top-right-radius: 8px;"
-          >
-            Edit Shortcut
-          </button>
-          <button
-            onclick="deleteShortcut()"
-            class="w-full border-b-0 border-r-0 border-l-0 px-4 py-4 text-left hover:bg-red-500/20 text-red-300 transition-colors duration-200 transform hover:translate-y-0"
-            style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;"
-            >
-            Delete Shortcut
-          </button>
+        <div class="relative flex-1">
+          <input type="text" placeholder="Search..." id="searchInput"
+            class="w-full px-6 py-4 rounded-2xl shadow-lg border-0 bg-white/90 backdrop-blur-xl text-white text-lg focus:outline-none focus:ring-2 focus:ring-blue-400/30 transition-all duration-300 placeholder-white/50" />
+          <svg class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-white" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="{2}"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
+        <button onclick="showSearchHelp()"
+          class="text-white hover:text-white/80 text-xl font-medium w-10 h-10 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center hover:bg-white/30 transition-all duration-300">
+          ?
+        </button>
+      </div>
 
-        <!-- Add search help modal -->
-        <div
-          id="searchHelpModal"
-          class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center z-50"
-        >
-          <div
-            class="bg-white/95 rounded-2xl p-6 w-[500px] shadow-2xl backdrop-blur-xl"
-          >
-            <h2 class="text-2xl font-bold mb-4 text-white">Commandes de recherche</h2>
-            <div class="grid grid-cols-2 gap-4 text-white">
-              <div>
-                <p><strong>&#47;g</strong> - Google</p>
-                <p><strong>&#47;yt</strong> - YouTube</p>
-                <p><strong>&#47;gh</strong> - GitHub</p>
-                <p><strong>&#47;w</strong> - Wikipedia</p>
-                <p><strong>&#47;r</strong> - Reddit</p>
-                <p><strong>&#47;so</strong> - Stack Overflow</p>
-                <p><strong>&#47;i</strong> - Google Images</p>
-                <p><strong>&#47;ddg</strong> - DuckDuckGo</p>
-                <p><strong>&#47;px</strong> - Perplexity AI</p>
-              </div>
-              <div>
-                <p><strong>&#47;a</strong> - Amazon</p>
-                <p><strong>&#47;n</strong> - Netflix</p>
-                <p><strong>&#47;sp</strong> - Spotify</p>
-                <p><strong>&#47;tw</strong> - Twitter</p>
-                <p><strong>&#47;ig</strong> - Instagram Tags</p>
-                <p><strong>&#47;maps</strong> - Google Maps</p>
-              </div>
+      <!-- Grid Shortcuts -->
+      <div id="shortcutGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-5xl mx-auto w-full">
+      </div>
+
+      <!-- Configuration Modal simplifié -->
+      <div id="configModal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center">
+        <div class="modal-content bg-white/95 rounded-2xl p-6 w-96 shadow-2xl backdrop-blur-xl">
+          <h2 class="text-2xl font-bold mb-4 text-gray-900">Ajouter un raccourci</h2>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Titre</label>
+              <input type="text" id="shortcutTitle" oninput="validateForm()" placeholder="Facebook"
+                class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400" />
             </div>
-            <div class="mt-6 text-white/80">
-              <p>Exemple: <code>/yt chats mignons</code>, recherche directement sur Youtube "chats mignons".</p>
-              <p>
-                Astuce: Utilise un slash (/) avant une commande, ou bien tape juste ta recherche pour rechercher avec Google
+            <div>
+              <label class="block text-sm font-medium text-gray-700">URL</label>
+              <input type="url" id="shortcutUrl" oninput="validateForm()" placeholder="facebook.com"
+                class="mt-1 w-full rounded-lg px-3 py-2 text-gray-900 bg-gray-50 placeholder-gray-400" />
+              <p id="urlError" class="mt-1 text-sm text-red-500 hidden">
+                Veuillez entrer une URL valide (ex: google.com)
               </p>
             </div>
-            <button
-              onclick="closeSearchHelp()"
-              class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-white"
-            >
-              Close
+            <div class="flex justify-end gap-2 mt-6">
+              <button onclick="closeConfigModal()"
+                class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">
+                Annuler
+              </button>
+              <button id="saveButton" onclick="saveShortcut()" disabled
+                class="px-4 py-2 rounded-lg bg-blue-400/80 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-500/80">
+                <span class="flex items-center gap-2 font-medium">
+                  <svg class="animate-spin h-4 w-4 text-white hidden" id="saveSpinner"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                  </svg>
+                  <span id="saveText">Ajouter</span>
+                </span></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Liste des extensions de domaine courantes
+        const validTLDs = [
+          "com",
+          "net",
+          "org",
+          "edu",
+          "gov",
+          "mil",
+          "io",
+          "co",
+          "ai",
+          "app",
+          "dev",
+          "me",
+          "tv",
+          "info",
+          "biz",
+          "name",
+          "mobi",
+          "pro",
+          "travel",
+          // Domaines nationaux courants
+          "fr",
+          "uk",
+          "de",
+          "it",
+          "es",
+          "nl",
+          "ru",
+          "cn",
+          "jp",
+          "kr",
+          "br",
+          "au",
+          "ca",
+          "in",
+          "eu",
+        ];
+
+        function isValidUrl(string) {
+          try {
+            const url = string.trim();
+            if (!url) return false;
+
+            // Ajouter https:// si nécessaire
+            const urlToTest = url.match(/^https?:\/\//i)
+              ? url
+              : `https://${url}`;
+            const urlObj = new URL(urlToTest);
+
+            // Vérifier le hostname
+            const parts = urlObj.hostname.split(".");
+            if (parts.length < 2) return false;
+
+            // Vérifier que l'extension respecte le format standard
+            // Une extension est typiquement 2-12 caractères et contient uniquement des lettres
+            const tld = parts[parts.length - 1].toLowerCase();
+            return /^[a-z]{2,12}$/.test(tld);
+          } catch (err) {
+            return false;
+          }
+        }
+
+        // Fonction de validation améliorée
+        function validateForm() {
+          const title = document.getElementById("shortcutTitle").value.trim();
+          const url = document.getElementById("shortcutUrl").value.trim();
+          const saveButton = document.getElementById("saveButton");
+          const urlError = document.getElementById("urlError");
+
+          const isTitleValid = title.length > 0;
+          const isUrlValid = isValidUrl(url);
+
+          // Afficher/masquer le message d'erreur
+          if (url && !isUrlValid) {
+            urlError.classList.remove("hidden");
+          } else {
+            urlError.classList.add("hidden");
+          }
+
+          saveButton.disabled = !isTitleValid || !isUrlValid;
+        }
+
+        // Modification de openConfigModal pour réinitialiser l'état du bouton
+        function openConfigModal(position) {
+          const modal = document.getElementById("configModal");
+          modal.setAttribute("data-position", position);
+
+          document.getElementById("shortcutTitle").value = "";
+          document.getElementById("shortcutUrl").value = "";
+          document.getElementById("saveButton").disabled = true;
+
+          modal.classList.remove("hidden");
+          document.getElementById("shortcutTitle").focus();
+        }
+      </script>
+      <div id="contextMenu"
+        class="hidden fixed rounded-lg shadow-2xl min-w-[150px] z-50 bg-black/40 backdrop-blur-xl border border-white/10">
+        <button onclick="editShortcut(document.getElementById('contextMenu').getAttribute('data-position'))"
+          class="w-full border-t-0 border-r-0 border-l-0 border-b-0 px-4 py-4 text-left hover:bg-white/10 text-gray-200 transition-colors duration-200 transform hover:translate-y-0"
+          style="border-top-left-radius: 8px; border-top-right-radius: 8px;">
+          Edit Shortcut
+        </button>
+        <button onclick="deleteShortcut()"
+          class="w-full border-b-0 border-r-0 border-l-0 px-4 py-4 text-left hover:bg-red-500/20 text-red-300 transition-colors duration-200 transform hover:translate-y-0"
+          style="border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+          Delete Shortcut
+        </button>
+      </div>
+
+      <!-- Add search help modal -->
+      <div id="searchHelpModal"
+        class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center z-50">
+        <div class="bg-white/95 rounded-2xl p-6 w-[500px] shadow-2xl backdrop-blur-xl">
+          <h2 class="text-2xl font-bold mb-4 text-white">Commandes de recherche</h2>
+          <div class="grid grid-cols-2 gap-4 text-white">
+            <div>
+              <p><strong>&#47;g</strong> - Google</p>
+              <p><strong>&#47;yt</strong> - YouTube</p>
+              <p><strong>&#47;gh</strong> - GitHub</p>
+              <p><strong>&#47;w</strong> - Wikipedia</p>
+              <p><strong>&#47;r</strong> - Reddit</p>
+              <p><strong>&#47;so</strong> - Stack Overflow</p>
+              <p><strong>&#47;i</strong> - Google Images</p>
+              <p><strong>&#47;ddg</strong> - DuckDuckGo</p>
+              <p><strong>&#47;px</strong> - Perplexity AI</p>
+            </div>
+            <div>
+              <p><strong>&#47;a</strong> - Amazon</p>
+              <p><strong>&#47;n</strong> - Netflix</p>
+              <p><strong>&#47;sp</strong> - Spotify</p>
+              <p><strong>&#47;tw</strong> - Twitter</p>
+              <p><strong>&#47;ig</strong> - Instagram Tags</p>
+              <p><strong>&#47;maps</strong> - Google Maps</p>
+            </div>
+          </div>
+          <div class="mt-6 text-white/80">
+            <p>Exemple: <code>/yt chats mignons</code>, recherche directement sur Youtube "chats mignons".</p>
+            <p>
+              Astuce: Utilise un slash (/) avant une commande, ou bien tape juste ta recherche pour rechercher avec
+              Google
+            </p>
+          </div>
+          <button onclick="closeSearchHelp()" class="mt-6 px-4 py-2 bg-white/20 hover:bg-white/30 rounded text-white">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <!-- Popup d'autocorrection -->
+      <div id="autocorrectionModal"
+        class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center z-50">
+        <div class="bg-white/95 rounded-2xl p-6 w-[500px] shadow-2xl backdrop-blur-xl">
+          <h2 class="text-2xl font-bold mb-4 text-white">Suggestion de correction</h2>
+          <div class="text-white mb-6">
+            <p>Vous avez saisi : <span id="originalQuery" class="font-semibold"></span></p>
+            <p class="mt-3">Vouliez-vous chercher : <span id="correctedQuery" class="font-semibold"></span> ?</p>
+            <p class="mt-2 text-white/70 text-sm">La recherche sera effectuée sur Amazon</p>
+          </div>
+          <div class="flex justify-end gap-3">
+            <button onclick="executeOriginalSearch()"
+              class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white">
+              Non
+            </button>
+            <button onclick="executeCorrectedSearch()"
+              class="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 rounded-lg text-white">
+              Oui
             </button>
           </div>
         </div>
-
-        <!-- Popup d'autocorrection -->
-        <div
-          id="autocorrectionModal"
-          class="hidden fixed inset-0 bg-black/40 backdrop-blur-xl flex items-center justify-center z-50"
-        >
-          <div
-            class="bg-white/95 rounded-2xl p-6 w-[500px] shadow-2xl backdrop-blur-xl"
-          >
-            <h2 class="text-2xl font-bold mb-4 text-white">Suggestion de correction</h2>
-            <div class="text-white mb-6">
-              <p>Vous avez saisi : <span id="originalQuery" class="font-semibold"></span></p>
-              <p class="mt-3">Vouliez-vous chercher : <span id="correctedQuery" class="font-semibold"></span> ?</p>
-              <p class="mt-2 text-white/70 text-sm">La recherche sera effectuée sur Amazon</p>
-            </div>
-            <div class="flex justify-end gap-3">
-              <button
-                onclick="executeOriginalSearch()"
-                class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white"
-              >
-                Non
-              </button>
-              <button
-                onclick="executeCorrectedSearch()"
-                class="px-4 py-2 bg-blue-500/80 hover:bg-blue-600/80 rounded-lg text-white"
-              >
-                Oui
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <script>
-          function showSearchHelp() {
-            document
-              .getElementById("searchHelpModal")
-              .classList.remove("hidden");
-          }
-
-          function closeSearchHelp() {
-            document.getElementById("searchHelpModal").classList.add("hidden");
-          }
-        </script>
-      </main>
-    </div>
-
-    <!-- Navigation bar mobile en bas de l'écran -->
-    <nav
-      id="mobileNavBar"
-      class="fixed bottom-0 left-0 right-0 bg-black/60 backdrop-blur-xl p-2 z-50 lg:hidden"
-    >
-      <div class="flex justify-center items-center">
-        <div class="flex items-center gap-5">
-          <button
-            id="showSidebar"
-            class="flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl"
-          >
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-              ></path>
-            </svg>
-            <span class="text-xs">Accès rapide</span>
-          </button>
-          <button
-            onclick="showSearchHelp()"
-            class="mr-2 flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl"
-          >
-            <span
-              class="text-xl font-medium w-6 h-6 flex items-center justify-center"
-              >?</span
-            >
-            <span class="text-xs">Centre d'aide</span>
-          </button>
-        </div>
       </div>
-    </nav>
 
-    <!-- Ajout d'un modal pour afficher la sidebar sur mobile -->
-    <div
-      id="sidebarModal"
-      class="fixed inset-0 bg-black/40 backdrop-blur-md z-[60] hidden"
-    >
-      <div
-        class="fixed bottom-0 inset-x-0 rounded-t-3xl bg-white/90 backdrop-blur-xl p-6 shadow-2xl max-h-[80vh] overflow-y-auto transition-transform duration-300 transform translate-y-0"
-      >
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-medium text-white">Accès rapide</h2>
-          <button
-            id="closeSidebar"
-            class="p-2 text-white rounded-full bg-white/20 hover:bg-white/30"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          </button>
-        </div>
-        <div id="sidebarContent" class="space-y-4">
-          <!-- Le contenu de la sidebar sera cloné ici via JavaScript -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Ajout des styles pour le menu mobile -->
-    <style>
-      @media (min-width: 1024px) {
-        main {
-          margin-left: 0 !important;
+      <script>
+        function showSearchHelp() {
+          document
+            .getElementById("searchHelpModal")
+            .classList.remove("hidden");
         }
+
+        function closeSearchHelp() {
+          document.getElementById("searchHelpModal").classList.add("hidden");
+        }
+      </script>
+    </main>
+  </div>
+
+  <!-- Navigation bar mobile en bas de l'écran -->
+  <nav id="mobileNavBar" class="fixed bottom-0 left-0 right-0 bg-black/60 backdrop-blur-xl p-2 z-50 lg:hidden">
+    <div class="flex justify-center items-center">
+      <div class="flex items-center gap-5">
+        <button id="showSidebar"
+          class="flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z">
+            </path>
+          </svg>
+          <span class="text-xs">Accès rapide</span>
+        </button>
+        <button onclick="showSearchHelp()"
+          class="mr-2 flex flex-col items-center py-1 px-3 text-white/80 hover:text-white transition-colors rounded-xl">
+          <span class="text-xl font-medium w-6 h-6 flex items-center justify-center">?</span>
+          <span class="text-xs">Centre d'aide</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Ajout d'un modal pour afficher la sidebar sur mobile -->
+  <div id="sidebarModal" class="fixed inset-0 bg-black/40 backdrop-blur-md z-[60] hidden">
+    <div
+      class="fixed bottom-0 inset-x-0 rounded-t-3xl bg-white/90 backdrop-blur-xl p-6 shadow-2xl max-h-[80vh] overflow-y-auto transition-transform duration-300 transform translate-y-0">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-medium text-white">Accès rapide</h2>
+        <button id="closeSidebar" class="p-2 text-white rounded-full bg-white/20 hover:bg-white/30">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div id="sidebarContent" class="space-y-4">
+        <!-- Le contenu de la sidebar sera cloné ici via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Ajout des styles pour le menu mobile -->
+  <style>
+    @media (min-width: 1024px) {
+      main {
+        margin-left: 0 !important;
       }
+    }
 
-      /* Add these new styles for the tooltip */
-      .shortcut-container {
-        position: relative;
-      }
+    /* Add these new styles for the tooltip */
+    .shortcut-container {
+      position: relative;
+    }
 
-      .shortcut-container::before {
-        content: "Clic droit pour éditer ou supprimer";
-        position: absolute;
-        top: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        pointer-events: none;
-        white-space: nowrap;
-        backdrop-filter: blur(4px);
-      }
+    .shortcut-container::before {
+      content: "Clic droit pour éditer ou supprimer";
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+    }
 
-      .shortcut-container:hover::before {
-        opacity: 1;
-      }
-    </style>
+    .shortcut-container:hover::before {
+      opacity: 1;
+    }
+  </style>
 
-    <!-- Script pour cloner le contenu de la sidebar dans le modal mobile -->
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Cloner le contenu de la sidebar pour le modal mobile
-        const sidebarChildren = document.querySelectorAll(
-          "#sidebar > *:not(:first-child)"
-        );
-        const sidebarContent = document.getElementById("sidebarContent");
+  <!-- Script pour cloner le contenu de la sidebar dans le modal mobile -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Cloner le contenu de la sidebar pour le modal mobile
+      const sidebarChildren = document.querySelectorAll(
+        "#sidebar > *:not(:first-child)"
+      );
+      const sidebarContent = document.getElementById("sidebarContent");
 
-        sidebarChildren.forEach((child) => {
-          sidebarContent.appendChild(child.cloneNode(true));
-        });
-
-        // Gestion de l'affichage du modal
-        const showSidebarBtn = document.getElementById("showSidebar");
-        const closeSidebarBtn = document.getElementById("closeSidebar");
-        const sidebarModal = document.getElementById("sidebarModal");
-
-        showSidebarBtn.addEventListener("click", function () {
-          sidebarModal.classList.remove("hidden");
-          document.body.style.overflow = "hidden"; // Empêcher le défilement du body
-        });
-
-        closeSidebarBtn.addEventListener("click", function () {
-          sidebarModal.classList.add("hidden");
-          document.body.style.overflow = ""; // Réactiver le défilement
-        });
-
-        // Fermer le modal si on clique en dehors du contenu
-        sidebarModal.addEventListener("click", function (e) {
-          if (e.target === sidebarModal) {
-            sidebarModal.classList.add("hidden");
-            document.body.style.overflow = "";
-          }        });
+      sidebarChildren.forEach((child) => {
+        sidebarContent.appendChild(child.cloneNode(true));
       });
-    </script>
-    <script src="aurora-svelte.js"></script>
-  </body>
+
+      // Gestion de l'affichage du modal
+      const showSidebarBtn = document.getElementById("showSidebar");
+      const closeSidebarBtn = document.getElementById("closeSidebar");
+      const sidebarModal = document.getElementById("sidebarModal");
+
+      showSidebarBtn.addEventListener("click", function () {
+        sidebarModal.classList.remove("hidden");
+        document.body.style.overflow = "hidden"; // Empêcher le défilement du body
+      });
+
+      closeSidebarBtn.addEventListener("click", function () {
+        sidebarModal.classList.add("hidden");
+        document.body.style.overflow = ""; // Réactiver le défilement
+      });
+
+      // Fermer le modal si on clique en dehors du contenu
+      sidebarModal.addEventListener("click", function (e) {
+        if (e.target === sidebarModal) {
+          sidebarModal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+      });
+    });
+  </script>
+  <script src="aurora-svelte.js"></script>
+</body>
+
 </html>
