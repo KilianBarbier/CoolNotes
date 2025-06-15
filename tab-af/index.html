@@ -288,24 +288,24 @@
       // Supprimer le raccourci des données stockées
       delete shortcuts[position];
       
-      // Récupérer le nombre actuel de raccourcis
-      let shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
-      
-      // Si c'est le dernier raccourci, réduire le nombre total
-      if (positionNum === shortcutCount - 1) {
-        // Trouver la position du dernier raccourci non vide
-        let lastUsedPosition = -1;
-        for (let i = 0; i < shortcutCount; i++) {
-          if (i !== positionNum && shortcuts[i.toString()]) {
-            lastUsedPosition = Math.max(lastUsedPosition, i);
-          }
+      // Compter le nombre de raccourcis réellement utilisés
+      let lastUsedPosition = -1;
+      for (let i = 0; i < 100; i++) { // Examiner un grand nombre pour être sûr
+        if (shortcuts[i.toString()]) {
+          lastUsedPosition = Math.max(lastUsedPosition, i);
         }
-        
-        // Calculer le nouveau nombre de raccourcis
-        // Arrondir au prochain multiple de 4
-        const newCount = Math.ceil((lastUsedPosition + 1) / 4) * 4;
-        // Assurer un minimum de 4 raccourcis
-        shortcutCount = Math.max(4, newCount);
+      }
+      
+      // Calculer le nouveau nombre de raccourcis
+      // Arrondir au prochain multiple de 4
+      const newCount = Math.ceil((lastUsedPosition + 1) / 4) * 4;
+      // Assurer un minimum de 4 raccourcis
+      const shortcutCount = Math.max(4, newCount);
+      
+      // Supprimer directement l'élément du DOM
+      const shortcutElements = document.querySelectorAll(".shortcut-container");
+      if (shortcutElements[positionNum]) {
+        shortcutElements[positionNum].remove();
       }
       
       // Mettre à jour le localStorage
@@ -315,9 +315,8 @@
       
       closeContextMenu();
       
-      // Recharger complètement la page pour garantir que tous les raccourcis sont correctement mis à jour
-      // C'est une solution plus radicale mais qui garantit que tout sera correctement réinitialisé
-      window.location.reload();
+      // Recharger les raccourcis sans recharger la page
+      reloadShortcuts();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -719,20 +718,46 @@
 
       // Fallback: exécuter la recherche via handleSearch
       handleSearch({ type: "click" });
-    }
-
-    function reloadShortcuts() {
+    }    function reloadShortcuts() {
       const grid = document.getElementById("shortcutGrid");
-      const shortcuts = JSON.parse(localStorage.getItem("shortcuts") || "{}");
+      const activeTab = localStorage.getItem("activeTab") || "personal";
+      const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${activeTab}`) || "{}");
 
       // Supprimer tous les raccourcis existants mais garder le bouton d'ajout
       const addRowButton = document.getElementById("addRowButton");
       grid.innerHTML = '';
 
-      // Recréer les raccourcis
+      // Déterminer le nombre réel de raccourcis à afficher
       const shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
+      
+      // Recréer les raccourcis
       for (let i = 0; i < shortcutCount; i++) {
         grid.innerHTML += generateShortcut(i);
+      }
+
+      // Mettre à jour l'apparence des raccourcis avec les données stockées
+      for (const position in shortcuts) {
+        const shortcutData = shortcuts[position];
+        const shortcutElement = document.querySelector(`a[data-position="${position}"]`);
+        
+        if (shortcutElement && shortcutData) {
+          // Mettre à jour l'apparence du raccourci
+          const iconElement = shortcutElement.querySelector('.shortcut-icon');
+          const titleElement = shortcutElement.querySelector('.shortcut-title');
+          
+          if (shortcutData.iconURL) {
+            iconElement.innerHTML = `<img src="${shortcutData.iconURL}" alt="${shortcutData.title}" class="mx-auto h-12 w-12 rounded">`;
+            iconElement.setAttribute('data-empty', 'false');
+          }
+          
+          if (shortcutData.title) {
+            titleElement.textContent = shortcutData.title;
+          }
+          
+          if (shortcutData.url) {
+            shortcutElement.href = shortcutData.url;
+          }
+        }
       }
 
       // Remettre le bouton d'ajout
