@@ -277,8 +277,9 @@
       const position = document
         .getElementById("contextMenu")
         .getAttribute("data-position");
+      const positionNum = parseInt(position);
       const activeTab = localStorage.getItem("activeTab") || "personal";
-
+      
       // Récupérer les shortcuts depuis localStorage
       const shortcuts = JSON.parse(
         localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
@@ -286,47 +287,37 @@
       
       // Supprimer le raccourci des données stockées
       delete shortcuts[position];
-      localStorage.setItem(
-        `shortcuts_${activeTab}`,
-        JSON.stringify(shortcuts)
-      );
-      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
-
-      // Maintenant, on réduit le nombre total de raccourcis
+      
+      // Récupérer le nombre actuel de raccourcis
       let shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
       
-      // Chercher tous les raccourcis existants (vides ou non)
-      const allShortcuts = document.querySelectorAll("[data-position]");
-      
-      // Vérifier si c'est le dernier raccourci de sa rangée
-      const positionNum = parseInt(position);
-      const isLastInRow = (positionNum + 1) % 4 === 0;
-      const isLastRow = positionNum >= shortcutCount - 4;
-      
-      // Si c'est le dernier raccourci de la dernière rangée, on réduit le nombre total
-      if (isLastRow) {
-        // Trouver la dernière position non vide
-        let lastNonEmptyPosition = -1;
-        for (let i = 0; i < allShortcuts.length; i++) {
-          const pos = allShortcuts[i].getAttribute("data-position");
-          const isEmpty = allShortcuts[i].querySelector(".shortcut-icon").getAttribute("data-empty") === "true";
-          
-          // Si ce n'est pas le raccourci qu'on est en train de supprimer et qu'il n'est pas vide
-          if (pos !== position && !isEmpty) {
-            lastNonEmptyPosition = Math.max(lastNonEmptyPosition, parseInt(pos));
+      // Si c'est le dernier raccourci, réduire le nombre total
+      if (positionNum === shortcutCount - 1) {
+        // Trouver la position du dernier raccourci non vide
+        let lastUsedPosition = -1;
+        for (let i = 0; i < shortcutCount; i++) {
+          if (i !== positionNum && shortcuts[i.toString()]) {
+            lastUsedPosition = Math.max(lastUsedPosition, i);
           }
         }
         
-        // Ajuster le compte pour le prochain multiple de 4 après la dernière position non vide
-        const newRowCount = Math.ceil((lastNonEmptyPosition + 1) / 4);
-        const newShortcutCount = Math.max(4, newRowCount * 4); // Au moins une rangée
-        
-        // Mettre à jour le compteur dans localStorage
-        localStorage.setItem("shortcutCount", newShortcutCount);
+        // Calculer le nouveau nombre de raccourcis
+        // Arrondir au prochain multiple de 4
+        const newCount = Math.ceil((lastUsedPosition + 1) / 4) * 4;
+        // Assurer un minimum de 4 raccourcis
+        shortcutCount = Math.max(4, newCount);
       }
-
+      
+      // Mettre à jour le localStorage
+      localStorage.setItem("shortcutCount", shortcutCount);
+      localStorage.setItem(`shortcuts_${activeTab}`, JSON.stringify(shortcuts));
+      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      
       closeContextMenu();
-      reloadShortcuts(); // Recharger les raccourcis pour refléter les changements
+      
+      // Recharger complètement la page pour garantir que tous les raccourcis sont correctement mis à jour
+      // C'est une solution plus radicale mais qui garantit que tout sera correctement réinitialisé
+      window.location.reload();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
