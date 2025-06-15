@@ -547,34 +547,26 @@
         if (firstSpace > 0) {
           const possibleCommand = lowercaseQuery.substring(0, firstSpace).toLowerCase();
           
-          // Vérifier les commandes exactes (yt, gh, etc.)
-          if (validSearchCommands[possibleCommand]) {
+          // Vérifier strictement si la commande est dans notre liste de commandes valides
+          if (Object.keys(validSearchCommands).includes(possibleCommand)) {
             detectedCommand = possibleCommand;
             searchTerms = lowercaseQuery.substring(firstSpace + 1);
           }
-          // Vérifier les commandes à une lettre (g, a, w, r, etc.)
-          else if (possibleCommand.length === 1 && validSearchCommands[possibleCommand]) {
-            detectedCommand = possibleCommand;
-            searchTerms = lowercaseQuery.substring(firstSpace + 1);
-          }
-        } else if (validSearchCommands[lowercaseQuery]) {
-          // Si toute la requête est juste une commande
-          detectedCommand = lowercaseQuery;
-          searchTerms = "";
-        } else if (lowercaseQuery.length === 1 && validSearchCommands[lowercaseQuery]) {
-          // Si c'est juste une lettre qui correspond à une commande
+          // Ne pas essayer d'interpréter un texte quelconque comme une commande
+        } else if (Object.keys(validSearchCommands).includes(lowercaseQuery)) {
+          // Si toute la requête est exactement une commande valide
           detectedCommand = lowercaseQuery;
           searchTerms = "";
         }
         
-        // Si une commande a été détectée, l'utiliser
+        // Si une commande valide a été détectée, l'utiliser
         if (detectedCommand) {
           document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent = 
             `La recherche sera effectuée sur ${validSearchCommands[detectedCommand]}`;
           return `/${detectedCommand} ${searchTerms}`.trim();
         }
         
-        // Par défaut, utiliser le moteur de recherche actuellement sélectionné
+        // Par défaut, utiliser le moteur de recherche actuellement sélectionné avec toute la requête
         document.getElementById("autocorrectionModal").querySelector("p.mt-2").textContent = 
           `La recherche sera effectuée sur ${currentEngineName}`;
         return `/${currentEngine} ${lowercaseQuery}`;
