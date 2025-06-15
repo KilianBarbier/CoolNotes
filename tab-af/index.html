@@ -1,10 +1,10 @@
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>New Tab</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="aurora-svelte.css" />
     <script>
       tailwind.config = {
         theme: {
@@ -76,8 +76,7 @@
              ondragover="handleDragOver(event)" 
              ondrop="handleDrop(event, '${i}')"
              ondragenter="handleDragEnter(event)"
-             ondragleave="handleDragLeave(event)">
-            <a href="#" 
+             ondragleave="handleDragLeave(event)">            <a href="#" 
              draggable="true"
              ondragstart="handleDragStart(event, '${i}')"
              onclick="handleShortcutClick(event, '${i}')" 
@@ -172,9 +171,7 @@
       function handleDragStart(event, position) {
         event.dataTransfer.setData('text/plain', position);
         event.currentTarget.classList.add('opacity-50');
-      }
-
-      function generateAddRowButton() {
+      }      function generateAddRowButton() {
         return `
           <button
              onclick="addMoreShortcuts()"
@@ -752,10 +749,9 @@
         const shortcuts = JSON.parse(localStorage.getItem(`shortcuts_${tab}`) || "{}");
         localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-        // Reload shortcuts
-        reloadShortcuts(); // Au lieu de reloadWithTransition()
-      }
-    </script>
+        // Reload shortcuts        reloadShortcuts(); // Au lieu de reloadWithTransition()
+      }    </script>
+    <script src="aurora-animation.js"></script>
   </head>
   <body class="min-h-screen font-sf">
     <!-- Suppression du bouton hamburger pour le remplacer par une barre de navigation mobile en bas -->
@@ -897,18 +893,16 @@
           <a href="https://dev.kilianbarbier.fr/fr" class="block w-full"
             >CoolNotes FR</a
           >
-        </div>
-      </aside>
+        </div>      </aside>
 
-      <!-- Main Content -->
-      <main class="flex-1 flex flex-col lg:ml-72 pb-20 lg:pb-0">
+      <!-- Main Content -->      <main class="flex-1 flex flex-col lg:ml-72 pb-20 lg:pb-0">        <!-- Hello Kilian Title -->
+        <h1 class="aurora-svelte-container mx-auto mt-8">Hello Kilian</h1>
+        
         <!-- Search Bar -->
         <div
           class="max-w-2xl mx-auto w-full mb-12 flex items-center gap-4 search-container relative z-30"
         >
-          <div class="relative">
-            <button
-              id="currentSearch"
+          <div class="relative">            <button              id="currentSearch"
               class="relative z-[999999] px-5 h-12 bg-white/20 backdrop-blur-xl rounded-xl border-0 outline-none cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center justify-center"
             >
               <span class="pr-3 shortcut-title font-sf" style="font-weight: 400"
@@ -1636,9 +1630,9 @@
           if (e.target === sidebarModal) {
             sidebarModal.classList.add("hidden");
             document.body.style.overflow = "";
-          }
-        });
+          }        });
       });
     </script>
+    <script src="aurora-svelte.js"></script>
   </body>
 </html>
