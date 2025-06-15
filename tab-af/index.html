@@ -591,21 +591,43 @@
       // Fonction pour exécuter la recherche d'origine
       function executeOriginalSearch() {
         const originalQuery = document.getElementById("autocorrectionModal").getAttribute("data-original-query");
-        document.getElementById("searchInput").value = originalQuery;
         document.getElementById("autocorrectionModal").classList.add("hidden");
         
-        // Déclencher la recherche
-        handleSearch({type: "click"});
-      }
-      
-      // Fonction pour exécuter la recherche corrigée
-      function executeCorrectedSearch() {
-        const correctedQuery = document.getElementById("autocorrectionModal").getAttribute("data-corrected-query");
-        document.getElementById("searchInput").value = correctedQuery;
-        document.getElementById("autocorrectionModal").classList.add("hidden");
+        // Récupérer le moteur de recherche actuellement sélectionné
+        let selectedEngine = document.getElementById("searchEngine").value;
         
-        // Déclencher la recherche
-        handleSearch({type: "click"});
+        // Extraire directement les URLs de recherche pour éviter de repasser par le processus d'autocorrection
+        const searchEngines = {
+          g: "https://www.google.com/search?q=",
+          yt: "https://www.youtube.com/results?search_query=",
+          gh: "https://github.com/search?q=",
+          w: "https://en.wikipedia.org/wiki/Special:Search?search=",
+          r: "https://www.reddit.com/search/?q=",
+          so: "https://stackoverflow.com/search?q=",
+          a: "https://www.amazon.fr/s?k=",
+          n: "https://www.netflix.com/search?q=",
+          sp: "https://open.spotify.com/search/results",
+          tw: "https://twitter.com/search?q=",
+          ig: "https://www.instagram.com/explore/tags/",
+          maps: "https://www.google.com/maps/search/",
+          i: "https://www.google.com/images?q=",
+          ddg: "https://duckduckgo.com/?q=",
+          px: "https://www.perplexity.ai/search?q=",
+        };
+        
+        // Vérifier si la requête commence par une commande spécifique
+        if (originalQuery.startsWith("/")) {
+          const parts = originalQuery.substring(1).split(" ");
+          if (parts.length > 0 && searchEngines[parts[0].toLowerCase()]) {
+            selectedEngine = parts[0].toLowerCase();
+            query = parts.slice(1).join(" ");
+            window.location.href = searchEngines[selectedEngine] + encodeURIComponent(query);
+            return;
+          }
+        }
+        
+        // Si pas de commande spécifique, utiliser directement la requête originale
+        window.location.href = searchEngines[selectedEngine] + encodeURIComponent(originalQuery);
       }
       
       function reloadShortcuts() {
