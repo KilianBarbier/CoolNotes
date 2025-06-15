@@ -485,11 +485,32 @@
 
       // Fonction pour vérifier si on devrait suggérer une autocorrection
       function shouldSuggestAutocorrection(query) {
-        // Ne suggérer l'autocorrection QUE si la requête commence par ":" 
-        // (potentiellement une tentative de commande avec la mauvaise syntaxe)
-        return query.startsWith(":");
-        
-        // Suppression de la détection des majuscules qui causait des faux positifs
+        // Ne suggérer l'autocorrection QUE si la requête commence par ":"
+        if (!query.startsWith(":")) {
+          return false;
+        }
+        // Liste des commandes valides
+        const validSearchCommands = {
+          "g": "Google",
+          "yt": "YouTube",
+          "gh": "GitHub", 
+          "w": "Wikipedia",
+          "r": "Reddit",
+          "so": "Stack Overflow",
+          "a": "Amazon",
+          "n": "Netflix",
+          "sp": "Spotify",
+          "tw": "Twitter",
+          "ig": "Instagram",
+          "maps": "Google Maps",
+          "i": "Google Images",
+          "ddg": "DuckDuckGo",
+          "px": "Perplexity AI"
+        };
+        // Extraire la partie après le ":" (jusqu'au premier espace ou fin de chaîne)
+        const commandPart = query.substring(1).split(" ")[0].toLowerCase();
+        // Vérifier si cette partie correspond à une commande valide
+        return Object.keys(validSearchCommands).includes(commandPart);
       }
 
       // Fonction pour afficher la modal d'autocorrection
