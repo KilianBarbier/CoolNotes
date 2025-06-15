@@ -279,38 +279,54 @@
         .getAttribute("data-position");
       const activeTab = localStorage.getItem("activeTab") || "personal";
 
-      // Récupérer l'élément du raccourci
-      const shortcut = document.querySelector(`[data-position="${position}"]`);
-      const iconContainer = shortcut.querySelector(".shortcut-icon");
-      const isEmpty = iconContainer.getAttribute("data-empty") === "true";
+      // Récupérer les shortcuts depuis localStorage
+      const shortcuts = JSON.parse(
+        localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
+      );
+      
+      // Supprimer le raccourci des données stockées
+      delete shortcuts[position];
+      localStorage.setItem(
+        `shortcuts_${activeTab}`,
+        JSON.stringify(shortcuts)
+      );
+      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
 
-      // Si le raccourci est vide, rien à supprimer du localStorage
-      // Mais on va quand même le réinitialiser visuellement pour s'assurer qu'il est bien vide
-      if (isEmpty) {
-        // Réinitialiser visuellement le raccourci vide (pour s'assurer qu'il est bien vide)
-        shortcut.href = "#";
-        shortcut.onclick = (e) => {
-          e.preventDefault();
-          openConfigModal(position);
-        };
-        shortcut.querySelector(".shortcut-title").textContent = "Ajouter un raccourci";
-        iconContainer.setAttribute("data-empty", "true");
-        iconContainer.innerHTML = "";
-      } else {
-        // Pour un raccourci non vide, on supprime du localStorage
-        const shortcuts = JSON.parse(
-          localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
-        );
-        delete shortcuts[position];
-        localStorage.setItem(
-          `shortcuts_${activeTab}`,
-          JSON.stringify(shortcuts)
-        );
-        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      // Maintenant, on réduit le nombre total de raccourcis
+      let shortcutCount = parseInt(localStorage.getItem("shortcutCount") || "8");
+      
+      // Chercher tous les raccourcis existants (vides ou non)
+      const allShortcuts = document.querySelectorAll("[data-position]");
+      
+      // Vérifier si c'est le dernier raccourci de sa rangée
+      const positionNum = parseInt(position);
+      const isLastInRow = (positionNum + 1) % 4 === 0;
+      const isLastRow = positionNum >= shortcutCount - 4;
+      
+      // Si c'est le dernier raccourci de la dernière rangée, on réduit le nombre total
+      if (isLastRow) {
+        // Trouver la dernière position non vide
+        let lastNonEmptyPosition = -1;
+        for (let i = 0; i < allShortcuts.length; i++) {
+          const pos = allShortcuts[i].getAttribute("data-position");
+          const isEmpty = allShortcuts[i].querySelector(".shortcut-icon").getAttribute("data-empty") === "true";
+          
+          // Si ce n'est pas le raccourci qu'on est en train de supprimer et qu'il n'est pas vide
+          if (pos !== position && !isEmpty) {
+            lastNonEmptyPosition = Math.max(lastNonEmptyPosition, parseInt(pos));
+          }
+        }
+        
+        // Ajuster le compte pour le prochain multiple de 4 après la dernière position non vide
+        const newRowCount = Math.ceil((lastNonEmptyPosition + 1) / 4);
+        const newShortcutCount = Math.max(4, newRowCount * 4); // Au moins une rangée
+        
+        // Mettre à jour le compteur dans localStorage
+        localStorage.setItem("shortcutCount", newShortcutCount);
       }
 
       closeContextMenu();
-      reloadShortcuts(); // Au lieu de reloadWithTransition()
+      reloadShortcuts(); // Recharger les raccourcis pour refléter les changements
     }
 
     document.addEventListener("DOMContentLoaded", () => {
