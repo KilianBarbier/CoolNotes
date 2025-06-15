@@ -273,23 +273,41 @@
     function editShortcut(position) {
       openConfigModal(position, true);
       closeContextMenu();
-    }
-
-    function deleteShortcut() {
+    }    function deleteShortcut() {
       const position = document
         .getElementById("contextMenu")
         .getAttribute("data-position");
       const activeTab = localStorage.getItem("activeTab") || "personal";
 
-      const shortcuts = JSON.parse(
-        localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
-      );
-      delete shortcuts[position];
-      localStorage.setItem(
-        `shortcuts_${activeTab}`,
-        JSON.stringify(shortcuts)
-      );
-      localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      // Récupérer l'élément du raccourci
+      const shortcut = document.querySelector(`[data-position="${position}"]`);
+      const iconContainer = shortcut.querySelector(".shortcut-icon");
+      const isEmpty = iconContainer.getAttribute("data-empty") === "true";
+
+      // Si le raccourci est vide, rien à supprimer du localStorage
+      // Mais on va quand même le réinitialiser visuellement pour s'assurer qu'il est bien vide
+      if (isEmpty) {
+        // Réinitialiser visuellement le raccourci vide (pour s'assurer qu'il est bien vide)
+        shortcut.href = "#";
+        shortcut.onclick = (e) => {
+          e.preventDefault();
+          openConfigModal(position);
+        };
+        shortcut.querySelector(".shortcut-title").textContent = "Ajouter un raccourci";
+        iconContainer.setAttribute("data-empty", "true");
+        iconContainer.innerHTML = "";
+      } else {
+        // Pour un raccourci non vide, on supprime du localStorage
+        const shortcuts = JSON.parse(
+          localStorage.getItem(`shortcuts_${activeTab}`) || "{}"
+        );
+        delete shortcuts[position];
+        localStorage.setItem(
+          `shortcuts_${activeTab}`,
+          JSON.stringify(shortcuts)
+        );
+        localStorage.setItem("shortcuts", JSON.stringify(shortcuts));
+      }
 
       closeContextMenu();
       reloadShortcuts(); // Au lieu de reloadWithTransition()
