@@ -236,9 +236,7 @@
         } catch (e) {
           console.error("Erreur lors de la sauvegarde du raccourci:", e);
         }
-      }
-
-      function openConfigModal(position) {
+      }      function openConfigModal(position) {
         const modal = document.getElementById("configModal");
         const titleInput = document.getElementById("shortcutTitle");
         
@@ -249,10 +247,24 @@
 
         modal.classList.remove("hidden");
         
-        // Force focus sur l'input du titre avec un petit délai pour être sûr que la modal est bien affichée
+        // Amélioration de la méthode de focus avec plusieurs tentatives
+        // Première tentative immédiate
+        titleInput.focus();
+        
+        // Deuxième tentative avec un délai court
         setTimeout(() => {
           titleInput.focus();
         }, 50);
+        
+        // Troisième tentative avec un délai plus long pour s'assurer que la modal est complètement rendue
+        setTimeout(() => {
+          titleInput.focus();
+          // Mettre le curseur à la fin du texte
+          if (titleInput.value) {
+            titleInput.selectionStart = titleInput.value.length;
+            titleInput.selectionEnd = titleInput.value.length;
+          }
+        }, 150);
       }
 
       function closeConfigModal() {
