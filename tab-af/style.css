@@ -36,7 +36,7 @@ input:focus {
 
 /* Remove the custom-gradient class since we're using random gradients now */
 body {
-  background: linear-gradient(90deg, #0800B9 0%, #009EE3 100%);
+  background: linear-gradient(to bottom right, #3b82f6, #8b5cf6);
   background-size: cover !important;
   background-attachment: fixed;
   color: white;
